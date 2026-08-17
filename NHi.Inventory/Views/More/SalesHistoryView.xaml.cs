@@ -37,6 +37,13 @@ public partial class SalesHistoryView : UserControl
             MessageBox.Show(LanguageManager.GetString("ErrorOccurred"), LanguageManager.GetString("Error"), MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
+    private void BtnReturn_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn || btn.Tag is not Sale saleRow) return;
+        var dialog = new SaleReturnDialog(saleRow.Id);
+        if (dialog.ShowDialog() == true) LoadData();
+    }
+
     private void BtnVoid_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not Button btn || btn.Tag is not Sale saleRow) return;

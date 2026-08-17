@@ -102,6 +102,88 @@ public class PurchaseService
         return query.Where(p => !p.IsDeleted).OrderByDescending(p => p.PurchaseDate).ToList();
     }
 
+    /// <summary>
+    /// Processes a partial or full return of one product from a completed purchase:
+    /// decreases stock, updates the supplier's payable ledger, and records the return.
+    /// Runs as a single transaction.
+    /// </summary>
+    public (bool success, string? error) ProcessPurchaseReturn(int purchaseId, int productId, decimal quantity, string? reason)
+    {
+        using var db = new AppDbContext();
+        using var transaction = db.Database.BeginTransaction();
+        try
+        {
+            var purchase = db.Purchases.Include(p => p.Items).Include(p => p.Supplier).FirstOrDefault(p => p.Id == purchaseId);
+            if (purchase == null) return (false, "Purchase not found");
+
+            var purchaseItem = purchase.Items.FirstOrDefault(i => i.ProductId == productId);
+            if (purchaseItem == null) return (false, "Product not found on this invoice");
+
+            var alreadyReturned = db.PurchaseReturns.Where(r => r.PurchaseId == purchaseId && r.ProductId == productId).Sum(r => r.Quantity);
+            if (quantity <= 0 || quantity > purchaseItem.Quantity - alreadyReturned)
+                return (false, "Return quantity exceeds what was purchased");
+
+            var refundAmount = quantity * purchaseItem.UnitPrice;
+
+            var product = db.Products.Find(productId);
+            if (product != null)
+            {
+                var prevStock = product.CurrentStock;
+                product.CurrentStock -= quantity;
+                db.StockTransactions.Add(new StockTransaction
+                {
+                    ProductId = productId,
+                    TransactionType = "PURCHASE_RETURN",
+                    Quantity = -quantity,
+                    PreviousStock = prevStock,
+                    NewStock = product.CurrentStock,
+                    Description = $"Purchase Return: {purchase.InvoiceNumber}",
+                    ReferenceId = purchaseId,
+                    ReferenceType = "Purchase"
+                });
+            }
+
+            if (purchase.SupplierId.HasValue)
+            {
+                var supplier = db.Suppliers.Find(purchase.SupplierId);
+                if (supplier != null)
+                {
+                    supplier.CurrentBalance -= refundAmount;
+                    db.SupplierLedgers.Add(new SupplierLedger
+                    {
+                        SupplierId = purchase.SupplierId.Value,
+                        Description = $"Purchase Return - {purchase.InvoiceNumber}",
+                        Debit = 0,
+                        Credit = refundAmount,
+                        Balance = supplier.CurrentBalance,
+                        ReferenceId = purchaseId,
+                        ReferenceType = "PurchaseReturn"
+                    });
+                }
+            }
+
+            db.PurchaseReturns.Add(new PurchaseReturn
+            {
+                PurchaseId = purchaseId,
+                ProductId = productId,
+                Quantity = quantity,
+                RefundAmount = refundAmount,
+                Reason = reason,
+                CreatedBy = AuthService.CurrentUser?.Id
+            });
+
+            db.SaveChanges();
+            transaction.Commit();
+            AuditLogService.Log("PURCHASE_RETURN", "Purchase", purchaseId, $"Returned {quantity} of product #{productId} from {purchase.InvoiceNumber}");
+            return (true, null);
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            return (false, ex.Message);
+        }
+    }
+
     public decimal GetTodayPurchasesTotal()
     {
         using var db = new AppDbContext();

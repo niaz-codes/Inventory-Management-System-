@@ -32,12 +32,14 @@
                 <DataGridTextColumn Header="Paid" Binding="{Binding PaidAmount, StringFormat='Rs. {0:N0}'}" Width="100"/>
                 <DataGridTextColumn Header="Remaining" Binding="{Binding RemainingAmount, StringFormat='Rs. {0:N0}'}" Width="100"/>
                 <DataGridTextColumn Header="Method" Binding="{Binding PaymentMethod}" Width="80"/>
-                <DataGridTemplateColumn Header="Actions" Width="160">
+                <DataGridTemplateColumn Header="Actions" Width="230">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="{DynamicResource Reprint}" Click="BtnReprint_Click" Tag="{Binding}"
                                         Padding="8,4" Margin="0,0,5,0" Background="#E3F2FD" Foreground="#1565C0" BorderThickness="0" FontSize="11" Cursor="Hand"/>
+                                <Button Content="{DynamicResource Return}" Click="BtnReturn_Click" Tag="{Binding}"
+                                        Padding="8,4" Margin="0,0,5,0" Background="#FFF3E0" Foreground="#E65100" BorderThickness="0" FontSize="11" Cursor="Hand"/>
                                 <Button Content="{DynamicResource Void}" Click="BtnVoid_Click" Tag="{Binding}"
                                         Padding="8,4" Background="#FFEBEE" Foreground="#C62828" BorderThickness="0" FontSize="11" Cursor="Hand"/>
                             </StackPanel>

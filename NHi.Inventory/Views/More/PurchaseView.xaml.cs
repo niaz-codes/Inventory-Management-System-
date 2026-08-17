@@ -14,4 +14,11 @@ public partial class PurchaseView : UserControl
         var dialog = new PurchaseDialog();
         if (dialog.ShowDialog() == true) LoadData();
     }
+
+    private void BtnReturn_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn || btn.Tag is not Models.Purchase purchaseRow) return;
+        var dialog = new PurchaseReturnDialog(purchaseRow.Id);
+        if (dialog.ShowDialog() == true) LoadData();
+    }
 }

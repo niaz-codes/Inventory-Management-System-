@@ -177,6 +177,100 @@ public class SalesService
         catch { transaction.Rollback(); throw; }
     }
 
+    /// <summary>
+    /// Processes a partial or full return of one product from a completed sale:
+    /// restores stock, reverses the customer's credit ledger (or refunds cash),
+    /// and records the return. Runs as a single transaction.
+    /// </summary>
+    public (bool success, string? error) ProcessSaleReturn(int saleId, int productId, decimal quantity, string? reason)
+    {
+        using var db = new AppDbContext();
+        using var transaction = db.Database.BeginTransaction();
+        try
+        {
+            var sale = db.Sales.Include(s => s.Items).Include(s => s.Customer).FirstOrDefault(s => s.Id == saleId);
+            if (sale == null) return (false, "Sale not found");
+
+            var saleItem = sale.Items.FirstOrDefault(i => i.ProductId == productId);
+            if (saleItem == null) return (false, "Product not found on this invoice");
+
+            var alreadyReturned = db.SaleReturns.Where(r => r.SaleId == saleId && r.ProductId == productId).Sum(r => r.Quantity);
+            if (quantity <= 0 || quantity > saleItem.Quantity - alreadyReturned)
+                return (false, "Return quantity exceeds what was sold");
+
+            var refundAmount = quantity * saleItem.UnitPrice;
+
+            var product = db.Products.Find(productId);
+            if (product != null)
+            {
+                var prevStock = product.CurrentStock;
+                product.CurrentStock += quantity;
+                db.StockTransactions.Add(new StockTransaction
+                {
+                    ProductId = productId,
+                    TransactionType = "SALE_RETURN",
+                    Quantity = quantity,
+                    PreviousStock = prevStock,
+                    NewStock = product.CurrentStock,
+                    Description = $"Sale Return: {sale.InvoiceNumber}",
+                    ReferenceId = saleId,
+                    ReferenceType = "Sale"
+                });
+            }
+
+            if (sale.CustomerId.HasValue)
+            {
+                var customer = db.Customers.Find(sale.CustomerId);
+                if (customer != null)
+                {
+                    customer.CurrentBalance -= refundAmount;
+                    db.CustomerLedgers.Add(new CustomerLedger
+                    {
+                        CustomerId = sale.CustomerId.Value,
+                        Description = $"Sale Return - {sale.InvoiceNumber}",
+                        Debit = 0,
+                        Credit = refundAmount,
+                        Balance = customer.CurrentBalance,
+                        ReferenceId = saleId,
+                        ReferenceType = "SaleReturn"
+                    });
+                }
+            }
+            else
+            {
+                db.CashTransactions.Add(new CashTransaction
+                {
+                    TransactionType = "SALE_RETURN",
+                    Amount = refundAmount,
+                    IsInflow = false,
+                    Description = $"Refund - {sale.InvoiceNumber}",
+                    ReferenceId = saleId,
+                    ReferenceType = "SaleReturn"
+                });
+            }
+
+            db.SaleReturns.Add(new SaleReturn
+            {
+                SaleId = saleId,
+                ProductId = productId,
+                Quantity = quantity,
+                RefundAmount = refundAmount,
+                Reason = reason,
+                CreatedBy = AuthService.CurrentUser?.Id
+            });
+
+            db.SaveChanges();
+            transaction.Commit();
+            AuditLogService.Log("SALE_RETURN", "Sale", saleId, $"Returned {quantity} of product #{productId} from {sale.InvoiceNumber}");
+            return (true, null);
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            return (false, ex.Message);
+        }
+    }
+
     public decimal GetTodaySalesTotal()
     {
         using var db = new AppDbContext();
