@@ -9,6 +9,7 @@ public partial class SupplierDialog : Window
     public SupplierDialog()
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
     }
 
     private void BtnSave_Click(object sender, RoutedEventArgs e)

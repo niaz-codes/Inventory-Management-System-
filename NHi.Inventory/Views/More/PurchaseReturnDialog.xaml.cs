@@ -26,6 +26,7 @@ public partial class PurchaseReturnDialog : Window
     public PurchaseReturnDialog(int purchaseId)
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
         _purchaseId = purchaseId;
         using var db = new AppDbContext();
         _purchase = db.Purchases.Include(p => p.Items).ThenInclude(i => i.Product).Include(p => p.Supplier)

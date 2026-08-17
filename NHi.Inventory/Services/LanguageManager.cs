@@ -10,6 +10,7 @@ public static class LanguageManager
 
     public static string CurrentLanguage => _currentLanguage;
     public static bool IsRTL => _currentLanguage == "ur";
+    public static FlowDirection CurrentFlowDirection => IsRTL ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
     public static event Action? LanguageChanged;
 
@@ -37,10 +38,10 @@ public static class LanguageManager
                 app.Resources.MergedDictionaries.Add(newDict);
             }
 
-            var mainWindow = app.MainWindow;
-            if (mainWindow != null)
+            var flowDirection = language == "ur" ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+            foreach (Window window in app.Windows)
             {
-                mainWindow.FlowDirection = language == "ur" ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+                window.FlowDirection = flowDirection;
             }
         }
 

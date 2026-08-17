@@ -25,6 +25,7 @@ public partial class SaleReturnDialog : Window
     public SaleReturnDialog(int saleId)
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
         _saleId = saleId;
         _sale = _salesService.GetSaleById(saleId)!;
         txtTitle.Text = $"{LanguageManager.GetString("Return")} - {_sale.InvoiceNumber}";

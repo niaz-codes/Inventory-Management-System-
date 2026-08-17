@@ -6,7 +6,7 @@ namespace NHi.Inventory.Views.Settings;
 public partial class ResetPasswordDialog : Window
 {
     private readonly int _userId;
-    public ResetPasswordDialog(int userId) { InitializeComponent(); _userId = userId; }
+    public ResetPasswordDialog(int userId) { InitializeComponent(); FlowDirection = LanguageManager.CurrentFlowDirection; _userId = userId; }
 
     private void BtnSave(object sender, RoutedEventArgs e)
     {

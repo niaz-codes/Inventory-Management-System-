@@ -13,6 +13,7 @@ public partial class HeldSalesDialog : Window
     public HeldSalesDialog(List<HeldSale> heldSales)
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
         _heldSales = heldSales;
         lv.ItemsSource = _heldSales;
     }

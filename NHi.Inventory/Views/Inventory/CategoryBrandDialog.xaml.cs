@@ -11,6 +11,7 @@ public partial class CategoryBrandDialog : Window
     public CategoryBrandDialog(string type)
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
         _type = type;
         txtTitle.Text = type == "Category" ? LanguageManager.GetString("AddCategory") : LanguageManager.GetString("AddBrand");
         lblName.Text = type;

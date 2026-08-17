@@ -2,12 +2,13 @@ using System.Windows;
 using System.Windows.Controls;
 using NHi.Inventory.Data;
 using NHi.Inventory.Models;
+using NHi.Inventory.Services;
 
 namespace NHi.Inventory.Views.Settings;
 
 public partial class AddUserDialog : Window
 {
-    public AddUserDialog() { InitializeComponent(); }
+    public AddUserDialog() { InitializeComponent(); FlowDirection = LanguageManager.CurrentFlowDirection; }
 
     private void BtnSave(object sender, RoutedEventArgs e)
     {

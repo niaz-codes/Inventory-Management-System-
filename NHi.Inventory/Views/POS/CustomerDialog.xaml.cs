@@ -9,6 +9,7 @@ public partial class CustomerDialog : Window
     public CustomerDialog()
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
     }
 
     private void BtnSave_Click(object sender, RoutedEventArgs e)

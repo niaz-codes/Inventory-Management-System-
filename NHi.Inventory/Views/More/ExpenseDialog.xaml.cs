@@ -10,6 +10,7 @@ public partial class ExpenseDialog : Window
     public ExpenseDialog()
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
         cmbCategory.ItemsSource = _service.GetCategories();
         if (cmbCategory.Items.Count > 0) cmbCategory.SelectedIndex = 0;
     }

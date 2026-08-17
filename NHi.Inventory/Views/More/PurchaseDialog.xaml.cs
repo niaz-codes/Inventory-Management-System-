@@ -15,6 +15,7 @@ public partial class PurchaseDialog : Window
     public PurchaseDialog()
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
         cmbSupplier.ItemsSource = _supplierService.GetAll();
         cmbProduct.ItemsSource = _productService.GetAll();
         txtInvoice.Text = _purchaseService.GenerateInvoiceNumber();

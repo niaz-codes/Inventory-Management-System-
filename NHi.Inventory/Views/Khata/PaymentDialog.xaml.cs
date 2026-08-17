@@ -11,6 +11,7 @@ public partial class PaymentDialog : Window
     public PaymentDialog(int entityId, string type)
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
         _entityId = entityId;
         _type = type;
 

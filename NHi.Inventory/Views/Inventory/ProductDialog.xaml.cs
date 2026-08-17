@@ -12,6 +12,7 @@ public partial class ProductDialog : Window
     public ProductDialog(Product? existingProduct = null)
     {
         InitializeComponent();
+        FlowDirection = LanguageManager.CurrentFlowDirection;
         _existingProduct = existingProduct;
         LoadComboBoxes();
         if (existingProduct != null) LoadProduct(existingProduct);
