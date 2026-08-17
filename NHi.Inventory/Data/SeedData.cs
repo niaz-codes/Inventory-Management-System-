@@ -13,7 +13,7 @@ public static class SeedData
                 new User
                 {
                     Username = "admin",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("REDACTED"),
                     FullName = "Administrator",
                     Role = "ADMIN",
                     IsActive = true
@@ -93,5 +93,21 @@ public static class SeedData
         }
 
         db.SaveChanges();
+    }
+
+    /// <summary>
+    /// One-time migration for databases created before the default admin
+    /// password was hardened: if the admin account still has the old
+    /// "admin" password, upgrade it to the new default without touching
+    /// any other data.
+    /// </summary>
+    public static void UpgradeDefaultAdminPassword(AppDbContext db)
+    {
+        var admin = db.Users.FirstOrDefault(u => u.Username == "admin");
+        if (admin != null && BCrypt.Net.BCrypt.Verify("admin", admin.PasswordHash))
+        {
+            admin.PasswordHash = BCrypt.Net.BCrypt.HashPassword("REDACTED");
+            db.SaveChanges();
+        }
     }
 }

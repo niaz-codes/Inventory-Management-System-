@@ -8,7 +8,7 @@ namespace NHi.Inventory.Views.Settings;
 
 public partial class SettingsView : UserControl
 {
-    public SettingsView() { InitializeComponent(); Loaded += (s, e) => LoadCompanySettings(); }
+    public SettingsView() { InitializeComponent(); Loaded += (s, e) => { LoadCompanySettings(); ApplyCompanyProfilePermissions(); }; }
 
     private void LoadCompanySettings()
     {
@@ -25,6 +25,15 @@ public partial class SettingsView : UserControl
         }
     }
 
+    private void ApplyCompanyProfilePermissions()
+    {
+        var isAdmin = AuthService.IsAdmin();
+        foreach (var box in new[] { txtCompanyName, txtPhone, txtAddress, txtCity, txtEmail, txtCurrency })
+            box.IsReadOnly = !isAdmin;
+        btnSaveCompany.Visibility = isAdmin ? Visibility.Visible : Visibility.Collapsed;
+        txtReadOnlyNotice.Visibility = isAdmin ? Visibility.Collapsed : Visibility.Visible;
+    }
+
     private void BtnSaveCompany(object sender, RoutedEventArgs e)
     {
         if (!AuthService.IsAdmin()) { MessageBox.Show(LanguageManager.GetString("AdminPermissionRequired")); return; }
@@ -38,7 +47,9 @@ public partial class SettingsView : UserControl
         settings.Email = txtEmail.Text.Trim();
         settings.Currency = txtCurrency.Text.Trim();
         settings.UpdatedAt = DateTime.Now;
+        settings.UpdatedBy = AuthService.CurrentUser?.Id;
         db.SaveChanges();
+        AuditLogService.Log("UPDATE_COMPANY_SETTINGS", "CompanySettings", settings.Id, $"Company profile updated to '{settings.CompanyName}'");
         MessageBox.Show(LanguageManager.GetString("SavedSuccessfully"));
     }
 

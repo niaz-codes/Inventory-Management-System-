@@ -17,13 +17,16 @@ public static class AuthService
             user.LastLogin = DateTime.Now;
             db.SaveChanges();
             CurrentUser = user;
+            AuditLogService.Log("LOGIN_SUCCESS", "User", user.Id, $"User '{username}' logged in");
             return true;
         }
+        AuditLogService.Log("LOGIN_FAILED", "User", null, $"Failed login attempt for username '{username}'");
         return false;
     }
 
     public static void Logout()
     {
+        AuditLogService.Log("LOGOUT", "User", CurrentUser?.Id, $"User '{CurrentUser?.Username}' logged out");
         CurrentUser = null;
     }
 
@@ -45,6 +48,7 @@ public static class AuthService
         {
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
             db.SaveChanges();
+            AuditLogService.Log("CHANGE_PASSWORD", "User", user.Id, "User changed their own password");
             return true;
         }
         return false;
@@ -59,6 +63,7 @@ public static class AuthService
         {
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
             db.SaveChanges();
+            AuditLogService.Log("RESET_USER_PASSWORD", "User", user.Id, $"Admin reset password for '{user.Username}'");
             return true;
         }
         return false;

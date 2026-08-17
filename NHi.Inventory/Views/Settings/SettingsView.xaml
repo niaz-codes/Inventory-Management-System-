@@ -19,7 +19,9 @@
                     <TextBox x:Name="txtEmail" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
                     <TextBlock Text="{DynamicResource Currency}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
                     <TextBox x:Name="txtCurrency" FontSize="13" Padding="10,8" Text="Rs." Margin="0,0,0,12"/>
-                    <Button Content="{DynamicResource SaveChanges}" Height="38" Click="BtnSaveCompany" Background="#1565C0" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                    <TextBlock x:Name="txtReadOnlyNotice" Text="{DynamicResource AdminPermissionRequired}" FontSize="11"
+                               Foreground="#F44336" Margin="0,0,0,8" Visibility="Collapsed"/>
+                    <Button x:Name="btnSaveCompany" Content="{DynamicResource SaveChanges}" Height="38" Click="BtnSaveCompany" Background="#1565C0" Foreground="White" BorderThickness="0" Cursor="Hand"/>
                 </StackPanel>
             </Border>
             <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,15" BorderBrush="#E0E0E0" BorderThickness="1">

@@ -4,6 +4,7 @@ using System.Globalization;
 using NHi.Inventory.Data;
 using NHi.Inventory.Services;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 
 namespace NHi.Inventory;
 
@@ -13,6 +14,8 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        QuestPDF.Settings.License = LicenseType.Community;
+
         _mutex = new Mutex(true, "NHiInventoryManagementSystem", out bool isNewInstance);
         if (!isNewInstance)
         {
@@ -29,6 +32,8 @@ public partial class App : Application
         using var db = new AppDbContext();
         db.Database.EnsureCreated();
         SeedData.Initialize(db);
+        SeedData.UpgradeDefaultAdminPassword(db);
+        BackupService.RunAutomaticBackupIfDue();
 
         base.OnStartup(e);
     }

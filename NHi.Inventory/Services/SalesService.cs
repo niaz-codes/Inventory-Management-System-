@@ -171,6 +171,7 @@ public class SalesService
 
             db.SaveChanges();
             transaction.Commit();
+            AuditLogService.Log("VOID_SALE", "Sale", saleId, $"Voided invoice {sale.InvoiceNumber}");
             return true;
         }
         catch { transaction.Rollback(); throw; }

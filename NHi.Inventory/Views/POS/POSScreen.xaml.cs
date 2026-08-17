@@ -325,11 +325,28 @@ public partial class POSScreen : UserControl
         try
         {
             var saleId = _salesService.CompleteSale(sale, items);
+            sale.Id = saleId;
 
             var result = MessageBox.Show(
                 $"{LanguageManager.GetString("SaleSuccessful")}\n\nInvoice: {sale.InvoiceNumber}\nTotal: Rs. {grandTotal:N0}\nPaid: Rs. {paid:N0}\n\n{LanguageManager.GetString("PrintReceipt")}?",
                 LanguageManager.GetString("Success"),
                 MessageBoxButton.YesNo, MessageBoxImage.Information);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                var lines = _cartItems.Select(c => new ReceiptLineItem
+                {
+                    ProductName = c.ProductName,
+                    Quantity = c.Quantity,
+                    Price = c.Price
+                }).ToList();
+
+                if (!ReceiptService.PrintReceipt(sale, customer, lines))
+                {
+                    MessageBox.Show(LanguageManager.GetString("ErrorOccurred"), LanguageManager.GetString("Error"),
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
 
             _cartItems.Clear();
             UpdateCartDisplay();

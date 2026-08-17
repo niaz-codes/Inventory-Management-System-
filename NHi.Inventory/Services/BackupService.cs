@@ -59,4 +59,42 @@ public static class BackupService
         if (!System.IO.Directory.Exists(backupDir)) return new List<string>();
         return System.IO.Directory.GetFiles(backupDir, "NHiBackup_*.db").OrderByDescending(f => f).ToList();
     }
+
+    public static string GetAutoBackupDirectory()
+    {
+        return System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "NHiInventory", "AutoBackups");
+    }
+
+    /// <summary>
+    /// Creates at most one automatic backup per calendar day, keeping the
+    /// most recent 14 automatic backups so the folder doesn't grow forever.
+    /// </summary>
+    public static void RunAutomaticBackupIfDue()
+    {
+        try
+        {
+            var dbPath = GetDatabasePath();
+            if (!System.IO.File.Exists(dbPath)) return;
+
+            var autoDir = GetAutoBackupDirectory();
+            System.IO.Directory.CreateDirectory(autoDir);
+
+            var todayStamp = DateTime.Now.ToString("yyyyMMdd");
+            var alreadyDoneToday = System.IO.Directory.GetFiles(autoDir, $"NHiAutoBackup_{todayStamp}_*.db").Any();
+            if (alreadyDoneToday) return;
+
+            var fileName = $"NHiAutoBackup_{DateTime.Now:yyyyMMdd_HHmmss}.db";
+            System.IO.File.Copy(dbPath, System.IO.Path.Combine(autoDir, fileName), true);
+
+            var old = System.IO.Directory.GetFiles(autoDir, "NHiAutoBackup_*.db")
+                .OrderByDescending(f => f).Skip(14);
+            foreach (var f in old) System.IO.File.Delete(f);
+        }
+        catch
+        {
+            // Automatic backup must never block application startup.
+        }
+    }
 }
