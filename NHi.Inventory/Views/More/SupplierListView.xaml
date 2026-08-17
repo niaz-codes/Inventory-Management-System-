@@ -10,6 +10,8 @@
             <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Suppliers}" FontSize="22" FontWeight="Bold"/>
             <Button DockPanel.Dock="Right" Content="{DynamicResource AddSupplier}" HorizontalAlignment="Right"
                     Click="BtnAdd_Click" Background="#4CAF50" Foreground="White" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+            <Button DockPanel.Dock="Right" Content="{DynamicResource ExportToExcel}" HorizontalAlignment="Right" Margin="0,0,10,0"
+                    Click="BtnExport_Click" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
         </DockPanel>
         <DataGrid x:Name="dg" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
                   GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1"

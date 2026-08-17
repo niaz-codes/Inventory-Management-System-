@@ -11,6 +11,8 @@
             <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Customers}" FontSize="22" FontWeight="Bold"/>
             <Button DockPanel.Dock="Right" Content="{DynamicResource AddCustomer}" HorizontalAlignment="Right"
                     Click="BtnAdd_Click" Background="#1565C0" Foreground="White" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+            <Button DockPanel.Dock="Right" Content="{DynamicResource ExportToExcel}" HorizontalAlignment="Right" Margin="0,0,10,0"
+                    Click="BtnExport_Click" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
         </DockPanel>
         <TextBox x:Name="txtSearch" Grid.Row="1" FontSize="14" Padding="10,8" Margin="0,0,0,10" TextChanged="TxtSearch_TextChanged"/>
         <DataGrid x:Name="dg" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"

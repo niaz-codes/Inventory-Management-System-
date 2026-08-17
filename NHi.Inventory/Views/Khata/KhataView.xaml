@@ -34,8 +34,10 @@
                                      TextChanged="TxtCustomerSearch_TextChanged"/>
                             <Button Grid.Column="1" Content="{DynamicResource AddCustomer}" Padding="12,7" Margin="10,0,5,0"
                                     Click="BtnAddCustomer_Click" FontSize="12" Background="#1565C0" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                            <Button Grid.Column="2" Content="{DynamicResource AddSupplier}" Padding="12,7" Margin="5,0,0,0"
+                            <Button Grid.Column="2" Content="{DynamicResource AddSupplier}" Padding="12,7" Margin="5,0,5,0"
                                     Click="BtnAddSupplier_Click" FontSize="12" Background="#4CAF50" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                            <Button Grid.Column="3" Content="{DynamicResource ExportToExcel}" Padding="12,7" Margin="5,0,0,0"
+                                    Click="BtnExportCustomerLedger_Click" FontSize="12" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"/>
                         </Grid>
                     </Border>
 
@@ -80,11 +82,15 @@
                 </TabItem.Header>
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <DataGrid x:Name="dgSupplierLedger" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True"
+                    <Button Grid.Row="0" Content="{DynamicResource ExportToExcel}" HorizontalAlignment="Right" Margin="0,0,0,10"
+                            Click="BtnExportSupplierLedger_Click" Padding="12,7" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" FontSize="12" Cursor="Hand"/>
+
+                    <DataGrid x:Name="dgSupplierLedger" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
                               GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F0F0F0"
                               BorderBrush="#E0E0E0" BorderThickness="1" RowBackground="White" 
                               AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
@@ -108,8 +114,8 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Border Grid.Row="1" Background="#FF9800" CornerRadius="0,0,10,10" Padding="15,10" Margin="0,-1,0,0">
-                        <TextBlock x:Name="txtSupplierBalance" Text="Total Payables: Rs. 0" 
+                    <Border Grid.Row="2" Background="#FF9800" CornerRadius="0,0,10,10" Padding="15,10" Margin="0,-1,0,0">
+                        <TextBlock x:Name="txtSupplierBalance" Text="Total Payables: Rs. 0"
                                    Foreground="White" FontSize="14" FontWeight="SemiBold"/>
                     </Border>
                 </Grid>

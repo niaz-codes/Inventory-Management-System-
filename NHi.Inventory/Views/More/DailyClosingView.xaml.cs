@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using NHi.Inventory.Services;
 
 namespace NHi.Inventory.Views.More;
@@ -25,8 +26,16 @@ public partial class DailyClosingView : UserControl
     {
         if (!AuthService.IsAdmin()) { MessageBox.Show(LanguageManager.GetString("AdminPermissionRequired")); return; }
         if (!decimal.TryParse(txtActualClosing.Text, out var actual)) { MessageBox.Show("Enter valid amount"); return; }
-        _service.CloseDay(actual);
+        var closingId = _service.CloseDay(actual);
+        AuditLogService.Log("CLOSE_DAY", "DailyClosing", closingId, $"Day closed with actual cash Rs. {actual:N0}");
         MessageBox.Show("Day closed successfully!", "", MessageBoxButton.OK, MessageBoxImage.Information);
         LoadData();
+    }
+
+    private void BtnExport_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog { Filter = "Excel|*.xlsx", FileName = "DailyClosingHistory.xlsx" };
+        if (dialog.ShowDialog() == true)
+        { ExcelExportService.ExportDailyClosings(dialog.FileName); MessageBox.Show(LanguageManager.GetString("SavedSuccessfully")); }
     }
 }

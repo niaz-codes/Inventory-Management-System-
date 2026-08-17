@@ -81,6 +81,8 @@
                                     <TextBlock Grid.Column="0" Text="Stock Value" FontSize="13"/><TextBlock x:Name="txtStockValue" Grid.Column="1" FontSize="14" FontWeight="Bold"/></Grid>
                             </StackPanel>
                         </Border>
+                        <Button Content="{DynamicResource ExportToExcel}" Margin="0,15,0,0" Height="38" Click="BtnExportProfit"
+                                Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" FontSize="12" Cursor="Hand"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

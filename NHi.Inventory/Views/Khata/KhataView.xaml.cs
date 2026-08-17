@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using NHi.Inventory.Models;
 using NHi.Inventory.Services;
 
@@ -137,6 +138,20 @@ public partial class KhataView : UserControl
                 LoadSupplierLedger();
             }
         }
+    }
+
+    private void BtnExportCustomerLedger_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog { Filter = "Excel|*.xlsx", FileName = "CustomerKhata.xlsx" };
+        if (dialog.ShowDialog() == true)
+        { ExcelExportService.ExportCustomerLedger(dialog.FileName); MessageBox.Show(LanguageManager.GetString("SavedSuccessfully")); }
+    }
+
+    private void BtnExportSupplierLedger_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog { Filter = "Excel|*.xlsx", FileName = "SupplierLedger.xlsx" };
+        if (dialog.ShowDialog() == true)
+        { ExcelExportService.ExportSupplierLedger(dialog.FileName); MessageBox.Show(LanguageManager.GetString("SavedSuccessfully")); }
     }
 }
 

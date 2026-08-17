@@ -40,4 +40,11 @@ public partial class ReportsView : UserControl
         if (dialog.ShowDialog() == true)
         { ExcelExportService.ExportStock(dialog.FileName); MessageBox.Show("Exported!"); }
     }
+
+    private void BtnExportProfit(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog { Filter = "Excel|*.xlsx", FileName = "ProfitSummary.xlsx" };
+        if (dialog.ShowDialog() == true)
+        { ExcelExportService.ExportProfitSummary(dialog.FileName); MessageBox.Show(LanguageManager.GetString("SavedSuccessfully")); }
+    }
 }

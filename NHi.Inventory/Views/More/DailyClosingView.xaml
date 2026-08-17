@@ -39,6 +39,8 @@
                     <TextBlock x:Name="txtDiff" Text="" FontSize="12" Foreground="#F44336" Margin="0,0,0,10"/>
                     <Button Content="{DynamicResource CloseDay}" Height="42" FontSize="14" FontWeight="SemiBold"
                             Click="BtnCloseDay_Click" Background="#F44336" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                    <Button Content="{DynamicResource ExportToExcel}" Height="38" Margin="0,10,0,0" FontSize="13"
+                            Click="BtnExport_Click" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"/>
                 </StackPanel>
             </Border>
         </StackPanel>
