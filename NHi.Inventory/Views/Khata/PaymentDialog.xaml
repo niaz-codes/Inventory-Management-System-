@@ -1,0 +1,29 @@
+<Window x:Class="NHi.Inventory.Views.Khata.PaymentDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Payment" Height="280" Width="380" WindowStartupLocation="CenterOwner"
+        Background="White" ResizeMode="NoResize">
+    <Border Padding="25">
+        <StackPanel>
+            <TextBlock x:Name="txtTitle" FontSize="18" FontWeight="Bold" Foreground="#1565C0" Margin="0,0,0,10"/>
+            <TextBlock x:Name="txtBalance" FontSize="14" Foreground="#757575" Margin="0,0,0,15"/>
+
+            <TextBlock Text="{DynamicResource Amount}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtAmount" FontSize="16" Padding="12,10" Margin="0,0,0,12"/>
+
+            <TextBlock Text="{DynamicResource Notes}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtNotes" FontSize="13" Padding="10,8" Margin="0,0,0,15"/>
+
+            <Button Content="{DynamicResource Save}" Height="40" FontSize="14" FontWeight="SemiBold"
+                    Click="BtnSave_Click" Background="#4CAF50" Foreground="White" BorderThickness="0" Cursor="Hand">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="10">
+                            <ContentPresenter HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
+    </Border>
+</Window>

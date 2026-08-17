@@ -1,0 +1,28 @@
+<UserControl x:Class="NHi.Inventory.Views.More.PurchaseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Purchases}" FontSize="22" FontWeight="Bold"/>
+            <Button DockPanel.Dock="Right" Content="{DynamicResource AddPurchase}" HorizontalAlignment="Right"
+                    Click="BtnAdd_Click" Background="#1565C0" Foreground="White" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+        </DockPanel>
+        <DataGrid x:Name="dg" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"
+                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column" RowBackground="White" AlternatingRowBackground="#FAFAFA">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Invoice" Binding="{Binding InvoiceNumber}" Width="130"/>
+                <DataGridTextColumn Header="Date" Binding="{Binding PurchaseDate, StringFormat='{}{0:dd-MMM-yyyy}'}" Width="100"/>
+                <DataGridTextColumn Header="Supplier" Binding="{Binding Supplier.Name}" Width="*"/>
+                <DataGridTextColumn Header="Total" Binding="{Binding GrandTotal, StringFormat='Rs. {0:N0}'}" Width="110"/>
+                <DataGridTextColumn Header="Paid" Binding="{Binding PaidAmount, StringFormat='Rs. {0:N0}'}" Width="100"/>
+                <DataGridTextColumn Header="Remaining" Binding="{Binding RemainingAmount, StringFormat='Rs. {0:N0}'}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,270 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- General -->
+    <sys:String x:Key="AppName">این ایچ آئی انوینٹری مینجمنٹ سسٹم</sys:String>
+    <sys:String x:Key="Login">لاگ ان</sys:String>
+    <sys:String x:Key="Logout">لاگ آؤٹ</sys:String>
+    <sys:String x:Key="Username">صارف نام</sys:String>
+    <sys:String x:Key="Password">پاس ورڈ</sys:String>
+    <sys:String x:Key="ShowPassword">پاس ورڈ دکھائیں</sys:String>
+    <sys:String x:Key="RememberMe">مجھے یاد رکھیں</sys:String>
+    <sys:String x:Key="LoginFailed">غلط صارف نام یا پاس ورڈ</sys:String>
+    <sys:String x:Key="LoginSuccess">لاگ ان کامیاب</sys:String>
+    <sys:String x:Key="AdminPermissionRequired">اس کارروائی کے لیے ایڈمن کی اجازت ضروری ہے۔</sys:String>
+    <sys:String x:Key="AccessDenied">رسائی مسترد۔ صرف ایڈمن یہ کارروائی کر سکتا ہے۔</sys:String>
+    <sys:String x:Key="ConfirmLogout">کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟</sys:String>
+    <sys:String x:Key="Welcome">خوش آمدید</sys:String>
+    <sys:String x:Key="GoodMorning">صبح بخیر</sys:String>
+    <sys:String x:Key="GoodAfternoon">دوپہر بخیر</sys:String>
+    <sys:String x:Key="GoodEvening">شام بخیر</sys:String>
+
+    <!-- Navigation -->
+    <sys:String x:Key="NavHome">ہوم</sys:String>
+    <sys:String x:Key="NavPOS">پوس</sys:String>
+    <sys:String x:Key="NavInventory">انوینٹری</sys:String>
+    <sys:String x:Key="NavKhata">کھاتہ</sys:String>
+    <sys:String x:Key="NavMore">مزید</sys:String>
+
+    <!-- Dashboard -->
+    <sys:String x:Key="Dashboard">ڈیش بورڈ</sys:String>
+    <sys:String x:Key="TodaysSales">آج کی فروخت</sys:String>
+    <sys:String x:Key="TodaysPurchases">آج کی خریداری</sys:String>
+    <sys:String x:Key="TodaysProfit">آج کا منافع</sys:String>
+    <sys:String x:Key="TotalCustomers">کل کسٹمرز</sys:String>
+    <sys:String x:Key="TotalSuppliers">کل سپلائرز</sys:String>
+    <sys:String x:Key="TotalProducts">کل پروڈکٹس</sys:String>
+    <sys:String x:Key="LowStockProducts">کم اسٹاک پروڈکٹس</sys:String>
+    <sys:String x:Key="CustomerReceivables">کسٹمر وصولی</sys:String>
+    <sys:String x:Key="SupplierPayables">سپلائر ادائیگی</sys:String>
+    <sys:String x:Key="TodaysExpenses">آج کے اخراجات</sys:String>
+    <sys:String x:Key="CurrentCash">موجودہ نقد</sys:String>
+
+    <!-- Products -->
+    <sys:String x:Key="Products">پروڈکٹس</sys:String>
+    <sys:String x:Key="AddProduct">پروڈکٹ شامل کریں</sys:String>
+    <sys:String x:Key="EditProduct">پروڈکٹ میں ترمیم</sys:String>
+    <sys:String x:Key="DeleteProduct">پروڈکٹ حذف کریں</sys:String>
+    <sys:String x:Key="ProductName">پروڈکٹ کا نام</sys:String>
+    <sys:String x:Key="ProductNameEnglish">پروڈکٹ نام (انگریزی)</sys:String>
+    <sys:String x:Key="ProductNameUrdu">پروڈکٹ نام (اردو)</sys:String>
+    <sys:String x:Key="Barcode">بار کوڈ</sys:String>
+    <sys:String x:Key="SKU">ایس کیو</sys:String>
+    <sys:String x:Key="Category">زمرہ</sys:String>
+    <sys:String x:Key="Brand">برانڈ</sys:String>
+    <sys:String x:Key="Unit">اکائی</sys:String>
+    <sys:String x:Key="PurchasePrice">خریداری قیمت</sys:String>
+    <sys:String x:Key="SalePrice">فروخت قیمت</sys:String>
+    <sys:String x:Key="WholesalePrice">تھوک قیمت</sys:String>
+    <sys:String x:Key="OpeningStock">ابتدائی اسٹاک</sys:String>
+    <sys:String x:Key="CurrentStock">موجودہ اسٹاک</sys:String>
+    <sys:String x:Key="MinimumStock">کم از کم اسٹاک</sys:String>
+    <sys:String x:Key="MaximumStock">زیادہ سے زیادہ اسٹاک</sys:String>
+    <sys:String x:Key="ExpiryDate">ختم ہونے کی تاریخ</sys:String>
+    <sys:String x:Key="BatchNumber">بیچ نمبر</sys:String>
+    <sys:String x:Key="Description">تفصیل</sys:String>
+    <sys:String x:Key="Active">فعال</sys:String>
+    <sys:String x:Key="Inactive">غیر فعال</sys:String>
+    <sys:String x:Key="ProductImage">پروڈکٹ تصویر</sys:String>
+    <sys:String x:Key="SearchProducts">پروڈکٹس تلاش کریں...</sys:String>
+    <sys:String x:Key="NoProductsFound">کوئی پروڈکٹ نہیں ملا</sys:String>
+    <sys:String x:Key="LowStock">کم اسٹاک</sys:String>
+
+    <!-- POS -->
+    <sys:String x:Key="POSScreen">پوس فروخت</sys:String>
+    <sys:String x:Key="NewSale">نئی فروخت</sys:String>
+    <sys:String x:Key="Cart">گاڑی</sys:String>
+    <sys:String x:Key="AddToCart">گاڑی میں شامل کریں</sys:String>
+    <sys:String x:Key="Product">پروڈکٹ</sys:String>
+    <sys:String x:Key="Quantity">مقدار</sys:String>
+    <sys:String x:Key="Price">قیمت</sys:String>
+    <sys:String x:Key="Discount">رعایت</sys:String>
+    <sys:String x:Key="Total">کل</sys:String>
+    <sys:String x:Key="Subtotal">ذیلی کل</sys:String>
+    <sys:String x:Key="GrandTotal">مجموعی کل</sys:String>
+    <sys:String x:Key="Remove">ہٹائیں</sys:String>
+    <sys:String x:Key="EmptyCart">گاڑی خالی ہے</sys:String>
+    <sys:String x:Key="SelectCustomer">کسٹمر منتخب کریں</sys:String>
+    <sys:String x:Key="WalkInCustomer">واک ان کسٹمر</sys:String>
+    <sys:String x:Key="PreviousBalance">پچھلا بیلنس</sys:String>
+    <sys:String x:Key="PaymentMethod">ادائیگی کا طریقہ</sys:String>
+    <sys:String x:Key="Cash">نقد</sys:String>
+    <sys:String x:Key="Credit">کریڈٹ</sys:String>
+    <sys:String x:Key="Partial">جزوی ادائیگی</sys:String>
+    <sys:String x:Key="PaidAmount">ادا شدہ رقم</sys:String>
+    <sys:String x:Key="RemainingAmount">باقی رقم</sys:String>
+    <sys:String x:Key="CompleteSale">فروخت مکمل کریں (F10)</sys:String>
+    <sys:String x:Key="HoldSale">فروخت روکیں (F5)</sys:String>
+    <sys:String x:Key="SaleSuccessful">فروخت کامیاب!</sys:String>
+    <sys:String x:Key="InvoiceNumber">انوائس نمبر</sys:String>
+    <sys:String x:Key="PrintReceipt">رسید پرنٹ کریں</sys:String>
+    <sys:String x:Key="NewSaleBtn">نئی فروخت</sys:String>
+    <sys:String x:Key="PercentDiscount">فیصد رعایت (%)</sys:String>
+    <sys:String x:Key="FixedDiscount">مقررہ رعایت</sys:String>
+
+    <!-- Customers -->
+    <sys:String x:Key="Customers">کسٹمرز</sys:String>
+    <sys:String x:Key="AddCustomer">کسٹمر شامل کریں</sys:String>
+    <sys:String x:Key="EditCustomer">کسٹمر میں ترمیم</sys:String>
+    <sys:String x:Key="DeleteCustomer">کسٹمر حذف کریں</sys:String>
+    <sys:String x:Key="CustomerName">کسٹمر کا نام</sys:String>
+    <sys:String x:Key="FatherName">والد کا نام</sys:String>
+    <sys:String x:Key="Phone">فون</sys:String>
+    <sys:String x:Key="Address">پتہ</sys:String>
+    <sys:String x:Key="OpeningBalance">ابتدائی بیلنس</sys:String>
+    <sys:String x:Key="CreditLimit">کریڈٹ لیمٹ</sys:String>
+    <sys:String x:Key="Notes">نوٹس</sys:String>
+    <sys:String x:Key="SearchCustomers">کسٹمرز تلاش کریں...</sys:String>
+
+    <!-- Suppliers -->
+    <sys:String x:Key="Suppliers">سپلائرز</sys:String>
+    <sys:String x:Key="Supplier">سپلائر</sys:String>
+    <sys:String x:Key="AddSupplier">سپلائر شامل کریں</sys:String>
+    <sys:String x:Key="EditSupplier">سپلائر میں ترمیم</sys:String>
+    <sys:String x:Key="DeleteSupplier">سپلائر حذف کریں</sys:String>
+    <sys:String x:Key="SupplierName">سپلائر کا نام</sys:String>
+    <sys:String x:Key="ContactPerson">رابطہ شخص</sys:String>
+    <sys:String x:Key="SearchSuppliers">سپلائرز تلاش کریں...</sys:String>
+
+    <!-- Khata -->
+    <sys:String x:Key="CustomerKhata">کسٹمر کھاتہ</sys:String>
+    <sys:String x:Key="SupplierLedger">سپلائر لیجر</sys:String>
+    <sys:String x:Key="Debit">ڈیبٹ</sys:String>
+    <sys:String x:Key="Balance">بیلنس</sys:String>
+    <sys:String x:Key="HasToPay">ادا کرنا ہے</sys:String>
+    <sys:String x:Key="ReceivePayment">ادائیگی وصول کریں</sys:String>
+    <sys:String x:Key="MakePayment">ادائیگی کریں</sys:String>
+    <sys:String x:Key="PaymentReceived">ادائیگی کامیابی سے وصول ہوئی</sys:String>
+    <sys:String x:Key="PaymentMade">ادائیگی کامیابی سے ہوئی</sys:String>
+
+    <!-- Purchases -->
+    <sys:String x:Key="Purchases">خریداری</sys:String>
+    <sys:String x:Key="AddPurchase">خریداری شامل کریں</sys:String>
+    <sys:String x:Key="EditPurchase">خریداری میں ترمیم</sys:String>
+    <sys:String x:Key="PurchaseDate">خریداری کی تاریخ</sys:String>
+    <sys:String x:Key="SearchPurchases">خریداریاں تلاش کریں...</sys:String>
+
+    <!-- Expenses -->
+    <sys:String x:Key="Expenses">اخراجات</sys:String>
+    <sys:String x:Key="AddExpense">خرچہ شامل کریں</sys:String>
+    <sys:String x:Key="EditExpense">خرچے میں ترمیم</sys:String>
+    <sys:String x:Key="DeleteExpense">خرچہ حذف کریں</sys:String>
+    <sys:String x:Key="ExpenseCategory">خرچے کی قسم</sys:String>
+    <sys:String x:Key="Amount">رقم</sys:String>
+
+    <!-- Reports -->
+    <sys:String x:Key="Reports">رپورٹس</sys:String>
+    <sys:String x:Key="SalesReports">فروخت رپورٹس</sys:String>
+    <sys:String x:Key="PurchaseReports">خریداری رپورٹس</sys:String>
+    <sys:String x:Key="InventoryReports">انوینٹری رپورٹس</sys:String>
+    <sys:String x:Key="ProfitReports">منافع رپورٹس</sys:String>
+    <sys:String x:Key="KhataReports">کھاتہ رپورٹس</sys:String>
+    <sys:String x:Key="ExpenseReports">اخراجات رپورٹس</sys:String>
+    <sys:String x:Key="DailySales">روزانہ فروخت</sys:String>
+    <sys:String x:Key="MonthlySales">ماہانہ فروخت</sys:String>
+    <sys:String x:Key="CurrentStockReport">موجودہ اسٹاک</sys:String>
+    <sys:String x:Key="LowStockReport">کم اسٹاک</sys:String>
+    <sys:String x:Key="GrossProfit">مجموعی منافع</sys:String>
+    <sys:String x:Key="NetProfit">خالص منافع</sys:String>
+    <sys:String x:Key="DateFrom">تاریخ سے</sys:String>
+    <sys:String x:Key="DateTo">تاریخ تک</sys:String>
+    <sys:String x:Key="Filter">فلٹر</sys:String>
+    <sys:String x:Key="ExportToExcel">ایکسل میں ایکسپورٹ</sys:String>
+    <sys:String x:Key="Print">پرنٹ (F9)</sys:String>
+
+    <!-- Daily Closing -->
+    <sys:String x:Key="DailyClosing">یومیہ بندی</sys:String>
+    <sys:String x:Key="OpeningCash">ابتدائی نقد</sys:String>
+    <sys:String x:Key="ClosingCash">اختتامی نقد</sys:String>
+    <sys:String x:Key="CashSales">نقد فروخت</sys:String>
+    <sys:String x:Key="CreditSales">کریڈٹ فروخت</sys:String>
+    <sys:String x:Key="CustomerPayments">کسٹمر ادائیگیاں</sys:String>
+    <sys:String x:Key="SupplierPayments">سپلائر ادائیگیاں</sys:String>
+    <sys:String x:Key="ExpectedClosing">متوقع اختتامی</sys:String>
+    <sys:String x:Key="ActualClosing">اصلی اختتامی</sys:String>
+    <sys:String x:Key="Difference">فرق</sys:String>
+    <sys:String x:Key="CloseDay">دن بند کریں</sys:String>
+
+    <!-- Settings -->
+    <sys:String x:Key="Settings">ترتیبات</sys:String>
+    <sys:String x:Key="CompanyProfile">کمپنی پروفائل</sys:String>
+    <sys:String x:Key="ShopName">دکان کا نام</sys:String>
+    <sys:String x:Key="ShopAddress">دکان کا پتہ</sys:String>
+    <sys:String x:Key="PhoneNumber">فون نمبر</sys:String>
+    <sys:String x:Key="WhatsApp">واٹس ایپ</sys:String>
+    <sys:String x:Key="Email">ای میل</sys:String>
+    <sys:String x:Key="City">شہر</sys:String>
+    <sys:String x:Key="Website">ویب سائٹ</sys:String>
+    <sys:String x:Key="TaxNumber">ٹیکس نمبر</sys:String>
+    <sys:String x:Key="Currency">کرنسی</sys:String>
+    <sys:String x:Key="InvoiceFooter">انوائس فوٹر</sys:String>
+    <sys:String x:Key="SaveChanges">تبدیلیاں محفوظ کریں</sys:String>
+    <sys:String x:Key="ChangePassword">پاس ورڈ تبدیل کریں</sys:String>
+    <sys:String x:Key="NewPassword">نیا پاس ورڈ</sys:String>
+    <sys:String x:Key="ConfirmPassword">پاس ورڈ کی تصدیق</sys:String>
+
+    <!-- Backup -->
+    <sys:String x:Key="BackupRestore">بیک اپ اور بحالی</sys:String>
+    <sys:String x:Key="BackupDatabase">ڈیٹابیس بیک اپ</sys:String>
+    <sys:String x:Key="RestoreDatabase">ڈیٹابیس بحالی</sys:String>
+    <sys:String x:Key="BackupLocation">بیک اپ کی جگہ</sys:String>
+    <sys:String x:Key="BackupSuccess">بیک اپ کامیابی سے بن گیا</sys:String>
+    <sys:String x:Key="RestoreSuccess">ڈیٹابیس کامیابی سے بحال ہو گیا</sys:String>
+    <sys:String x:Key="RestoreConfirm">کیا آپ کو یقین ہے؟ یہ تمام موجودہ ڈیٹا تبدیل کر دے گا۔</sys:String>
+
+    <!-- Sales History -->
+    <sys:String x:Key="SalesHistory">فروخت کی تاریخ</sys:String>
+    <sys:String x:Key="ViewDetails">تفصیل دیکھیں</sys:String>
+    <sys:String x:Key="Reprint">دوبارہ پرنٹ</sys:String>
+    <sys:String x:Key="Return">واپسی</sys:String>
+    <sys:String x:Key="Void">منسوخ</sys:String>
+
+    <!-- Categories & Brands -->
+    <sys:String x:Key="Categories">زمرے</sys:String>
+    <sys:String x:Key="Brands">برانڈز</sys:String>
+    <sys:String x:Key="Units">اکائیاں</sys:String>
+    <sys:String x:Key="AddCategory">زمرہ شامل کریں</sys:String>
+    <sys:String x:Key="AddBrand">برانڈ شامل کریں</sys:String>
+
+    <!-- Users -->
+    <sys:String x:Key="Users">صارفین</sys:String>
+    <sys:String x:Key="AddUser">صارف شامل کریں</sys:String>
+    <sys:String x:Key="FullName">پورا نام</sys:String>
+    <sys:String x:Key="Role">کردار</sys:String>
+    <sys:String x:Key="Admin">ایڈمن</sys:String>
+    <sys:String x:Key="User">صارف</sys:String>
+
+    <!-- Messages -->
+    <sys:String x:Key="ConfirmDelete">کیا آپ واقعی یہ ریکارڈ حذف کرنا چاہتے ہیں؟</sys:String>
+    <sys:String x:Key="SavedSuccessfully">کامیابی سے محفوظ ہو گیا</sys:String>
+    <sys:String x:Key="DeletedSuccessfully">کامیابی سے حذف ہو گیا</sys:String>
+    <sys:String x:Key="ErrorOccurred">ایک خرابی پیش آئی</sys:String>
+    <sys:String x:Key="FillRequired">براہ کرم تمام ضروری فیلڈز بھریں</sys:String>
+    <sys:String x:Key="Success">کامیابی</sys:String>
+    <sys:String x:Key="Warning">انتباہ</sys:String>
+    <sys:String x:Key="Error">خرابی</sys:String>
+    <sys:String x:Key="Information">معلومات</sys:String>
+    <sys:String x:Key="Yes">ہاں</sys:String>
+    <sys:String x:Key="No">نہیں</sys:String>
+    <sys:String x:Key="Cancel">منسوخ</sys:String>
+    <sys:String x:Key="Save">محفوظ</sys:String>
+    <sys:String x:Key="Close">بند</sys:String>
+    <sys:String x:Key="Search">تلاش</sys:String>
+    <sys:String x:Key="All">سب</sys:String>
+    <sys:String x:Key="From">سے</sys:String>
+    <sys:String x:Key="To">تک</sys:String>
+    <sys:String x:Key="NoDataFound">کوئی ڈیٹا نہیں ملا</sys:String>
+    <sys:String x:Key="StockUpdated">اسٹاک کامیابی سے اپڈیٹ ہو گیا</sys:String>
+    <sys:String x:Key="SaleReturned">فروخت واپسی کامیابی سے ہوئی</sys:String>
+    <sys:String x:Key="PurchaseReturned">خریداری واپسی کامیابی سے ہوئی</sys:String>
+
+    <!-- More Menu -->
+    <sys:String x:Key="MoreMenu">مزید آپشنز</sys:String>
+    <sys:String x:Key="PurchaseManagement">خریداری مینجمنٹ</sys:String>
+    <sys:String x:Key="ExpenseManagement">اخراجات مینجمنٹ</sys:String>
+    <sys:String x:Key="CashManagement">نقد مینجمنٹ</sys:String>
+    <sys:String x:Key="UserManagement">صارف مینجمنٹ</sys:String>
+    <sys:String x:Key="CompanySettings">کمپنی ترتیبات</sys:String>
+    <sys:String x:Key="SystemSettings">سسٹم ترتیبات</sys:String>
+</ResourceDictionary>

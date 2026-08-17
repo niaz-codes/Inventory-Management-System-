@@ -1,0 +1,21 @@
+<Window x:Class="NHi.Inventory.Views.Khata.SupplierDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add Supplier" Height="420" Width="400" WindowStartupLocation="CenterOwner"
+        Background="White" ResizeMode="NoResize">
+    <Border Padding="25">
+        <StackPanel>
+            <TextBlock Text="{DynamicResource AddSupplier}" FontSize="18" FontWeight="Bold" Foreground="#1565C0" Margin="0,0,0,15"/>
+            <TextBlock Text="{DynamicResource SupplierName}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtName" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
+            <TextBlock Text="{DynamicResource ContactPerson}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtContact" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
+            <TextBlock Text="{DynamicResource Phone}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtPhone" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
+            <TextBlock Text="{DynamicResource Address}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtAddress" FontSize="13" Padding="10,8" Margin="0,0,0,15"/>
+            <Button Content="{DynamicResource Save}" Height="40" Click="BtnSave_Click"
+                    Background="#4CAF50" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+        </StackPanel>
+    </Border>
+</Window>

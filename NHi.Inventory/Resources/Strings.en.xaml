@@ -1,0 +1,270 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- General -->
+    <sys:String x:Key="AppName">NHi Inventory Management System</sys:String>
+    <sys:String x:Key="Login">Login</sys:String>
+    <sys:String x:Key="Logout">Logout</sys:String>
+    <sys:String x:Key="Username">Username</sys:String>
+    <sys:String x:Key="Password">Password</sys:String>
+    <sys:String x:Key="ShowPassword">Show Password</sys:String>
+    <sys:String x:Key="RememberMe">Remember me</sys:String>
+    <sys:String x:Key="LoginFailed">Invalid username or password</sys:String>
+    <sys:String x:Key="LoginSuccess">Login successful</sys:String>
+    <sys:String x:Key="AdminPermissionRequired">Admin permission required.</sys:String>
+    <sys:String x:Key="AccessDenied">Access Denied. Admin permission required.</sys:String>
+    <sys:String x:Key="ConfirmLogout">Are you sure you want to logout?</sys:String>
+    <sys:String x:Key="Welcome">Welcome</sys:String>
+    <sys:String x:Key="GoodMorning">Good Morning</sys:String>
+    <sys:String x:Key="GoodAfternoon">Good Afternoon</sys:String>
+    <sys:String x:Key="GoodEvening">Good Evening</sys:String>
+
+    <!-- Navigation -->
+    <sys:String x:Key="NavHome">Home</sys:String>
+    <sys:String x:Key="NavPOS">POS</sys:String>
+    <sys:String x:Key="NavInventory">Inventory</sys:String>
+    <sys:String x:Key="NavKhata">Khata</sys:String>
+    <sys:String x:Key="NavMore">More</sys:String>
+
+    <!-- Dashboard -->
+    <sys:String x:Key="Dashboard">Dashboard</sys:String>
+    <sys:String x:Key="TodaysSales">Today's Sales</sys:String>
+    <sys:String x:Key="TodaysPurchases">Today's Purchases</sys:String>
+    <sys:String x:Key="TodaysProfit">Today's Profit</sys:String>
+    <sys:String x:Key="TotalCustomers">Total Customers</sys:String>
+    <sys:String x:Key="TotalSuppliers">Total Suppliers</sys:String>
+    <sys:String x:Key="TotalProducts">Total Products</sys:String>
+    <sys:String x:Key="LowStockProducts">Low Stock Products</sys:String>
+    <sys:String x:Key="CustomerReceivables">Customer Receivables</sys:String>
+    <sys:String x:Key="SupplierPayables">Supplier Payables</sys:String>
+    <sys:String x:Key="TodaysExpenses">Today's Expenses</sys:String>
+    <sys:String x:Key="CurrentCash">Current Cash</sys:String>
+
+    <!-- Products -->
+    <sys:String x:Key="Products">Products</sys:String>
+    <sys:String x:Key="AddProduct">Add Product</sys:String>
+    <sys:String x:Key="EditProduct">Edit Product</sys:String>
+    <sys:String x:Key="DeleteProduct">Delete Product</sys:String>
+    <sys:String x:Key="ProductName">Product Name</sys:String>
+    <sys:String x:Key="ProductNameEnglish">Product Name (English)</sys:String>
+    <sys:String x:Key="ProductNameUrdu">Product Name (Urdu)</sys:String>
+    <sys:String x:Key="Barcode">Barcode</sys:String>
+    <sys:String x:Key="SKU">SKU</sys:String>
+    <sys:String x:Key="Category">Category</sys:String>
+    <sys:String x:Key="Brand">Brand</sys:String>
+    <sys:String x:Key="Unit">Unit</sys:String>
+    <sys:String x:Key="PurchasePrice">Purchase Price</sys:String>
+    <sys:String x:Key="SalePrice">Sale Price</sys:String>
+    <sys:String x:Key="WholesalePrice">Wholesale Price</sys:String>
+    <sys:String x:Key="OpeningStock">Opening Stock</sys:String>
+    <sys:String x:Key="CurrentStock">Current Stock</sys:String>
+    <sys:String x:Key="MinimumStock">Minimum Stock</sys:String>
+    <sys:String x:Key="MaximumStock">Maximum Stock</sys:String>
+    <sys:String x:Key="ExpiryDate">Expiry Date</sys:String>
+    <sys:String x:Key="BatchNumber">Batch Number</sys:String>
+    <sys:String x:Key="Description">Description</sys:String>
+    <sys:String x:Key="Active">Active</sys:String>
+    <sys:String x:Key="Inactive">Inactive</sys:String>
+    <sys:String x:Key="ProductImage">Product Image</sys:String>
+    <sys:String x:Key="SearchProducts">Search products...</sys:String>
+    <sys:String x:Key="NoProductsFound">No products found</sys:String>
+    <sys:String x:Key="LowStock">LOW STOCK</sys:String>
+
+    <!-- POS -->
+    <sys:String x:Key="POSScreen">POS Sale</sys:String>
+    <sys:String x:Key="NewSale">New Sale</sys:String>
+    <sys:String x:Key="Cart">Cart</sys:String>
+    <sys:String x:Key="AddToCart">Add to Cart</sys:String>
+    <sys:String x:Key="Product">Product</sys:String>
+    <sys:String x:Key="Quantity">Quantity</sys:String>
+    <sys:String x:Key="Price">Price</sys:String>
+    <sys:String x:Key="Discount">Discount</sys:String>
+    <sys:String x:Key="Total">Total</sys:String>
+    <sys:String x:Key="Subtotal">Subtotal</sys:String>
+    <sys:String x:Key="GrandTotal">Grand Total</sys:String>
+    <sys:String x:Key="Remove">Remove</sys:String>
+    <sys:String x:Key="EmptyCart">Cart is empty</sys:String>
+    <sys:String x:Key="SelectCustomer">Select Customer</sys:String>
+    <sys:String x:Key="WalkInCustomer">Walk-in Customer</sys:String>
+    <sys:String x:Key="PreviousBalance">Previous Balance</sys:String>
+    <sys:String x:Key="PaymentMethod">Payment Method</sys:String>
+    <sys:String x:Key="Cash">Cash</sys:String>
+    <sys:String x:Key="Credit">Credit</sys:String>
+    <sys:String x:Key="Partial">Partial Payment</sys:String>
+    <sys:String x:Key="PaidAmount">Paid Amount</sys:String>
+    <sys:String x:Key="RemainingAmount">Remaining Amount</sys:String>
+    <sys:String x:Key="CompleteSale">Complete Sale (F10)</sys:String>
+    <sys:String x:Key="HoldSale">Hold Sale (F5)</sys:String>
+    <sys:String x:Key="SaleSuccessful">Sale Successful!</sys:String>
+    <sys:String x:Key="InvoiceNumber">Invoice Number</sys:String>
+    <sys:String x:Key="PrintReceipt">Print Receipt</sys:String>
+    <sys:String x:Key="NewSaleBtn">New Sale</sys:String>
+    <sys:String x:Key="PercentDiscount">Percent Discount (%)</sys:String>
+    <sys:String x:Key="FixedDiscount">Fixed Discount</sys:String>
+
+    <!-- Customers -->
+    <sys:String x:Key="Customers">Customers</sys:String>
+    <sys:String x:Key="AddCustomer">Add Customer</sys:String>
+    <sys:String x:Key="EditCustomer">Edit Customer</sys:String>
+    <sys:String x:Key="DeleteCustomer">Delete Customer</sys:String>
+    <sys:String x:Key="CustomerName">Customer Name</sys:String>
+    <sys:String x:Key="FatherName">Father Name</sys:String>
+    <sys:String x:Key="Phone">Phone</sys:String>
+    <sys:String x:Key="Address">Address</sys:String>
+    <sys:String x:Key="OpeningBalance">Opening Balance</sys:String>
+    <sys:String x:Key="CreditLimit">Credit Limit</sys:String>
+    <sys:String x:Key="Notes">Notes</sys:String>
+    <sys:String x:Key="SearchCustomers">Search customers...</sys:String>
+
+    <!-- Suppliers -->
+    <sys:String x:Key="Suppliers">Suppliers</sys:String>
+    <sys:String x:Key="Supplier">Supplier</sys:String>
+    <sys:String x:Key="AddSupplier">Add Supplier</sys:String>
+    <sys:String x:Key="EditSupplier">Edit Supplier</sys:String>
+    <sys:String x:Key="DeleteSupplier">Delete Supplier</sys:String>
+    <sys:String x:Key="SupplierName">Supplier Name</sys:String>
+    <sys:String x:Key="ContactPerson">Contact Person</sys:String>
+    <sys:String x:Key="SearchSuppliers">Search suppliers...</sys:String>
+
+    <!-- Khata -->
+    <sys:String x:Key="CustomerKhata">Customer Khata</sys:String>
+    <sys:String x:Key="SupplierLedger">Supplier Ledger</sys:String>
+    <sys:String x:Key="Debit">Debit</sys:String>
+    <sys:String x:Key="Balance">Balance</sys:String>
+    <sys:String x:Key="HasToPay">Has to pay</sys:String>
+    <sys:String x:Key="ReceivePayment">Receive Payment</sys:String>
+    <sys:String x:Key="MakePayment">Make Payment</sys:String>
+    <sys:String x:Key="PaymentReceived">Payment received successfully</sys:String>
+    <sys:String x:Key="PaymentMade">Payment made successfully</sys:String>
+
+    <!-- Purchases -->
+    <sys:String x:Key="Purchases">Purchases</sys:String>
+    <sys:String x:Key="AddPurchase">Add Purchase</sys:String>
+    <sys:String x:Key="EditPurchase">Edit Purchase</sys:String>
+    <sys:String x:Key="PurchaseDate">Purchase Date</sys:String>
+    <sys:String x:Key="SearchPurchases">Search purchases...</sys:String>
+
+    <!-- Expenses -->
+    <sys:String x:Key="Expenses">Expenses</sys:String>
+    <sys:String x:Key="AddExpense">Add Expense</sys:String>
+    <sys:String x:Key="EditExpense">Edit Expense</sys:String>
+    <sys:String x:Key="DeleteExpense">Delete Expense</sys:String>
+    <sys:String x:Key="ExpenseCategory">Expense Category</sys:String>
+    <sys:String x:Key="Amount">Amount</sys:String>
+
+    <!-- Reports -->
+    <sys:String x:Key="Reports">Reports</sys:String>
+    <sys:String x:Key="SalesReports">Sales Reports</sys:String>
+    <sys:String x:Key="PurchaseReports">Purchase Reports</sys:String>
+    <sys:String x:Key="InventoryReports">Inventory Reports</sys:String>
+    <sys:String x:Key="ProfitReports">Profit Reports</sys:String>
+    <sys:String x:Key="KhataReports">Khata Reports</sys:String>
+    <sys:String x:Key="ExpenseReports">Expense Reports</sys:String>
+    <sys:String x:Key="DailySales">Daily Sales</sys:String>
+    <sys:String x:Key="MonthlySales">Monthly Sales</sys:String>
+    <sys:String x:Key="CurrentStockReport">Current Stock</sys:String>
+    <sys:String x:Key="LowStockReport">Low Stock</sys:String>
+    <sys:String x:Key="GrossProfit">Gross Profit</sys:String>
+    <sys:String x:Key="NetProfit">Net Profit</sys:String>
+    <sys:String x:Key="DateFrom">Date From</sys:String>
+    <sys:String x:Key="DateTo">Date To</sys:String>
+    <sys:String x:Key="Filter">Filter</sys:String>
+    <sys:String x:Key="ExportToExcel">Export to Excel</sys:String>
+    <sys:String x:Key="Print">Print (F9)</sys:String>
+
+    <!-- Daily Closing -->
+    <sys:String x:Key="DailyClosing">Daily Closing</sys:String>
+    <sys:String x:Key="OpeningCash">Opening Cash</sys:String>
+    <sys:String x:Key="ClosingCash">Closing Cash</sys:String>
+    <sys:String x:Key="CashSales">Cash Sales</sys:String>
+    <sys:String x:Key="CreditSales">Credit Sales</sys:String>
+    <sys:String x:Key="CustomerPayments">Customer Payments</sys:String>
+    <sys:String x:Key="SupplierPayments">Supplier Payments</sys:String>
+    <sys:String x:Key="ExpectedClosing">Expected Closing</sys:String>
+    <sys:String x:Key="ActualClosing">Actual Closing</sys:String>
+    <sys:String x:Key="Difference">Difference</sys:String>
+    <sys:String x:Key="CloseDay">Close Day</sys:String>
+
+    <!-- Settings -->
+    <sys:String x:Key="Settings">Settings</sys:String>
+    <sys:String x:Key="CompanyProfile">Company Profile</sys:String>
+    <sys:String x:Key="ShopName">Shop Name</sys:String>
+    <sys:String x:Key="ShopAddress">Shop Address</sys:String>
+    <sys:String x:Key="PhoneNumber">Phone Number</sys:String>
+    <sys:String x:Key="WhatsApp">WhatsApp</sys:String>
+    <sys:String x:Key="Email">Email</sys:String>
+    <sys:String x:Key="City">City</sys:String>
+    <sys:String x:Key="Website">Website</sys:String>
+    <sys:String x:Key="TaxNumber">Tax Number (NTN)</sys:String>
+    <sys:String x:Key="Currency">Currency</sys:String>
+    <sys:String x:Key="InvoiceFooter">Invoice Footer</sys:String>
+    <sys:String x:Key="SaveChanges">Save Changes</sys:String>
+    <sys:String x:Key="ChangePassword">Change Password</sys:String>
+    <sys:String x:Key="NewPassword">New Password</sys:String>
+    <sys:String x:Key="ConfirmPassword">Confirm Password</sys:String>
+
+    <!-- Backup -->
+    <sys:String x:Key="BackupRestore">Backup &amp; Restore</sys:String>
+    <sys:String x:Key="BackupDatabase">Backup Database</sys:String>
+    <sys:String x:Key="RestoreDatabase">Restore Database</sys:String>
+    <sys:String x:Key="BackupLocation">Backup Location</sys:String>
+    <sys:String x:Key="BackupSuccess">Backup created successfully</sys:String>
+    <sys:String x:Key="RestoreSuccess">Database restored successfully</sys:String>
+    <sys:String x:Key="RestoreConfirm">Are you sure? This will replace all current data.</sys:String>
+
+    <!-- Sales History -->
+    <sys:String x:Key="SalesHistory">Sales History</sys:String>
+    <sys:String x:Key="ViewDetails">View Details</sys:String>
+    <sys:String x:Key="Reprint">Reprint</sys:String>
+    <sys:String x:Key="Return">Return</sys:String>
+    <sys:String x:Key="Void">Void</sys:String>
+
+    <!-- Categories & Brands -->
+    <sys:String x:Key="Categories">Categories</sys:String>
+    <sys:String x:Key="Brands">Brands</sys:String>
+    <sys:String x:Key="Units">Units</sys:String>
+    <sys:String x:Key="AddCategory">Add Category</sys:String>
+    <sys:String x:Key="AddBrand">Add Brand</sys:String>
+
+    <!-- Users -->
+    <sys:String x:Key="Users">Users</sys:String>
+    <sys:String x:Key="AddUser">Add User</sys:String>
+    <sys:String x:Key="FullName">Full Name</sys:String>
+    <sys:String x:Key="Role">Role</sys:String>
+    <sys:String x:Key="Admin">Admin</sys:String>
+    <sys:String x:Key="User">User</sys:String>
+
+    <!-- Messages -->
+    <sys:String x:Key="ConfirmDelete">Are you sure you want to delete this record?</sys:String>
+    <sys:String x:Key="SavedSuccessfully">Saved successfully</sys:String>
+    <sys:String x:Key="DeletedSuccessfully">Deleted successfully</sys:String>
+    <sys:String x:Key="ErrorOccurred">An error occurred</sys:String>
+    <sys:String x:Key="FillRequired">Please fill all required fields</sys:String>
+    <sys:String x:Key="Success">Success</sys:String>
+    <sys:String x:Key="Warning">Warning</sys:String>
+    <sys:String x:Key="Error">Error</sys:String>
+    <sys:String x:Key="Information">Information</sys:String>
+    <sys:String x:Key="Yes">Yes</sys:String>
+    <sys:String x:Key="No">No</sys:String>
+    <sys:String x:Key="Cancel">Cancel</sys:String>
+    <sys:String x:Key="Save">Save</sys:String>
+    <sys:String x:Key="Close">Close</sys:String>
+    <sys:String x:Key="Search">Search</sys:String>
+    <sys:String x:Key="All">All</sys:String>
+    <sys:String x:Key="From">From</sys:String>
+    <sys:String x:Key="To">To</sys:String>
+    <sys:String x:Key="NoDataFound">No data found</sys:String>
+    <sys:String x:Key="StockUpdated">Stock updated successfully</sys:String>
+    <sys:String x:Key="SaleReturned">Sale return processed successfully</sys:String>
+    <sys:String x:Key="PurchaseReturned">Purchase return processed successfully</sys:String>
+
+    <!-- More Menu -->
+    <sys:String x:Key="MoreMenu">More Options</sys:String>
+    <sys:String x:Key="PurchaseManagement">Purchase Management</sys:String>
+    <sys:String x:Key="ExpenseManagement">Expense Management</sys:String>
+    <sys:String x:Key="CashManagement">Cash Management</sys:String>
+    <sys:String x:Key="UserManagement">User Management</sys:String>
+    <sys:String x:Key="CompanySettings">Company Settings</sys:String>
+    <sys:String x:Key="SystemSettings">System Settings</sys:String>
+</ResourceDictionary>

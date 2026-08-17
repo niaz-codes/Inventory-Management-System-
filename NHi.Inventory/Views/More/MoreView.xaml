@@ -1,0 +1,96 @@
+<UserControl x:Class="NHi.Inventory.Views.More.MoreView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="MenuItem" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="10" 
+                                BorderThickness="1" BorderBrush="#E0E0E0" Padding="15,10">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#1565C0"/>
+                                <Setter TargetName="bd" Property="Background" Value="#E3F2FD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+        <StackPanel MaxWidth="900" HorizontalAlignment="Center">
+            <TextBlock Text="{DynamicResource NavMore}" FontSize="22" FontWeight="Bold" Foreground="#212121" Margin="0,10,0,20"/>
+            <WrapPanel>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnCustomers_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="👤" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource Customers}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Manage customers" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnSuppliers_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🚚" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource Suppliers}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Manage suppliers" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnPurchases_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🛒" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource Purchases}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Purchase management" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnSalesHistory_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📋" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource SalesHistory}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="View all sales" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnExpenses_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="💸" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource Expenses}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Manage expenses" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnReports_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📊" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource Reports}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Sales, profit, stock" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnDailyClosing_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📅" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource DailyClosing}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="End of day" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnBackup_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="💾" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource BackupRestore}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Backup and restore" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnSettings_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="⚙" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource Settings}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="System settings" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnUsers_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="👥" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource Users}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Manage users" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
+            </WrapPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,280 @@
+<UserControl x:Class="NHi.Inventory.Views.POS.POSScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="ProductCardBtn" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="155"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="10" 
+                                BorderThickness="1" BorderBrush="#E0E0E0" Padding="10">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#1565C0"/>
+                                <Setter TargetName="bd" Property="Background" Value="#E3F2FD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="CartBtn" TargetType="Button">
+            <Setter Property="Background" Value="#1565C0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="6" Padding="6,4">
+                            <ContentPresenter HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#0D47A1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="380"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT: Products -->
+        <Border Grid.Column="0" Background="#F5F7FA" Padding="10">
+            <DockPanel>
+                <!-- Customer Bar -->
+                <Border DockPanel.Dock="Top" Background="White" CornerRadius="8" Padding="12,8" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Customer:" FontSize="13" FontWeight="SemiBold" 
+                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <ComboBox x:Name="cmbCustomer" Grid.Column="1" DisplayMemberPath="Name" FontSize="13" 
+                                  Padding="8,5" VerticalContentAlignment="Center" Margin="0,0,10,0"/>
+                        <Button Grid.Column="2" Content="+" FontSize="16" Width="30" Height="30" 
+                                Cursor="Hand" Click="BtnAddCustomer_Click" Margin="0,0,5,0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#E8F5E9"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <TextBlock x:Name="txtPrevBalance" Grid.Column="3" FontSize="11" Foreground="#FF9800" 
+                                   VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </Grid>
+                </Border>
+
+                <!-- Search Bar -->
+                <Border DockPanel.Dock="Top" Background="White" CornerRadius="8" Padding="8" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="txtSearch" Grid.Column="0" FontSize="14" Padding="10,8" 
+                                 TextChanged="TxtSearch_TextChanged"
+                                 Tag="{DynamicResource SearchProducts}"/>
+                        <TextBox x:Name="txtBarcode" Grid.Column="1" FontSize="14" Padding="10,8" Width="150"
+                                 Margin="10,0,0,0" KeyDown="TxtBarcode_KeyDown" 
+                                 Tag="Scan Barcode..."/>
+                    </Grid>
+                </Border>
+
+                <!-- Category Filter -->
+                <Border DockPanel.Dock="Top" Background="Transparent" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="All" Padding="12,6" Margin="3,0" Cursor="Hand" Tag=""
+                                Click="CategoryFilter_Click" FontSize="12" FontWeight="SemiBold">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#1565C0"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- Product Cards -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="productCardsPanel" Margin="5">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- RIGHT: Cart -->
+        <Border Grid.Column="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="1,0,0,0">
+            <DockPanel>
+                <!-- Cart Header -->
+                <Border DockPanel.Dock="Top" Background="#1565C0" Padding="15,12">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Cart}" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock x:Name="txtCartCount" Text="0 items" FontSize="11" Foreground="#BBDEFB"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Payment Footer -->
+                <Border DockPanel.Dock="Bottom" Background="#F5F7FA" Padding="12,10" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+                    <StackPanel>
+                        <!-- Totals -->
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource Subtotal}" FontSize="13" Foreground="#757575"/>
+                            <TextBlock x:Name="txtSubtotal" Grid.Column="1" Text="Rs. 0" FontSize="13" FontWeight="SemiBold"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <TextBlock Text="{DynamicResource Discount}" FontSize="13" Foreground="#757575" Margin="0,0,5,0"/>
+                                <TextBox x:Name="txtDiscountPercent" Width="50" FontSize="12" Padding="5,3" Text="0" 
+                                         HorizontalContentAlignment="Center" TextChanged="TxtDiscount_Changed"/>
+                                <TextBlock Text="%" FontSize="12" Margin="2,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock x:Name="txtDiscountAmount" Grid.Column="1" Text="- Rs. 0" FontSize="12" 
+                                       Foreground="#F44336" FontWeight="SemiBold"/>
+                        </Grid>
+                        <Separator Margin="0,5"/>
+                        <Grid Margin="0,5,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource GrandTotal}" FontSize="15" FontWeight="Bold"/>
+                            <TextBlock x:Name="txtGrandTotal" Grid.Column="1" Text="Rs. 0" FontSize="18" 
+                                       FontWeight="Bold" Foreground="#1565C0"/>
+                        </Grid>
+
+                        <!-- Payment -->
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource PaidAmount}" FontSize="12" VerticalAlignment="Center"/>
+                            <TextBox x:Name="txtPaidAmount" Grid.Column="1" Width="120" FontSize="14" Padding="8,5" 
+                                     Text="0" HorizontalContentAlignment="Right"/>
+                        </Grid>
+
+                        <!-- Payment Method -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <RadioButton x:Name="rbCash" Content="{DynamicResource Cash}" IsChecked="True" 
+                                         GroupName="Payment" FontSize="12" Margin="0,0,15,0" Checked="PaymentMethod_Changed"/>
+                            <RadioButton x:Name="rbCredit" Content="{DynamicResource Credit}" 
+                                         GroupName="Payment" FontSize="12" Margin="0,0,15,0" Checked="PaymentMethod_Changed"/>
+                            <RadioButton x:Name="rbPartial" Content="{DynamicResource Partial}" 
+                                         GroupName="Payment" FontSize="12" Checked="PaymentMethod_Changed"/>
+                        </StackPanel>
+
+                        <Grid x:Name="pnlRemaining" Visibility="Collapsed" Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource RemainingAmount}" FontSize="12" 
+                                       Foreground="#F44336" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtRemaining" Grid.Column="1" Text="Rs. 0" FontSize="14" 
+                                       FontWeight="Bold" Foreground="#F44336"/>
+                        </Grid>
+
+                        <!-- Complete Sale Button -->
+                        <Button x:Name="btnCompleteSale" Content="{DynamicResource CompleteSale}" 
+                                FontSize="15" FontWeight="Bold" Height="45" Click="BtnCompleteSale_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#4CAF50"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="10" Padding="10">
+                                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="bd" Property="Background" Value="#388E3C"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter TargetName="bd" Property="Background" Value="#BDBDBD"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- Cart Items -->
+                <DataGrid x:Name="dgCart" AutoGenerateColumns="False" IsReadOnly="True" 
+                          GridLinesVisibility="None" BorderThickness="0" Background="Transparent"
+                          HeadersVisibility="Column" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Product" Binding="{Binding ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Qty" Binding="{Binding Quantity}" Width="45"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat='Rs. {0}'}" Width="70"/>
+                        <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat='Rs. {0}'}" Width="80"/>
+                        <DataGridTemplateColumn Width="35">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="✕" FontSize="11" Foreground="#F44336" 
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                            Click="BtnRemoveItem_Click" Tag="{Binding}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Empty Cart Message -->
+                <TextBlock x:Name="txtEmptyCart" Text="{DynamicResource EmptyCart}" FontSize="14" 
+                           Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

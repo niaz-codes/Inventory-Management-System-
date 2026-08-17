@@ -1,0 +1,241 @@
+<UserControl x:Class="NHi.Inventory.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewsReports="clr-namespace:NHi.Inventory.Views.Reports"
+             xmlns:viewsMore="clr-namespace:NHi.Inventory.Views.More">
+    <UserControl.Resources>
+        <Style x:Key="DashCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="18,15"/>
+            <Setter Property="Margin" Value="6"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.1" Color="#000"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="DashLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#9E9E9E"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+        <Style x:Key="DashValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#212121"/>
+        </Style>
+        <Style x:Key="QuickActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="10" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#E3F2FD"/>
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#1565C0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="15">
+        <StackPanel Margin="10">
+            <!-- Greeting -->
+            <TextBlock x:Name="txtGreeting" FontSize="24" FontWeight="Bold" Foreground="#212121" Margin="5,0,0,5"/>
+            <TextBlock x:Name="txtDate" FontSize="13" Foreground="#9E9E9E" Margin="5,0,0,20"/>
+
+            <!-- Stat Cards Row 1 -->
+            <WrapPanel>
+                <!-- Today's Sales -->
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#E3F2FD" CornerRadius="8" Width="40" Height="40" Margin="0,0,10,0">
+                                <TextBlock Text="💰" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{DynamicResource TodaysSales}" Style="{StaticResource DashLabel}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtTodaySales" Text="Rs. 0" Style="{StaticResource DashValue}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Today's Profit -->
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#E8F5E9" CornerRadius="8" Width="40" Height="40" Margin="0,0,10,0">
+                                <TextBlock Text="📈" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{DynamicResource TodaysProfit}" Style="{StaticResource DashLabel}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtTodayProfit" Text="Rs. 0" Style="{StaticResource DashValue}" Foreground="#4CAF50"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Customer Receivables -->
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#FFF3E0" CornerRadius="8" Width="40" Height="40" Margin="0,0,10,0">
+                                <TextBlock Text="📋" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{DynamicResource CustomerReceivables}" Style="{StaticResource DashLabel}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtReceivables" Text="Rs. 0" Style="{StaticResource DashValue}" Foreground="#FF9800"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Supplier Payables -->
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#FCE4EC" CornerRadius="8" Width="40" Height="40" Margin="0,0,10,0">
+                                <TextBlock Text="📤" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{DynamicResource SupplierPayables}" Style="{StaticResource DashLabel}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtPayables" Text="Rs. 0" Style="{StaticResource DashValue}" Foreground="#F44336"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <!-- Stat Cards Row 2 -->
+            <WrapPanel Margin="0,5,0,0">
+                <!-- Today's Purchases -->
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#E8EAF6" CornerRadius="8" Width="40" Height="40" Margin="0,0,10,0">
+                                <TextBlock Text="🛒" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{DynamicResource TodaysPurchases}" Style="{StaticResource DashLabel}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtTodayPurchases" Text="Rs. 0" Style="{StaticResource DashValue}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Today's Expenses -->
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#FFEBEE" CornerRadius="8" Width="40" Height="40" Margin="0,0,10,0">
+                                <TextBlock Text="💸" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{DynamicResource TodaysExpenses}" Style="{StaticResource DashLabel}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtTodayExpenses" Text="Rs. 0" Style="{StaticResource DashValue}" Foreground="#F44336"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Current Cash -->
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#E0F7FA" CornerRadius="8" Width="40" Height="40" Margin="0,0,10,0">
+                                <TextBlock Text="💵" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{DynamicResource CurrentCash}" Style="{StaticResource DashLabel}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtCurrentCash" Text="Rs. 0" Style="{StaticResource DashValue}" Foreground="#00897B"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Low Stock -->
+                <Border Style="{StaticResource DashCard}" Width="220" Cursor="Hand" MouseLeftButtonDown="LowStock_Click">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#FFF9C4" CornerRadius="8" Width="40" Height="40" Margin="0,0,10,0">
+                                <TextBlock Text="⚠️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{DynamicResource LowStockProducts}" Style="{StaticResource DashLabel}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock x:Name="txtLowStock" Text="0" Style="{StaticResource DashValue}" Foreground="#FF9800"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <!-- Info Row -->
+            <WrapPanel Margin="0,5,0,0">
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource TotalProducts}" Style="{StaticResource DashLabel}"/>
+                        <TextBlock x:Name="txtTotalProducts" Text="0" Style="{StaticResource DashValue}" Foreground="#1565C0"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource TotalCustomers}" Style="{StaticResource DashLabel}"/>
+                        <TextBlock x:Name="txtTotalCustomers" Text="0" Style="{StaticResource DashValue}" Foreground="#1565C0"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource DashCard}" Width="220">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource TotalSuppliers}" Style="{StaticResource DashLabel}"/>
+                        <TextBlock x:Name="txtTotalSuppliers" Text="0" Style="{StaticResource DashValue}" Foreground="#1565C0"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <!-- Quick Actions -->
+            <TextBlock Text="Quick Actions" FontSize="16" FontWeight="SemiBold" Foreground="#424242" Margin="12,20,0,10"/>
+            <WrapPanel>
+                <Button Style="{StaticResource QuickActionBtn}" Width="140" Margin="6" Click="QuickPOS_Click">
+                    <StackPanel>
+                        <TextBlock Text="🛒" FontSize="24" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource NavPOS}" FontSize="11" HorizontalAlignment="Center" 
+                                   Foreground="#424242" Margin="0,5,0,0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource QuickActionBtn}" Width="140" Margin="6" Click="QuickCustomer_Click">
+                    <StackPanel>
+                        <TextBlock Text="👤" FontSize="24" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource Customers}" FontSize="11" HorizontalAlignment="Center" 
+                                   Foreground="#424242" Margin="0,5,0,0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource QuickActionBtn}" Width="140" Margin="6" Click="QuickKhata_Click">
+                    <StackPanel>
+                        <TextBlock Text="📒" FontSize="24" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource NavKhata}" FontSize="11" HorizontalAlignment="Center" 
+                                   Foreground="#424242" Margin="0,5,0,0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource QuickActionBtn}" Width="140" Margin="6" Click="QuickReports_Click">
+                    <StackPanel>
+                        <TextBlock Text="📊" FontSize="24" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource Reports}" FontSize="11" HorizontalAlignment="Center" 
+                                   Foreground="#424242" Margin="0,5,0,0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource QuickActionBtn}" Width="140" Margin="6" Click="QuickExpenses_Click">
+                    <StackPanel>
+                        <TextBlock Text="💸" FontSize="24" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource Expenses}" FontSize="11" HorizontalAlignment="Center" 
+                                   Foreground="#424242" Margin="0,5,0,0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource QuickActionBtn}" Width="140" Margin="6" Click="QuickClosing_Click">
+                    <StackPanel>
+                        <TextBlock Text="📊" FontSize="24" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource DailyClosing}" FontSize="11" HorizontalAlignment="Center" 
+                                   Foreground="#424242" Margin="0,5,0,0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+            </WrapPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,22 @@
+<Window x:Class="NHi.Inventory.Views.Settings.AddUserDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add User" Height="350" Width="380" WindowStartupLocation="CenterOwner" Background="White" ResizeMode="NoResize">
+    <Border Padding="25">
+        <StackPanel>
+            <TextBlock Text="{DynamicResource AddUser}" FontSize="18" FontWeight="Bold" Foreground="#1565C0" Margin="0,0,0,15"/>
+            <TextBlock Text="{DynamicResource Username}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
+            <TextBox x:Name="txtUsername" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
+            <TextBlock Text="{DynamicResource FullName}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
+            <TextBox x:Name="txtFullName" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
+            <TextBlock Text="{DynamicResource Password}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
+            <PasswordBox x:Name="txtPassword" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
+            <TextBlock Text="{DynamicResource Role}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
+            <ComboBox x:Name="cmbRole" Padding="8,6" Margin="0,0,0,15">
+                <ComboBoxItem Content="ADMIN" IsSelected="True"/>
+                <ComboBoxItem Content="USER"/>
+            </ComboBox>
+            <Button Content="{DynamicResource Save}" Height="38" Click="BtnSave" Background="#1565C0" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+        </StackPanel>
+    </Border>
+</Window>

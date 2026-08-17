@@ -1,0 +1,105 @@
+<UserControl x:Class="NHi.Inventory.Views.Inventory.InventoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Products}" FontSize="22" FontWeight="Bold" Foreground="#212121"/>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="{DynamicResource AddCategory}" Padding="12,7" Margin="0,0,5,0" Cursor="Hand"
+                        Click="BtnAddCategory_Click" FontSize="12" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0"/>
+                <Button Content="{DynamicResource AddBrand}" Padding="12,7" Margin="0,0,5,0" Cursor="Hand"
+                        Click="BtnAddBrand_Click" FontSize="12" Background="#E3F2FD" Foreground="#1565C0" BorderThickness="0"/>
+                <Button x:Name="btnAddProduct" Content="{DynamicResource AddProduct}" Padding="15,7" Cursor="Hand"
+                        Click="BtnAddProduct_Click" FontSize="12" Background="#1565C0" Foreground="White" BorderThickness="0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="bd" Property="Background" Value="#0D47A1"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Search and Filter -->
+        <Border Grid.Row="1" Background="White" CornerRadius="10" Padding="12" Margin="0,0,0,10" 
+                BorderBrush="#E0E0E0" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="txtSearch" Grid.Column="0" FontSize="14" Padding="10,8" 
+                         TextChanged="TxtSearch_TextChanged" Tag="{DynamicResource SearchProducts}"/>
+                <ComboBox x:Name="cmbCategory" Grid.Column="1" Width="150" Margin="10,0,0,0" 
+                          DisplayMemberPath="Name" FontSize="12" SelectionChanged="Filter_Changed"/>
+                <Button x:Name="btnExport" Grid.Column="2" Content="{DynamicResource ExportToExcel}" Padding="12,8" Margin="10,0,0,0"
+                        Click="BtnExport_Click" FontSize="12" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"/>
+            </Grid>
+        </Border>
+
+        <!-- Product DataGrid -->
+        <DataGrid x:Name="dgProducts" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F0F0F0"
+                  BorderBrush="#E0E0E0" BorderThickness="1" RowBackground="White" 
+                  AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column" SelectionMode="Single" MouseDoubleClick="DgProducts_DoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding NameEnglish}" Width="*"/>
+                <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="100"/>
+                <DataGridTextColumn Header="Category" Binding="{Binding Category.Name}" Width="100"/>
+                <DataGridTextColumn Header="Purchase" Binding="{Binding PurchasePrice, StringFormat='Rs. {0:N0}'}" Width="90"/>
+                <DataGridTextColumn Header="Sale" Binding="{Binding SalePrice, StringFormat='Rs. {0:N0}'}" Width="90"/>
+                <DataGridTextColumn Header="Stock" Binding="{Binding CurrentStock, StringFormat='{}{0:N0}'}" Width="70"/>
+                <DataGridTextColumn Header="Min" Binding="{Binding MinimumStock, StringFormat='{}{0:N0}'}" Width="50"/>
+                <DataGridTemplateColumn Header="Status" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="OK"/>
+                                        <Setter Property="Foreground" Value="#4CAF50"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentStock}" Value="0">
+                                                <Setter Property="Text" Value="OUT"/>
+                                                <Setter Property="Foreground" Value="#F44336"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="✏" FontSize="12" Background="Transparent" BorderThickness="0" 
+                                        Cursor="Hand" Click="BtnEdit_Click" Tag="{Binding Id}" Padding="4,2"/>
+                                <Button Content="🗑" FontSize="12" Background="Transparent" BorderThickness="0" 
+                                        Cursor="Hand" Click="BtnDelete_Click" Tag="{Binding Id}" Padding="4,2" 
+                                        Foreground="#F44336"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

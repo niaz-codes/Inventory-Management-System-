@@ -1,0 +1,107 @@
+<Window x:Class="NHi.Inventory.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="NHi Inventory Management System" 
+        Height="600" Width="450"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Normal"
+        Background="White"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Login Card -->
+        <Border Grid.Row="0" Background="White" Padding="40,30">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="350">
+                <!-- Logo / Brand -->
+                <Border HorizontalAlignment="Center" Width="80" Height="80" CornerRadius="40" Background="#1565C0" Margin="0,0,0,15">
+                    <TextBlock Text="NHi" FontSize="24" FontWeight="Bold" Foreground="White" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock Text="NHi Inventory" FontSize="22" FontWeight="Bold" Foreground="#1565C0" 
+                           HorizontalAlignment="Center" Margin="0,0,0,2"/>
+                <TextBlock Text="Management System" FontSize="14" Foreground="#757575" 
+                           HorizontalAlignment="Center" Margin="0,0,0,25"/>
+
+                <!-- Username -->
+                <TextBlock Text="{DynamicResource Username}" Margin="0,0,0,5" FontSize="13" FontWeight="SemiBold" Foreground="#424242"/>
+                <TextBox x:Name="txtUsername" FontSize="14" Padding="12,10" Text="admin" Margin="0,0,0,15">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush" Value="#1565C0"/>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <!-- Password -->
+                <TextBlock Text="{DynamicResource Password}" Margin="0,0,0,5" FontSize="13" FontWeight="SemiBold" Foreground="#424242"/>
+                <Grid Margin="0,0,0,5">
+                    <PasswordBox x:Name="txtPassword" FontSize="14" Padding="12,10" Password="admin"/>
+                </Grid>
+                <Grid Margin="0,0,0,15">
+                    <CheckBox x:Name="chkShowPassword" Content="{DynamicResource ShowPassword}" 
+                              Click="ChkShowPassword_Click" FontSize="12" Foreground="#757575"/>
+                </Grid>
+                <TextBox x:Name="txtPasswordVisible" FontSize="14" Padding="12,10" Text="admin" 
+                         Visibility="Collapsed" Margin="0,-10,0,15"/>
+
+                <!-- Remember Me -->
+                <CheckBox x:Name="chkRemember" Content="{DynamicResource RememberMe}" 
+                          Margin="0,0,0,20" FontSize="12" Foreground="#757575"/>
+
+                <!-- Login Button -->
+                <Button x:Name="btnLogin" Content="{DynamicResource Login}" FontSize="15" FontWeight="SemiBold"
+                        Height="45" Cursor="Hand" Click="BtnLogin_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#1565C0"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="bd" Property="Background" Value="#0D47A1"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Error Message -->
+                <TextBlock x:Name="txtError" Text="" Foreground="#F44336" FontSize="12" 
+                           HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" TextAlignment="Center"/>
+
+                <!-- Language Selector -->
+                <Border Background="#F5F7FA" CornerRadius="8" Padding="10" Margin="0,20,0,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Language:" VerticalAlignment="Center" FontSize="12" Foreground="#757575" Margin="0,0,10,0"/>
+                        <RadioButton x:Name="rbEnglish" Content="English" IsChecked="True" GroupName="Lang" 
+                                     FontSize="12" VerticalAlignment="Center" Margin="0,0,15,0" Click="Lang_Changed"/>
+                        <RadioButton x:Name="rbUrdu" Content="اردو" GroupName="Lang" 
+                                     FontSize="12" VerticalAlignment="Center" Click="Lang_Changed"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- Footer -->
+        <Border Grid.Row="1" Background="#1565C0" Padding="10,8">
+            <TextBlock Text="NHi Inventory Management System" FontSize="11" Foreground="White" 
+                       HorizontalAlignment="Center" Opacity="0.9"/>
+        </Border>
+    </Grid>
+</Window>
