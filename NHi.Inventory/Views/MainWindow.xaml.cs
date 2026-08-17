@@ -9,6 +9,10 @@ using NHi.Inventory.Views.More;
 using NHi.Inventory.Views.Reports;
 using NHi.Inventory.Views.Settings;
 
+// Global POS keyboard shortcuts (spec section 30):
+// F1 New Sale, F2 Search, F3 Customer, F4 Payment, F5 Hold Sale,
+// F6 Discount, F7 Sales History, F8 Khata, F9 Print, F10 Complete Sale, ESC Cancel.
+
 namespace NHi.Inventory.Views;
 
 public partial class MainWindow : Window
@@ -23,8 +27,23 @@ public partial class MainWindow : Window
 
     private void MainWindow_KeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.F1) NavTo("POS");
-        if (e.Key == Key.F8) NavTo("Khata");
+        if (e.Key == Key.F1) { NavTo("POS"); return; }
+        if (e.Key == Key.F8) { NavTo("Khata"); return; }
+        if (e.Key == Key.F7) { mainContent.Content = new SalesHistoryView(); return; }
+
+        if (mainContent.Content is not POSScreen pos) return;
+
+        switch (e.Key)
+        {
+            case Key.F2: pos.FocusSearch(); e.Handled = true; break;
+            case Key.F3: pos.FocusCustomer(); e.Handled = true; break;
+            case Key.F4: pos.FocusPayment(); e.Handled = true; break;
+            case Key.F5: pos.HoldCurrentSale(); e.Handled = true; break;
+            case Key.F6: pos.FocusDiscount(); e.Handled = true; break;
+            case Key.F9: pos.PrintLastReceipt(); e.Handled = true; break;
+            case Key.F10: pos.TriggerCompleteSale(); e.Handled = true; break;
+            case Key.Escape: pos.CancelCurrentSale(); e.Handled = true; break;
+        }
     }
 
     private void LoadUserInfo()

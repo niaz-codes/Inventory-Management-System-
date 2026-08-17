@@ -249,6 +249,8 @@
     <sys:String x:Key="No">نہیں</sys:String>
     <sys:String x:Key="Cancel">منسوخ</sys:String>
     <sys:String x:Key="Save">محفوظ</sys:String>
+    <sys:String x:Key="Delete">حذف کریں</sys:String>
+    <sys:String x:Key="ResumeSale">دوبارہ شروع کریں</sys:String>
     <sys:String x:Key="Close">بند</sys:String>
     <sys:String x:Key="Search">تلاش</sys:String>
     <sys:String x:Key="All">سب</sys:String>

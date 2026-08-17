@@ -17,11 +17,18 @@ public partial class POSScreen : UserControl
     private List<Product> _allProducts = new();
     private bool _isInitialized;
 
+    private static readonly List<HeldSale> _heldSales = new();
+
+    private Sale? _lastCompletedSale;
+    private Customer? _lastCompletedSaleCustomer;
+    private List<ReceiptLineItem>? _lastCompletedSaleLines;
+
     public POSScreen()
     {
         InitializeComponent();
         _isInitialized = true;
         Loaded += POSScreen_Loaded;
+        UpdateHeldSalesButton();
     }
 
     private void POSScreen_Loaded(object sender, RoutedEventArgs e)
@@ -327,25 +334,25 @@ public partial class POSScreen : UserControl
             var saleId = _salesService.CompleteSale(sale, items);
             sale.Id = saleId;
 
+            var lines = _cartItems.Select(c => new ReceiptLineItem
+            {
+                ProductName = c.ProductName,
+                Quantity = c.Quantity,
+                Price = c.Price
+            }).ToList();
+            _lastCompletedSale = sale;
+            _lastCompletedSaleCustomer = customer;
+            _lastCompletedSaleLines = lines;
+
             var result = MessageBox.Show(
                 $"{LanguageManager.GetString("SaleSuccessful")}\n\nInvoice: {sale.InvoiceNumber}\nTotal: Rs. {grandTotal:N0}\nPaid: Rs. {paid:N0}\n\n{LanguageManager.GetString("PrintReceipt")}?",
                 LanguageManager.GetString("Success"),
                 MessageBoxButton.YesNo, MessageBoxImage.Information);
 
-            if (result == MessageBoxResult.Yes)
+            if (result == MessageBoxResult.Yes && !ReceiptService.PrintReceipt(sale, customer, lines))
             {
-                var lines = _cartItems.Select(c => new ReceiptLineItem
-                {
-                    ProductName = c.ProductName,
-                    Quantity = c.Quantity,
-                    Price = c.Price
-                }).ToList();
-
-                if (!ReceiptService.PrintReceipt(sale, customer, lines))
-                {
-                    MessageBox.Show(LanguageManager.GetString("ErrorOccurred"), LanguageManager.GetString("Error"),
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                MessageBox.Show(LanguageManager.GetString("ErrorOccurred"), LanguageManager.GetString("Error"),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             _cartItems.Clear();
@@ -356,8 +363,121 @@ public partial class POSScreen : UserControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"{LanguageManager.GetString("ErrorOccurred")}: {ex.Message}", 
+            MessageBox.Show($"{LanguageManager.GetString("ErrorOccurred")}: {ex.Message}",
                 LanguageManager.GetString("Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    // ---- Keyboard-shortcut entry points (invoked from MainWindow's global key handler) ----
+
+    public void FocusSearch()
+    {
+        txtSearch.Focus();
+        txtSearch.SelectAll();
+    }
+
+    public void FocusCustomer()
+    {
+        cmbCustomer.Focus();
+        cmbCustomer.IsDropDownOpen = true;
+    }
+
+    public void FocusPayment()
+    {
+        txtPaidAmount.Focus();
+        txtPaidAmount.SelectAll();
+    }
+
+    public void FocusDiscount()
+    {
+        txtDiscountPercent.Focus();
+        txtDiscountPercent.SelectAll();
+    }
+
+    public void TriggerCompleteSale()
+    {
+        BtnCompleteSale_Click(this, new RoutedEventArgs());
+    }
+
+    public void PrintLastReceipt()
+    {
+        if (_lastCompletedSale == null || _lastCompletedSaleLines == null)
+        {
+            MessageBox.Show(LanguageManager.GetString("NoDataFound"), "", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+        ReceiptService.PrintReceipt(_lastCompletedSale, _lastCompletedSaleCustomer, _lastCompletedSaleLines);
+    }
+
+    public void CancelCurrentSale()
+    {
+        if (_cartItems.Count == 0) return;
+        if (MessageBox.Show(LanguageManager.GetString("ConfirmDelete"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            return;
+        _cartItems.Clear();
+        UpdateCartDisplay();
+        txtPaidAmount.Text = "0";
+        txtDiscountPercent.Text = "0";
+    }
+
+    public void HoldCurrentSale()
+    {
+        if (_cartItems.Count == 0)
+        {
+            MessageBox.Show(LanguageManager.GetString("EmptyCart"), "", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        var customer = cmbCustomer.SelectedItem as Customer;
+        _heldSales.Add(new HeldSale
+        {
+            Items = _cartItems.ToList(),
+            CustomerId = customer?.Id > 0 ? customer.Id : null,
+            CustomerName = customer?.Name ?? LanguageManager.GetString("WalkInCustomer"),
+            DiscountPercent = decimal.TryParse(txtDiscountPercent.Text, out var dp) ? dp : 0,
+            HeldAt = DateTime.Now
+        });
+
+        _cartItems.Clear();
+        UpdateCartDisplay();
+        txtPaidAmount.Text = "0";
+        txtDiscountPercent.Text = "0";
+        UpdateHeldSalesButton();
+    }
+
+    private void UpdateHeldSalesButton()
+    {
+        if (btnHeldSales == null) return;
+        btnHeldSales.Visibility = _heldSales.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        btnHeldSales.Content = $"{LanguageManager.GetString("HoldSale")} ({_heldSales.Count})";
+    }
+
+    private void BtnHeldSales_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new HeldSalesDialog(_heldSales);
+        if (dialog.ShowDialog() == true && dialog.SelectedHeldSale != null)
+        {
+            var held = dialog.SelectedHeldSale;
+            if (_cartItems.Count > 0)
+                HoldCurrentSale();
+
+            _heldSales.Remove(held);
+            _cartItems = held.Items.ToList();
+            foreach (var c in cmbCustomer.Items)
+            {
+                if (c is Customer cust && held.CustomerId.HasValue && cust.Id == held.CustomerId.Value)
+                {
+                    cmbCustomer.SelectedItem = c;
+                    break;
+                }
+            }
+            txtDiscountPercent.Text = held.DiscountPercent.ToString();
+            UpdateCartDisplay();
+            UpdateHeldSalesButton();
+        }
+        else if (dialog.DeletedAny)
+        {
+            UpdateHeldSalesButton();
         }
     }
 }
@@ -370,4 +490,14 @@ public class CartViewModel
     public decimal Price { get; set; }
     public decimal PurchasePriceAtSale { get; set; }
     public decimal Total => Quantity * Price;
+}
+
+public class HeldSale
+{
+    public List<CartViewModel> Items { get; set; } = new();
+    public int? CustomerId { get; set; }
+    public string CustomerName { get; set; } = string.Empty;
+    public decimal DiscountPercent { get; set; }
+    public DateTime HeldAt { get; set; }
+    public decimal Total => Items.Sum(i => i.Total);
 }
