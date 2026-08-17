@@ -29,6 +29,9 @@ public class AppDbContext : DbContext
     public DbSet<PurchaseReturn> PurchaseReturns => Set<PurchaseReturn>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<ExpenseCategory> ExpenseCategories => Set<ExpenseCategory>();
+    public DbSet<Employee> Employees => Set<Employee>();
+    public DbSet<EmployeeLedger> EmployeeLedgers => Set<EmployeeLedger>();
+    public DbSet<EmployeePayment> EmployeePayments => Set<EmployeePayment>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -54,5 +57,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Sale>().HasIndex(s => s.InvoiceNumber);
         modelBuilder.Entity<Sale>().HasIndex(s => s.SaleDate);
         modelBuilder.Entity<Purchase>().HasIndex(p => p.InvoiceNumber);
+        modelBuilder.Entity<Employee>().HasIndex(e => e.Phone);
     }
 }

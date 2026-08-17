@@ -423,6 +423,44 @@ public static class ExcelExportService
         catch { return false; }
     }
 
+    public static bool ExportEmployees(string filePath)
+    {
+        try
+        {
+            using var db = new AppDbContext();
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Employees");
+
+            ws.Cell(1, 1).Value = "Employees Report";
+            ws.Range(1, 1, 1, 5).Merge().Style.Font.Bold = true;
+            ws.Range(1, 1, 1, 5).Style.Font.FontSize = 14;
+
+            var headers = new[] { "Name", "Position", "Phone", "Monthly Salary", "Balance Due" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ws.Cell(3, i + 1).Value = headers[i];
+                ws.Cell(3, i + 1).Style.Font.Bold = true;
+                ws.Cell(3, i + 1).Style.Fill.BackgroundColor = XLColor.LightGreen;
+            }
+
+            int row = 4;
+            foreach (var emp in db.Employees.Where(e => e.IsActive).OrderBy(e => e.Name).ToList())
+            {
+                ws.Cell(row, 1).Value = emp.Name;
+                ws.Cell(row, 2).Value = emp.Position ?? "";
+                ws.Cell(row, 3).Value = emp.Phone ?? "";
+                ws.Cell(row, 4).Value = (double)emp.MonthlySalary;
+                ws.Cell(row, 5).Value = (double)emp.CurrentBalance;
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            wb.SaveAs(filePath);
+            return true;
+        }
+        catch { return false; }
+    }
+
     public static bool ExportStock(string filePath)
     {
         try

@@ -37,4 +37,5 @@ public partial class MoreView : UserControl
         }
         NavigateTo(new UserManagementView());
     }
+    private void BtnEmployees_Click(object sender, RoutedEventArgs e) => NavigateTo(new EmployeeListView());
 }

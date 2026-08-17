@@ -261,6 +261,20 @@
     <sys:String x:Key="SaleReturned">Sale return processed successfully</sys:String>
     <sys:String x:Key="PurchaseReturned">Purchase return processed successfully</sys:String>
 
+    <!-- Employees -->
+    <sys:String x:Key="Employees">Employees</sys:String>
+    <sys:String x:Key="AddEmployee">Add Employee</sys:String>
+    <sys:String x:Key="EditEmployee">Edit Employee</sys:String>
+    <sys:String x:Key="EmployeeName">Employee Name</sys:String>
+    <sys:String x:Key="Position">Position</sys:String>
+    <sys:String x:Key="MonthlySalary">Monthly Salary</sys:String>
+    <sys:String x:Key="JoiningDate">Joining Date</sys:String>
+    <sys:String x:Key="AddDue">Add Due</sys:String>
+    <sys:String x:Key="PayEmployee">Pay Employee</sys:String>
+    <sys:String x:Key="EmployeeDues">Employee Dues</sys:String>
+    <sys:String x:Key="TotalDues">Total Dues</sys:String>
+    <sys:String x:Key="EmployeeManagement">Employee Management</sys:String>
+
     <!-- More Menu -->
     <sys:String x:Key="MoreMenu">More Options</sys:String>
     <sys:String x:Key="PurchaseManagement">Purchase Management</sys:String>

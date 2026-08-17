@@ -261,6 +261,20 @@
     <sys:String x:Key="SaleReturned">فروخت واپسی کامیابی سے ہوئی</sys:String>
     <sys:String x:Key="PurchaseReturned">خریداری واپسی کامیابی سے ہوئی</sys:String>
 
+    <!-- Employees -->
+    <sys:String x:Key="Employees">ملازمین</sys:String>
+    <sys:String x:Key="AddEmployee">ملازم شامل کریں</sys:String>
+    <sys:String x:Key="EditEmployee">ملازم میں ترمیم</sys:String>
+    <sys:String x:Key="EmployeeName">ملازم کا نام</sys:String>
+    <sys:String x:Key="Position">عہدہ</sys:String>
+    <sys:String x:Key="MonthlySalary">ماہانہ تنخواہ</sys:String>
+    <sys:String x:Key="JoiningDate">شمولیت کی تاریخ</sys:String>
+    <sys:String x:Key="AddDue">واجبات شامل کریں</sys:String>
+    <sys:String x:Key="PayEmployee">ملازم کو ادائیگی</sys:String>
+    <sys:String x:Key="EmployeeDues">ملازم کے واجبات</sys:String>
+    <sys:String x:Key="TotalDues">کل واجبات</sys:String>
+    <sys:String x:Key="EmployeeManagement">ملازمین کا انتظام</sys:String>
+
     <!-- More Menu -->
     <sys:String x:Key="MoreMenu">مزید آپشنز</sys:String>
     <sys:String x:Key="PurchaseManagement">خریداری مینجمنٹ</sys:String>

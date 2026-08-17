@@ -90,6 +90,12 @@
                         <StackPanel><TextBlock Text="{DynamicResource Users}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Manage users" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
                     </StackPanel>
                 </Button>
+                <Button Style="{StaticResource MenuItem}" Width="200" Margin="8" Click="BtnEmployees_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🧑‍💼" FontSize="24" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <StackPanel><TextBlock Text="{DynamicResource Employees}" FontSize="14" FontWeight="SemiBold" Foreground="#212121"/><TextBlock Text="Manage employees and dues" FontSize="11" Foreground="#9E9E9E"/></StackPanel>
+                    </StackPanel>
+                </Button>
             </WrapPanel>
         </StackPanel>
     </ScrollViewer>

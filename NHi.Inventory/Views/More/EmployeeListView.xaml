@@ -1,0 +1,71 @@
+<UserControl x:Class="NHi.Inventory.Views.More.EmployeeListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Employees}" FontSize="22" FontWeight="Bold"/>
+            <Button DockPanel.Dock="Right" Content="{DynamicResource AddEmployee}" HorizontalAlignment="Right"
+                    Click="BtnAdd_Click" Background="#1565C0" Foreground="White" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+        </DockPanel>
+
+        <DataGrid x:Name="dgEmployees" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" Height="150"
+                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1"
+                  RowBackground="White" AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column" SelectionChanged="DgEmployees_SelectionChanged" Margin="0,0,0,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Position" Binding="{Binding Position}" Width="120"/>
+                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="110"/>
+                <DataGridTextColumn Header="Salary" Binding="{Binding MonthlySalary, StringFormat='Rs. {0:N0}'}" Width="100"/>
+                <DataGridTextColumn Header="Balance" Binding="{Binding CurrentBalance, StringFormat='Rs. {0:N0}'}" Width="100"/>
+                <DataGridTemplateColumn Width="180">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="{DynamicResource AddDue}" FontSize="10" Padding="6,3" Margin="0,0,4,0"
+                                        Background="#FFF3E0" Foreground="#E65100" BorderThickness="0" Cursor="Hand"
+                                        Click="BtnAddDue_Click" Tag="{Binding Id}"/>
+                                <Button Content="{DynamicResource PayEmployee}" FontSize="10" Padding="6,3"
+                                        Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"
+                                        Click="BtnPay_Click" Tag="{Binding Id}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <DataGrid x:Name="dgLedger" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"
+                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1"
+                  RowBackground="White" AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding TransactionDate, StringFormat='{}{0:dd-MMM-yyyy}'}" Width="100"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                <DataGridTextColumn Header="Debit" Binding="{Binding Debit, StringFormat='Rs. {0:N0}'}" Width="100"/>
+                <DataGridTextColumn Header="Credit" Binding="{Binding Credit, StringFormat='Rs. {0:N0}'}" Width="100"/>
+                <DataGridTextColumn Header="Balance" Binding="{Binding Balance, StringFormat='Rs. {0:N0}'}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Row="3" Background="#1565C0" CornerRadius="0,0,10,10" Padding="15,10" Margin="0,-1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="txtTotalDues" Grid.Column="0" Text="Total Dues: Rs. 0"
+                           Foreground="White" FontSize="14" FontWeight="SemiBold"/>
+                <Button Grid.Column="1" Content="{DynamicResource ExportToExcel}" Click="BtnExport_Click"
+                        Padding="12,6" Background="White" Foreground="#1565C0" BorderThickness="0" FontSize="12" Cursor="Hand"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

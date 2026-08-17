@@ -21,6 +21,12 @@ public partial class PaymentDialog : Window
             var customer = new CustomerService().GetById(entityId);
             txtBalance.Text = $"Current Balance: Rs. {customer?.CurrentBalance:N0}";
         }
+        else if (type == "employee")
+        {
+            txtTitle.Text = LanguageManager.GetString("PayEmployee");
+            var employee = new EmployeeService().GetById(entityId);
+            txtBalance.Text = $"Current Balance: Rs. {employee?.CurrentBalance:N0}";
+        }
         else
         {
             txtTitle.Text = LanguageManager.GetString("MakePayment");
@@ -39,6 +45,8 @@ public partial class PaymentDialog : Window
 
         if (_type == "customer")
             new CustomerService().ReceivePayment(_entityId, amount, txtNotes.Text.Trim());
+        else if (_type == "employee")
+            new EmployeeService().MakePayment(_entityId, amount, txtNotes.Text.Trim());
         else
             new SupplierService().MakePayment(_entityId, amount, txtNotes.Text.Trim());
 
