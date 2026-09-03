@@ -24,6 +24,7 @@ public class PurchaseService
         using var transaction = db.Database.BeginTransaction();
         try
         {
+            purchase.ShopId = AuthService.CurrentShopId ?? 1;
             purchase.CreatedAt = DateTime.Now;
             purchase.CreatedBy = AuthService.CurrentUser?.Id;
             db.Purchases.Add(purchase);
@@ -31,6 +32,7 @@ public class PurchaseService
 
             foreach (var item in items)
             {
+                item.ShopId = purchase.ShopId;
                 item.PurchaseId = purchase.Id;
                 db.PurchaseItems.Add(item);
 
@@ -42,6 +44,7 @@ public class PurchaseService
                     product.PurchasePrice = item.UnitPrice;
                     db.StockTransactions.Add(new StockTransaction
                     {
+                        ShopId = purchase.ShopId,
                         ProductId = item.ProductId,
                         TransactionType = "PURCHASE",
                         Quantity = item.Quantity,
@@ -54,21 +57,28 @@ public class PurchaseService
                 }
             }
 
-            if (purchase.SupplierId.HasValue && purchase.RemainingAmount > 0)
+            if (purchase.SupplierId.HasValue)
             {
                 var supplier = db.Suppliers.Find(purchase.SupplierId);
                 if (supplier != null)
                 {
+                    // Always logged, even when fully paid (CashPurchase), so a supplier's
+                    // transaction history covers every purchase, not just the ones that left a
+                    // balance. Net effect on CurrentBalance is unchanged from before: it only
+                    // ever moves by RemainingAmount (Debit - Credit = GrandTotal - PaidAmount).
                     supplier.CurrentBalance += purchase.RemainingAmount;
                     db.SupplierLedgers.Add(new SupplierLedger
                     {
+                        ShopId = purchase.ShopId,
                         SupplierId = purchase.SupplierId.Value,
                         Description = $"Purchase - {purchase.InvoiceNumber}",
-                        Debit = purchase.RemainingAmount,
-                        Credit = 0,
+                        Debit = purchase.GrandTotal,
+                        Credit = purchase.PaidAmount,
                         Balance = supplier.CurrentBalance,
                         ReferenceId = purchase.Id,
-                        ReferenceType = "Purchase"
+                        ReferenceType = "Purchase",
+                        CreatedBy = purchase.CreatedBy,
+                        TransactionType = purchase.RemainingAmount > 0 ? "Purchase" : "CashPurchase"
                     });
                 }
             }
@@ -77,6 +87,7 @@ public class PurchaseService
             {
                 db.CashTransactions.Add(new CashTransaction
                 {
+                    ShopId = purchase.ShopId,
                     TransactionType = "PURCHASE",
                     Amount = purchase.PaidAmount,
                     IsInflow = false,
@@ -132,6 +143,7 @@ public class PurchaseService
                 product.CurrentStock -= quantity;
                 db.StockTransactions.Add(new StockTransaction
                 {
+                    ShopId = purchase.ShopId,
                     ProductId = productId,
                     TransactionType = "PURCHASE_RETURN",
                     Quantity = -quantity,
@@ -151,19 +163,23 @@ public class PurchaseService
                     supplier.CurrentBalance -= refundAmount;
                     db.SupplierLedgers.Add(new SupplierLedger
                     {
+                        ShopId = purchase.ShopId,
                         SupplierId = purchase.SupplierId.Value,
                         Description = $"Purchase Return - {purchase.InvoiceNumber}",
                         Debit = 0,
                         Credit = refundAmount,
                         Balance = supplier.CurrentBalance,
                         ReferenceId = purchaseId,
-                        ReferenceType = "PurchaseReturn"
+                        ReferenceType = "PurchaseReturn",
+                        CreatedBy = AuthService.CurrentUser?.Id,
+                        TransactionType = "PurchaseReturn"
                     });
                 }
             }
 
             db.PurchaseReturns.Add(new PurchaseReturn
             {
+                ShopId = purchase.ShopId,
                 PurchaseId = purchaseId,
                 ProductId = productId,
                 Quantity = quantity,
@@ -182,6 +198,15 @@ public class PurchaseService
             transaction.Rollback();
             return (false, ex.Message);
         }
+    }
+
+    /// <summary>Batch-resolves Purchase.Id -> InvoiceNumber, used by the Supplier Khata ledger
+    /// grid to show a readable invoice reference for Purchase/PurchaseReturn rows instead of a
+    /// bare internal Id.</summary>
+    public Dictionary<int, string> GetInvoiceNumbers(IEnumerable<int> purchaseIds)
+    {
+        using var db = new AppDbContext();
+        return db.Purchases.Where(p => purchaseIds.Contains(p.Id)).ToDictionary(p => p.Id, p => p.InvoiceNumber);
     }
 
     public decimal GetTodayPurchasesTotal()

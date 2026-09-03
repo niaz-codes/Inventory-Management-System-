@@ -5,10 +5,40 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon></ApplicationIcon>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
     <AssemblyName>NHi.Inventory</AssemblyName>
     <RootNamespace>NHi.Inventory</RootNamespace>
+
+    <!-- Product / version information (surfaced in the exe's Details tab and the installer). -->
+    <Product>NHI Inventory Management System</Product>
+    <AssemblyTitle>NHI Inventory Management System</AssemblyTitle>
+    <Company>NHI</Company>
+    <Authors>NHI</Authors>
+    <Description>Inventory, POS, Khata and reporting system for retail shops.</Description>
+    <Copyright>Copyright © NHI 2026</Copyright>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <!--
+      UseWindowsForms adds an implicit global "using System.Windows.Forms;" which collides
+      with WPF's own implicit usings (UserControl, Button, Application, FlowDirection,
+      KeyEventArgs all exist in both namespaces). WinForms types (PrintDialog,
+      PageSetupDialog, PrintPreviewControl, PrintDocument) are only needed for native print
+      dialogs and are referenced with a full/aliased name where used, so the blanket
+      implicit using is removed instead of qualifying every WPF type across the codebase.
+    -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Urdu Nastaleeq font (user-supplied) used both on-screen and in QuestPDF prints. Empty glob is fine before the file is added. -->
+    <Resource Include="Resources\Fonts\*.ttf" />
+    <!-- Company logo (user-supplied), shown in-app (e.g. the login screen badge) via pack URI. -->
+    <Resource Include="Resources\CompanyLogo.png" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
@@ -17,7 +47,11 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="QuestPDF" Version="2024.3.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4129.50" />
+    <PackageReference Include="OpenCvSharp4" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20241108" />
+    <PackageReference Include="QuestPDF" Version="2026.8.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <PackageReference Include="ZXing.Net" Version="0.16.11" />
   </ItemGroup>
 </Project>

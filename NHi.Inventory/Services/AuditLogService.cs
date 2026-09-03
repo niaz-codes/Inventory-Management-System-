@@ -12,6 +12,7 @@ public static class AuditLogService
             using var db = new AppDbContext();
             db.AuditLogs.Add(new AuditLog
             {
+                ShopId = AuthService.CurrentShopId,
                 UserId = AuthService.CurrentUser?.Id,
                 Username = AuthService.CurrentUser?.Username,
                 Action = action,

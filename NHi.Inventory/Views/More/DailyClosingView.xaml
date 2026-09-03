@@ -4,28 +4,28 @@
     <Grid Margin="20">
         <StackPanel MaxWidth="500" HorizontalAlignment="Center">
             <TextBlock Text="{DynamicResource DailyClosing}" FontSize="22" FontWeight="Bold" Margin="0,10,0,20"/>
-            <Border Background="White" CornerRadius="12" Padding="20" BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border Style="{StaticResource ContentCard}" Padding="20">
                 <StackPanel>
                     <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource OpeningCash}" FontSize="13" Foreground="#757575"/>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource OpeningCash}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         <TextBlock x:Name="txtOpening" Grid.Column="1" Text="Rs. 0" FontSize="14" FontWeight="SemiBold"/></Grid>
                     <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource CashSales}" FontSize="13" Foreground="#757575"/>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource CashSales}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         <TextBlock x:Name="txtCashSales" Grid.Column="1" Text="Rs. 0" FontSize="14" FontWeight="SemiBold"/></Grid>
                     <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource CreditSales}" FontSize="13" Foreground="#757575"/>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource CreditSales}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         <TextBlock x:Name="txtCreditSales" Grid.Column="1" Text="Rs. 0" FontSize="14" FontWeight="SemiBold"/></Grid>
                     <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource CustomerPayments}" FontSize="13" Foreground="#757575"/>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource CustomerPayments}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         <TextBlock x:Name="txtCustPayments" Grid.Column="1" Text="Rs. 0" FontSize="14" FontWeight="SemiBold"/></Grid>
                     <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource Purchases}" FontSize="13" Foreground="#757575"/>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource Purchases}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         <TextBlock x:Name="txtPurchases" Grid.Column="1" Text="Rs. 0" FontSize="14" FontWeight="SemiBold"/></Grid>
                     <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource Expenses}" FontSize="13" Foreground="#757575"/>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource Expenses}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         <TextBlock x:Name="txtExpenses" Grid.Column="1" Text="Rs. 0" FontSize="14" FontWeight="SemiBold"/></Grid>
                     <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource SupplierPayments}" FontSize="13" Foreground="#757575"/>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource SupplierPayments}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         <TextBlock x:Name="txtSupPayments" Grid.Column="1" Text="Rs. 0" FontSize="14" FontWeight="SemiBold"/></Grid>
                     <Separator Margin="0,8"/>
                     <Grid Margin="0,8,0,15"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
@@ -38,9 +38,9 @@
                     <TextBox x:Name="txtActualClosing" FontSize="14" Padding="10,8" Margin="0,0,0,15"/>
                     <TextBlock x:Name="txtDiff" Text="" FontSize="12" Foreground="#F44336" Margin="0,0,0,10"/>
                     <Button Content="{DynamicResource CloseDay}" Height="42" FontSize="14" FontWeight="SemiBold"
-                            Click="BtnCloseDay_Click" Background="#F44336" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                            Click="BtnCloseDay_Click" Style="{StaticResource DangerButton}"/>
                     <Button Content="{DynamicResource ExportToExcel}" Height="38" Margin="0,10,0,0" FontSize="13"
-                            Click="BtnExport_Click" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"/>
+                            Click="BtnExport_Click" Style="{StaticResource SecondaryButton}"/>
                 </StackPanel>
             </Border>
         </StackPanel>

@@ -1,0 +1,72 @@
+<Window x:Class="NHi.Inventory.Views.POS.PaymentConfirmDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Confirm Payment" Height="480" Width="380" WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize" Background="{DynamicResource CardBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="{DynamicResource CardBrush}">
+    <Border Padding="25">
+        <StackPanel>
+            <TextBlock Text="{DynamicResource ConfirmPayment}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,4"/>
+            <TextBlock x:Name="txtCustomerName" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,15"/>
+
+            <Border Background="{DynamicResource SurfaceAltBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,15">
+                <StackPanel>
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource Subtotal}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        <TextBlock x:Name="txtSubtotal" Grid.Column="1" FontSize="12" FontWeight="SemiBold"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource Discount}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        <TextBlock x:Name="txtDiscount" Grid.Column="1" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource DangerBrush}"/>
+                    </Grid>
+                    <Grid Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource GrandTotal}" FontSize="14" FontWeight="Bold"/>
+                        <TextBlock x:Name="txtGrandTotal" Grid.Column="1" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="{DynamicResource PaymentMethod}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBlock x:Name="txtPaymentMethod" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"/>
+
+            <StackPanel x:Name="pnlCash">
+                <TextBlock Text="{DynamicResource CashReceived}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBox x:Name="txtCashReceived" FontSize="18" Padding="12,10" Margin="0,0,0,10" TextChanged="TxtCashReceived_TextChanged"/>
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{DynamicResource Change}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="txtChange" Grid.Column="1" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}"/>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel x:Name="pnlCreditSummary">
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{DynamicResource PaidAmount}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    <TextBlock x:Name="txtPaidSummary" Grid.Column="1" FontSize="12" FontWeight="SemiBold"/>
+                </Grid>
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{DynamicResource RemainingAmount}" FontSize="12" Foreground="{StaticResource DangerBrush}"/>
+                    <TextBlock x:Name="txtRemainingSummary" Grid.Column="1" FontSize="12" FontWeight="Bold" Foreground="{StaticResource DangerBrush}"/>
+                </Grid>
+            </StackPanel>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="{DynamicResource Cancel}" Height="42" FontSize="14" IsCancel="True"
+                        Style="{StaticResource SecondaryButton}"/>
+                <Button x:Name="btnConfirm" Grid.Column="2" Content="{DynamicResource ConfirmPayment}" Height="42" FontSize="14" FontWeight="Bold"
+                        IsDefault="True" Click="BtnConfirm_Click" Style="{StaticResource SuccessButton}"/>
+            </Grid>
+        </StackPanel>
+    </Border>
+    </ScrollViewer>
+</Window>

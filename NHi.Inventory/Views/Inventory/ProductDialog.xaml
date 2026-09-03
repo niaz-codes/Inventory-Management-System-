@@ -1,9 +1,9 @@
 <Window x:Class="NHi.Inventory.Views.Inventory.ProductDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Product" Height="650" Width="500" WindowStartupLocation="CenterOwner"
-        Background="White" ResizeMode="NoResize">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        Title="Product" Height="780" Width="500" WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize" Background="{DynamicResource CardBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="{DynamicResource CardBrush}">
         <Border Padding="25" Width="450">
             <StackPanel>
                 <TextBlock x:Name="txtTitle" Text="{DynamicResource AddProduct}" FontSize="18" FontWeight="Bold" 
@@ -15,38 +15,48 @@
                 <TextBlock Text="{DynamicResource ProductNameUrdu}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
                 <TextBox x:Name="txtNameUrdu" FontSize="13" Padding="10,8" Margin="0,0,0,10"/>
 
+                <TextBlock Text="{DynamicResource Barcode}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="txtBarcode" Grid.Column="0" FontSize="13" Padding="10,8"/>
+                    <Button x:Name="btnGenerateBarcode" Grid.Column="1" Content="{DynamicResource GenerateBarcode}" Margin="6,0,0,0"
+                            Click="BtnGenerateBarcode_Click" Style="{StaticResource SecondaryButton}" Padding="12,0"/>
+                    <Button x:Name="btnPrintLabel" Grid.Column="2" Content="{DynamicResource PrintLabel}" Margin="6,0,0,0"
+                            Click="BtnPrintLabel_Click" Style="{StaticResource SecondaryButton}" Padding="12,0" Visibility="Collapsed"/>
+                </Grid>
+
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                        <TextBlock Text="{DynamicResource Barcode}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                        <TextBox x:Name="txtBarcode" FontSize="13" Padding="10,8"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <TextBlock Text="{DynamicResource SKU}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                        <TextBox x:Name="txtSKU" FontSize="13" Padding="10,8"/>
-                    </StackPanel>
-                </Grid>
-
-                <Grid Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <TextBlock Text="{DynamicResource Category}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                        <ComboBox x:Name="cmbCategory" DisplayMemberPath="Name" Padding="8,6"/>
+                        <ComboBox x:Name="cmbCategory" DisplayMemberPath="Name" Padding="8,6"
+                                  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
                         <TextBlock Text="{DynamicResource Brand}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                        <ComboBox x:Name="cmbBrand" DisplayMemberPath="Name" Padding="8,6"/>
+                        <ComboBox x:Name="cmbBrand" DisplayMemberPath="Name" Padding="8,6"
+                                  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}"/>
                     </StackPanel>
                 </Grid>
 
                 <TextBlock Text="{DynamicResource Unit}" FontSize="11" FontWeight="SemiBold" Margin="0,10,0,3"/>
-                <ComboBox x:Name="cmbUnit" DisplayMemberPath="Name" Padding="8,6" Margin="0,0,0,10"/>
+                <ComboBox x:Name="cmbUnit" DisplayMemberPath="Name" Padding="8,6" Margin="0,0,0,10"
+                          SelectionChanged="CmbUnit_SelectionChanged"
+                          ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}"/>
+
+                <!-- Shown only when "Other / دیگر" is picked. Accepts an English or Urdu unit
+                     (Box / Pack / ڈبہ / درجن …); saved as a reusable Unit on the product. -->
+                <StackPanel x:Name="pnlCustomUnit" Visibility="Collapsed" Margin="0,0,0,10">
+                    <TextBlock Text="{DynamicResource CustomUnitLabel}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                    <TextBox x:Name="txtCustomUnit" Padding="8,6" MaxLength="50"/>
+                </StackPanel>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -93,28 +103,32 @@
                     </StackPanel>
                 </Grid>
 
-                <TextBlock Text="{DynamicResource Description}" FontSize="11" FontWeight="SemiBold" Margin="0,10,0,3"/>
-                <TextBox x:Name="txtDescription" FontSize="13" Padding="10,8" TextWrapping="Wrap" Height="50" Margin="0,0,0,15"/>
+                <TextBlock Text="{DynamicResource ExpiryDate}" FontSize="11" FontWeight="SemiBold" Margin="0,10,0,3"/>
+                <DatePicker x:Name="dpExpiryDate" Padding="8,6" Margin="0,0,0,10" HorizontalAlignment="Stretch"/>
+
+                <TextBlock Text="{DynamicResource Description}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                <TextBox x:Name="txtDescription" FontSize="13" Padding="10,8" TextWrapping="Wrap" Height="50" Margin="0,0,0,10"/>
+
+                <TextBlock Text="{DynamicResource ProductImage}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Width="60" Height="60" CornerRadius="8" Background="{DynamicResource SurfaceAltBrush}"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,10,0">
+                        <Image x:Name="imgPreview" Stretch="UniformToFill"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <Button x:Name="btnChooseImage" Content="{DynamicResource ProductImage}" Click="BtnChooseImage_Click"
+                                Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </Grid>
+
+                <CheckBox x:Name="chkActive" Content="{DynamicResource Active}" FontSize="13" IsChecked="True" Margin="0,0,0,15"/>
 
                 <Button x:Name="btnSave" Content="{DynamicResource Save}" Height="40" FontSize="14" FontWeight="SemiBold"
-                        Click="BtnSave_Click">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Background" Value="#1565C0"/>
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="10">
-                                            <ContentPresenter HorizontalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
+                        Click="BtnSave_Click" Style="{StaticResource PrimaryButton}"/>
             </StackPanel>
         </Border>
     </ScrollViewer>

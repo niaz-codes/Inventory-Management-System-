@@ -1,105 +1,157 @@
 <UserControl x:Class="NHi.Inventory.Views.Inventory.InventoryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:NHi.Inventory.Views.Inventory">
+    <UserControl.Resources>
+        <local:ProductStatusConverter x:Key="StatusConverter"/>
+        <Style x:Key="PillButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Opacity" Value="0.82"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
         <DockPanel Grid.Row="0" Margin="0,0,0,15">
-            <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Products}" FontSize="22" FontWeight="Bold" Foreground="#212121"/>
+            <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Products}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="{DynamicResource AddCategory}" Padding="12,7" Margin="0,0,5,0" Cursor="Hand"
-                        Click="BtnAddCategory_Click" FontSize="12" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0"/>
-                <Button Content="{DynamicResource AddBrand}" Padding="12,7" Margin="0,0,5,0" Cursor="Hand"
-                        Click="BtnAddBrand_Click" FontSize="12" Background="#E3F2FD" Foreground="#1565C0" BorderThickness="0"/>
-                <Button x:Name="btnAddProduct" Content="{DynamicResource AddProduct}" Padding="15,7" Cursor="Hand"
-                        Click="BtnAddProduct_Click" FontSize="12" Background="#1565C0" Foreground="White" BorderThickness="0">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="bd" Property="Background" Value="#0D47A1"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                <Button Content="{DynamicResource AddCategory}" Padding="13,8" Margin="0,0,6,0" Cursor="Hand"
+                        Click="BtnAddCategory_Click" FontSize="12" Background="{DynamicResource SuccessBgBrush}" Foreground="{StaticResource SuccessBrush}" BorderThickness="0" Style="{StaticResource PillButton}"/>
+                <Button Content="{DynamicResource AddBrand}" Padding="13,8" Margin="0,0,6,0" Cursor="Hand"
+                        Click="BtnAddBrand_Click" FontSize="12" Background="{DynamicResource InfoBgBrush}" Foreground="{DynamicResource InfoTextBrush}" BorderThickness="0" Style="{StaticResource PillButton}"/>
+                <Button Content="{DynamicResource UnitManagement}" Padding="13,8" Margin="0,0,6,0" Cursor="Hand"
+                        Click="BtnManageUnits_Click" FontSize="12" Background="{DynamicResource SurfaceAltBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0" Style="{StaticResource PillButton}"/>
+                <Button Content="{DynamicResource StockAdjustment}" Padding="13,8" Margin="0,0,6,0" Cursor="Hand"
+                        Click="BtnStockAdjustment_Click" FontSize="12" Background="{DynamicResource WarningBgBrush}" Foreground="{DynamicResource WarningTextBrush}" BorderThickness="0" Style="{StaticResource PillButton}"/>
+                <Button Content="{DynamicResource PrintBarcodes}" Padding="13,8" Margin="0,0,6,0" Cursor="Hand"
+                        Click="BtnPrintAllBarcodes_Click" FontSize="12" Background="{DynamicResource InfoBgBrush}" Foreground="{DynamicResource InfoTextBrush}" BorderThickness="0" Style="{StaticResource PillButton}"/>
+                <Button x:Name="btnAddProduct" Content="{DynamicResource AddProduct}" Padding="16,8" Cursor="Hand"
+                        Click="BtnAddProduct_Click" FontSize="12" Style="{StaticResource PrimaryButton}"/>
             </StackPanel>
         </DockPanel>
 
         <!-- Search and Filter -->
-        <Border Grid.Row="1" Background="White" CornerRadius="10" Padding="12" Margin="0,0,0,10" 
-                BorderBrush="#E0E0E0" BorderThickness="1">
+        <Border Grid.Row="1" Background="{DynamicResource CardBrush}" CornerRadius="14" Padding="14" Margin="0,0,0,12"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.05" Color="#000"/>
+            </Border.Effect>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="txtSearch" Grid.Column="0" FontSize="14" Padding="10,8" 
+                <TextBox x:Name="txtSearch" Grid.Column="0" FontSize="14" Padding="10,8"
                          TextChanged="TxtSearch_TextChanged" Tag="{DynamicResource SearchProducts}"/>
-                <ComboBox x:Name="cmbCategory" Grid.Column="1" Width="150" Margin="10,0,0,0" 
-                          DisplayMemberPath="Name" FontSize="12" SelectionChanged="Filter_Changed"/>
-                <Button x:Name="btnExport" Grid.Column="2" Content="{DynamicResource ExportToExcel}" Padding="12,8" Margin="10,0,0,0"
-                        Click="BtnExport_Click" FontSize="12" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"/>
+                <ComboBox x:Name="cmbCategory" Grid.Column="1" Width="170" Margin="10,0,0,0"
+                          DisplayMemberPath="Name" FontSize="12" ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}"
+                          SelectionChanged="Filter_Changed"/>
+                <CheckBox x:Name="chkLowStockOnly" Grid.Column="2" Content="{DynamicResource LowStockOnly}" FontSize="12"
+                          VerticalAlignment="Center" Margin="12,0,0,0" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                <Button x:Name="btnExport" Grid.Column="3" Content="{DynamicResource ExportToExcel}" Padding="13,8" Margin="10,0,0,0"
+                        Click="BtnExport_Click" FontSize="12" Background="{DynamicResource SuccessBgBrush}" Foreground="{StaticResource SuccessBrush}" BorderThickness="0" Cursor="Hand" Style="{StaticResource PillButton}"/>
             </Grid>
         </Border>
 
         <!-- Product DataGrid -->
-        <DataGrid x:Name="dgProducts" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"
-                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F0F0F0"
-                  BorderBrush="#E0E0E0" BorderThickness="1" RowBackground="White" 
-                  AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
-                  HeadersVisibility="Column" SelectionMode="Single" MouseDoubleClick="DgProducts_DoubleClick">
+        <Border Grid.Row="2" Background="{DynamicResource CardBrush}" CornerRadius="14" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.05" Color="#000"/>
+            </Border.Effect>
+            <DataGrid x:Name="dgProducts" AutoGenerateColumns="False" IsReadOnly="True"
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BorderBrush}"
+                  BorderThickness="0" RowBackground="{DynamicResource CardBrush}"
+                  AlternatingRowBackground="{DynamicResource AltRowBrush}" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column" SelectionMode="Single" MouseDoubleClick="DgProducts_DoubleClick"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding NameEnglish}" Width="*"/>
-                <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="100"/>
-                <DataGridTextColumn Header="Category" Binding="{Binding Category.Name}" Width="100"/>
-                <DataGridTextColumn Header="Purchase" Binding="{Binding PurchasePrice, StringFormat='Rs. {0:N0}'}" Width="90"/>
-                <DataGridTextColumn Header="Sale" Binding="{Binding SalePrice, StringFormat='Rs. {0:N0}'}" Width="90"/>
-                <DataGridTextColumn Header="Stock" Binding="{Binding CurrentStock, StringFormat='{}{0:N0}'}" Width="70"/>
-                <DataGridTextColumn Header="Min" Binding="{Binding MinimumStock, StringFormat='{}{0:N0}'}" Width="50"/>
-                <DataGridTemplateColumn Header="Status" Width="80">
+                <DataGridTextColumn Header="{DynamicResource ProductName}" Binding="{Binding NameEnglish}" Width="*"/>
+                <DataGridTextColumn Header="{DynamicResource Barcode}" Binding="{Binding Barcode}" Width="100"/>
+                <DataGridTextColumn Header="{DynamicResource Category}" Binding="{Binding Category.Name}" Width="100"/>
+                <DataGridTextColumn Header="{DynamicResource Unit}" Binding="{Binding Unit.Name}" Width="80"/>
+                <DataGridTextColumn Header="{DynamicResource PurchasePrice}" Binding="{Binding PurchasePrice, StringFormat='Rs. {0:N0}'}" Width="90"/>
+                <DataGridTextColumn Header="{DynamicResource SalePrice}" Binding="{Binding SalePrice, StringFormat='Rs. {0:N0}'}" Width="90"/>
+                <DataGridTextColumn Header="{DynamicResource CurrentStock}" Binding="{Binding CurrentStock, StringFormat='{}{0:N0}'}" Width="70"/>
+                <DataGridTextColumn Header="{DynamicResource MinimumStock}" Binding="{Binding MinimumStock, StringFormat='{}{0:N0}'}" Width="50"/>
+                <DataGridTemplateColumn Header="{DynamicResource Status}" Width="90">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock>
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="OK"/>
-                                        <Setter Property="Foreground" Value="#4CAF50"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding CurrentStock}" Value="0">
-                                                <Setter Property="Text" Value="OUT"/>
-                                                <Setter Property="Foreground" Value="#F44336"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+                            <Border CornerRadius="4" Padding="6,3" HorizontalAlignment="Left">
+                                <Border.Background>
+                                    <MultiBinding Converter="{StaticResource StatusConverter}" ConverterParameter="brush">
+                                        <Binding Path="CurrentStock"/>
+                                        <Binding Path="MinimumStock"/>
+                                        <Binding Path="ExpiryDate"/>
+                                    </MultiBinding>
+                                </Border.Background>
+                                <TextBlock Foreground="White" FontSize="10" FontWeight="Bold">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource StatusConverter}">
+                                            <Binding Path="CurrentStock"/>
+                                            <Binding Path="MinimumStock"/>
+                                            <Binding Path="ExpiryDate"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="80">
+                <DataGridTemplateColumn Width="112">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="✏" FontSize="12" Background="Transparent" BorderThickness="0" 
-                                        Cursor="Hand" Click="BtnEdit_Click" Tag="{Binding Id}" Padding="4,2"/>
-                                <Button Content="🗑" FontSize="12" Background="Transparent" BorderThickness="0" 
-                                        Cursor="Hand" Click="BtnDelete_Click" Tag="{Binding Id}" Padding="4,2" 
-                                        Foreground="#F44336"/>
+                                <Button Style="{StaticResource GhostIconButton}" Width="26" Height="26"
+                                        Cursor="Hand" Click="BtnPrintLabel_Click" Tag="{Binding Id}" ToolTip="{DynamicResource PrintLabel}">
+                                    <materialDesign:PackIcon Kind="BarcodeScan" Width="14" Height="14" Foreground="{StaticResource PrimaryBrush}"/>
+                                </Button>
+                                <Button Style="{StaticResource GhostIconButton}" Width="26" Height="26"
+                                        Cursor="Hand" Click="BtnEdit_Click" Tag="{Binding Id}">
+                                    <materialDesign:PackIcon Kind="PencilOutline" Width="14" Height="14" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                </Button>
+                                <Button Style="{StaticResource GhostIconButton}" Width="26" Height="26"
+                                        Cursor="Hand" Click="BtnDelete_Click" Tag="{Binding Id}">
+                                    <materialDesign:PackIcon Kind="TrashCanOutline" Width="14" Height="14" Foreground="{StaticResource DangerBrush}"/>
+                                </Button>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </DataGrid>
+            </DataGrid>
+        </Border>
+
+        <!-- Pagination -->
+        <DockPanel Grid.Row="3" Margin="0,12,0,0">
+            <Button DockPanel.Dock="Left" Content="{DynamicResource PrevPage}" Padding="13,7" Click="BtnPrevPage_Click"
+                    Background="{DynamicResource CardBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" FontSize="12" Cursor="Hand" Style="{StaticResource PillButton}"/>
+            <Button DockPanel.Dock="Left" Content="{DynamicResource NextPage}" Padding="13,7" Margin="8,0,0,0" Click="BtnNextPage_Click"
+                    Background="{DynamicResource CardBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" FontSize="12" Cursor="Hand" Style="{StaticResource PillButton}"/>
+            <TextBlock x:Name="txtPageInfo" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+        </DockPanel>
     </Grid>
 </UserControl>

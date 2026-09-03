@@ -6,6 +6,7 @@ public class CashTransaction
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     public DateTime TransactionDate { get; set; } = DateTime.Now;
     [MaxLength(50)]
     public string TransactionType { get; set; } = string.Empty;

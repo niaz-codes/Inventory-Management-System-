@@ -6,6 +6,7 @@ public class Expense
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     public DateTime ExpenseDate { get; set; } = DateTime.Now;
     [Required, MaxLength(100)]
     public string Category { get; set; } = string.Empty;

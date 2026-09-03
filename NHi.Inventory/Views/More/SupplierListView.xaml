@@ -1,6 +1,7 @@
 <UserControl x:Class="NHi.Inventory.Views.More.SupplierListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -9,22 +10,28 @@
         <DockPanel Grid.Row="0" Margin="0,0,0,10">
             <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Suppliers}" FontSize="22" FontWeight="Bold"/>
             <Button DockPanel.Dock="Right" Content="{DynamicResource AddSupplier}" HorizontalAlignment="Right"
-                    Click="BtnAdd_Click" Background="#4CAF50" Foreground="White" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+                    Click="BtnAdd_Click" Style="{StaticResource SuccessButton}" Padding="15,7" FontSize="12"/>
             <Button DockPanel.Dock="Right" Content="{DynamicResource ExportToExcel}" HorizontalAlignment="Right" Margin="0,0,10,0"
-                    Click="BtnExport_Click" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+                    Click="BtnExport_Click" Style="{StaticResource SecondaryButton}" Padding="15,7" FontSize="12"/>
         </DockPanel>
-        <DataGrid x:Name="dg" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
-                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1"
-                  RowBackground="White" AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False" HeadersVisibility="Column">
+        <DataGrid x:Name="dg" Grid.Row="1" Style="{StaticResource ModernDataGrid}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="120"/>
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="200"/>
-                <DataGridTextColumn Header="Balance" Binding="{Binding CurrentBalance, StringFormat='Rs. {0:N0}'}" Width="120"/>
-                <DataGridTemplateColumn Width="60">
+                <!-- Proportional widths so the columns fill the grid evenly — the fixed-pixel
+                     columns used to leave a wide gap that stranded the action icon at the far
+                     right edge. Horizontal scroll is off so the Actions column is always shown. -->
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2.2*" MinWidth="140"/>
+                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="1.1*" MinWidth="110"/>
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" MinWidth="120"/>
+                <DataGridTextColumn Header="Balance" Binding="{Binding CurrentBalance, StringFormat='Rs. {0:N0}'}" Width="1.1*" MinWidth="110"/>
+                <DataGridTemplateColumn Header="Actions" Width="90" MinWidth="90">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="X" FontSize="11" Background="Transparent" BorderThickness="0" Click="BtnDelete_Click" Tag="{Binding Id}" Foreground="#F44336" Cursor="Hand"/>
+                            <Button Background="Transparent" BorderThickness="0" Click="BtnDelete_Click" Tag="{Binding Id}"
+                                    Cursor="Hand" Width="32" Height="32" Padding="5"
+                                    HorizontalAlignment="Left" Margin="4,0,0,0" ToolTip="{DynamicResource Delete}">
+                                <materialDesign:PackIcon Kind="TrashCanOutline" Width="16" Height="16" Foreground="{DynamicResource DangerTextBrush}"/>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

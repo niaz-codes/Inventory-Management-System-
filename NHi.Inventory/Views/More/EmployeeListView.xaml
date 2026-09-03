@@ -12,46 +12,35 @@
         <DockPanel Grid.Row="0" Margin="0,0,0,10">
             <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Employees}" FontSize="22" FontWeight="Bold"/>
             <Button DockPanel.Dock="Right" Content="{DynamicResource AddEmployee}" HorizontalAlignment="Right"
-                    Click="BtnAdd_Click" Background="#1565C0" Foreground="White" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+                    Click="BtnAdd_Click" Style="{StaticResource PrimaryButton}" Padding="15,7" FontSize="12"/>
         </DockPanel>
 
-        <DataGrid x:Name="dgEmployees" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" Height="150"
-                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1"
-                  RowBackground="White" AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
-                  HeadersVisibility="Column" SelectionChanged="DgEmployees_SelectionChanged" Margin="0,0,0,10">
+        <TextBox x:Name="txtSearch" Grid.Row="1" FontSize="14" Padding="10,8" Margin="0,0,0,10"
+                 TextChanged="TxtSearch_TextChanged" Tag="{DynamicResource SearchEmployees}"/>
+
+        <DataGrid x:Name="dgEmployees" Grid.Row="2" Style="{StaticResource ModernDataGrid}"
+                  MouseDoubleClick="DgEmployees_DoubleClick"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
                 <DataGridTextColumn Header="Position" Binding="{Binding Position}" Width="120"/>
                 <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="110"/>
-                <DataGridTextColumn Header="Salary" Binding="{Binding MonthlySalary, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                <DataGridTextColumn Header="Balance" Binding="{Binding CurrentBalance, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                <DataGridTemplateColumn Width="180">
+                <DataGridTextColumn Header="{DynamicResource DailyWage}" Binding="{Binding DailyWage, StringFormat='Rs. {0:N0}'}" Width="110"/>
+                <DataGridTextColumn Header="Balance" Binding="{Binding CurrentBalance, StringFormat='Rs. {0:N0}'}" Width="110"/>
+                <DataGridTemplateColumn Width="150">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="{DynamicResource AddDue}" FontSize="10" Padding="6,3" Margin="0,0,4,0"
-                                        Background="#FFF3E0" Foreground="#E65100" BorderThickness="0" Cursor="Hand"
-                                        Click="BtnAddDue_Click" Tag="{Binding Id}"/>
+                                <Button Content="{DynamicResource ViewEmployee}" FontSize="10" Padding="8,3" Margin="0,0,4,0"
+                                        Background="{DynamicResource InfoBgBrush}" Foreground="{DynamicResource InfoTextBrush}" BorderThickness="0" Cursor="Hand"
+                                        Click="BtnView_Click" Tag="{Binding Id}"/>
                                 <Button Content="{DynamicResource PayEmployee}" FontSize="10" Padding="6,3"
-                                        Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"
+                                        Background="{DynamicResource SuccessBgBrush}" Foreground="{DynamicResource SuccessTextBrush}" BorderThickness="0" Cursor="Hand"
                                         Click="BtnPay_Click" Tag="{Binding Id}"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <DataGrid x:Name="dgLedger" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"
-                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1"
-                  RowBackground="White" AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
-                  HeadersVisibility="Column">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Binding="{Binding TransactionDate, StringFormat='{}{0:dd-MMM-yyyy}'}" Width="100"/>
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
-                <DataGridTextColumn Header="Debit" Binding="{Binding Debit, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                <DataGridTextColumn Header="Credit" Binding="{Binding Credit, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                <DataGridTextColumn Header="Balance" Binding="{Binding Balance, StringFormat='Rs. {0:N0}'}" Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
 

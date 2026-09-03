@@ -1,0 +1,128 @@
+<Window x:Class="NHi.Inventory.Views.Settings.PrintLayoutDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource PrintLayout}" Height="660" Width="840" MinHeight="560" MinWidth="760"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource CardBrush}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="380"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left: settings form -->
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Background="{DynamicResource CardBrush}">
+            <StackPanel Margin="26,24">
+                <TextBlock Text="{DynamicResource PrintLayout}" FontSize="20" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                <TextBlock Text="{DynamicResource PrintLayoutCardHint}" FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,22"/>
+
+                <TextBlock Text="{DynamicResource PageSize}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <ComboBox x:Name="cmbPageSize" Height="38" Margin="0,0,0,6" SelectionChanged="Setting_SelectionChanged"/>
+                <TextBlock x:Name="txtFixedSizeInfo" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"
+                           TextWrapping="Wrap" Margin="0,0,0,14"/>
+
+                <StackPanel x:Name="panelCustomFields">
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{DynamicResource PageWidth}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBox x:Name="txtCustomWidth" FontSize="13" Padding="10,8" TextChanged="Setting_TextChanged"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{DynamicResource PageHeight}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBox x:Name="txtCustomHeight" FontSize="13" Padding="10,8" TextChanged="Setting_TextChanged"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{DynamicResource PageHeightBlankAutoHint}" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"
+                               TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="{DynamicResource PrintUnit}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="cmbUnit" Height="38" Margin="0,0,0,16" SelectionChanged="Setting_SelectionChanged"/>
+                </StackPanel>
+
+                <TextBlock Text="{DynamicResource Orientation}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,7"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                    <RadioButton x:Name="rbPortrait" Content="{DynamicResource Portrait}" GroupName="PrintOrientation"
+                                 IsChecked="True" FontSize="13" Margin="0,0,26,0" Checked="Setting_Changed"/>
+                    <RadioButton x:Name="rbLandscape" Content="{DynamicResource Landscape}" GroupName="PrintOrientation"
+                                 FontSize="13" Checked="Setting_Changed"/>
+                </StackPanel>
+
+                <TextBlock Text="{DynamicResource Margins}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,7"/>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock Text="{DynamicResource MarginTop}" FontSize="10" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtMarginTop" FontSize="13" Padding="10,8" TextChanged="Setting_TextChanged"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2">
+                        <TextBlock Text="{DynamicResource MarginBottom}" FontSize="10" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtMarginBottom" FontSize="13" Padding="10,8" TextChanged="Setting_TextChanged"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0">
+                        <TextBlock Text="{DynamicResource MarginLeft}" FontSize="10" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtMarginLeft" FontSize="13" Padding="10,8" TextChanged="Setting_TextChanged"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2">
+                        <TextBlock Text="{DynamicResource MarginRight}" FontSize="10" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtMarginRight" FontSize="13" Padding="10,8" TextChanged="Setting_TextChanged"/>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Text="{DynamicResource MarginsMmHint}" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,5,0,22"/>
+
+                <Button x:Name="btnSaveDefault" Content="{DynamicResource SaveAsDefault}" Height="42"
+                        Click="BtnSaveDefault_Click" Style="{StaticResource PrimaryButton}" Background="#673AB7" Margin="0,0,0,10"/>
+                <Button x:Name="btnResetDefault" Content="{DynamicResource ResetToDefault}" Height="40"
+                        Click="BtnResetDefault_Click" Style="{StaticResource SecondaryButton}" Margin="0,0,0,10"/>
+                <Button x:Name="btnClose" Content="{DynamicResource Close}" Height="38"
+                        Click="BtnClose_Click" Style="{StaticResource SecondaryButton}"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Right: live preview -->
+        <Border Grid.Column="1" Background="{DynamicResource LightBgBrush}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="{DynamicResource LivePreview}" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+
+                <Border x:Name="previewPage" Background="White" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="22" ShadowDepth="4" Opacity="0.16" Color="#000"/>
+                    </Border.Effect>
+                    <Border x:Name="previewMargin" BorderBrush="#552196F3" BorderThickness="1"
+                            SnapsToDevicePixels="True">
+                        <StackPanel Margin="4">
+                            <Border Width="24" Height="24" Background="#E0E0E0" CornerRadius="3" Margin="0,0,0,6"/>
+                            <Border Height="6" Background="#DADADA" CornerRadius="2" Margin="0,0,0,4" Width="80" HorizontalAlignment="Center"/>
+                            <Border Height="4" Background="#E8E8E8" CornerRadius="2" Margin="0,0,0,10" Width="60" HorizontalAlignment="Center"/>
+                            <Border Height="1" Background="#CCCCCC" Margin="0,0,0,8"/>
+                            <Border Height="3" Background="#E8E8E8" CornerRadius="2" Margin="0,0,0,3"/>
+                            <Border Height="3" Background="#E8E8E8" CornerRadius="2" Margin="0,0,0,3"/>
+                            <Border Height="3" Background="#EFEFEF" CornerRadius="2" Margin="0,0,0,3" Width="70" HorizontalAlignment="Left"/>
+                            <Border Height="1" Background="#CCCCCC" Margin="0,6,0,8"/>
+                            <Border Height="3" Background="#E0E0E0" CornerRadius="2" Margin="0,0,0,3"/>
+                            <Border Height="3" Background="#E0E0E0" CornerRadius="2" Margin="0,0,0,3" Width="85" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Border>
+                </Border>
+
+                <TextBlock x:Name="txtPreviewDims" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,16,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

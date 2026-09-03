@@ -10,20 +10,24 @@
         <TextBlock Grid.Row="0" Text="{DynamicResource SalesHistory}" FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
         <Grid Grid.Row="1" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/><ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="Auto"/><ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="Auto"/><ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="Auto"/><ColumnDefinition Width="140"/>
                 <ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="From" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"/>
-            <DatePicker x:Name="dpFrom" Grid.Column="1" FontSize="12"/>
-            <TextBlock Grid.Column="2" Text="To" VerticalAlignment="Center" FontSize="12" Margin="15,0,8,0"/>
-            <DatePicker x:Name="dpTo" Grid.Column="3" FontSize="12"/>
-            <Button Grid.Column="4" Content="{DynamicResource Filter}" Click="BtnFilter_Click" Padding="12,6" Margin="15,0,5,0" Background="#1565C0" Foreground="White" BorderThickness="0" FontSize="12"/>
-            <Button Grid.Column="5" Content="{DynamicResource ExportToExcel}" Click="BtnExport_Click" Padding="12,6" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" FontSize="12"/>
+            <TextBox x:Name="txtSearch" Grid.Column="0" FontSize="12" Padding="8,6" Margin="0,0,10,0"
+                     TextChanged="TxtSearch_TextChanged" Tag="{DynamicResource SearchInvoiceCustomer}"/>
+            <TextBlock Grid.Column="1" Text="From" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"/>
+            <DatePicker x:Name="dpFrom" Grid.Column="2" FontSize="12"/>
+            <TextBlock Grid.Column="3" Text="To" VerticalAlignment="Center" FontSize="12" Margin="15,0,8,0"/>
+            <DatePicker x:Name="dpTo" Grid.Column="4" FontSize="12"/>
+            <Button Grid.Column="5" Content="{DynamicResource Filter}" Click="BtnFilter_Click" Padding="12,6" Margin="15,0,5,0" FontSize="12" Style="{StaticResource PrimaryButton}"/>
+            <Button Grid.Column="6" Content="{DynamicResource ExportToExcel}" Click="BtnExport_Click" Padding="12,6" FontSize="12"
+                    Background="{DynamicResource SuccessBgBrush}" Foreground="{StaticResource SuccessBrush}" BorderThickness="0"/>
         </Grid>
         <DataGrid x:Name="dg" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"
-                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1" FontSize="13" CanUserAddRows="False"
-                  HeadersVisibility="Column" RowBackground="White" AlternatingRowBackground="#FAFAFA">
+                  GridLinesVisibility="Horizontal" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Invoice" Binding="{Binding InvoiceNumber}" Width="130"/>
                 <DataGridTextColumn Header="Date" Binding="{Binding SaleDate, StringFormat='{}{0:dd-MMM-yyyy}'}" Width="100"/>
@@ -32,16 +36,18 @@
                 <DataGridTextColumn Header="Paid" Binding="{Binding PaidAmount, StringFormat='Rs. {0:N0}'}" Width="100"/>
                 <DataGridTextColumn Header="Remaining" Binding="{Binding RemainingAmount, StringFormat='Rs. {0:N0}'}" Width="100"/>
                 <DataGridTextColumn Header="Method" Binding="{Binding PaymentMethod}" Width="80"/>
-                <DataGridTemplateColumn Header="Actions" Width="230">
+                <DataGridTemplateColumn Header="Actions" Width="280">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
+                                <Button Content="{DynamicResource ViewSale}" Click="BtnViewSale_Click" Tag="{Binding}"
+                                        Padding="8,4" Margin="0,0,5,0" Background="{DynamicResource SurfaceAltBrush}" Foreground="{DynamicResource TextSecondaryBrush}" BorderThickness="0" FontSize="11" Cursor="Hand"/>
                                 <Button Content="{DynamicResource Reprint}" Click="BtnReprint_Click" Tag="{Binding}"
-                                        Padding="8,4" Margin="0,0,5,0" Background="#E3F2FD" Foreground="#1565C0" BorderThickness="0" FontSize="11" Cursor="Hand"/>
+                                        Padding="8,4" Margin="0,0,5,0" Background="{DynamicResource InfoBgBrush}" Foreground="{DynamicResource InfoTextBrush}" BorderThickness="0" FontSize="11" Cursor="Hand"/>
                                 <Button Content="{DynamicResource Return}" Click="BtnReturn_Click" Tag="{Binding}"
-                                        Padding="8,4" Margin="0,0,5,0" Background="#FFF3E0" Foreground="#E65100" BorderThickness="0" FontSize="11" Cursor="Hand"/>
+                                        Padding="8,4" Margin="0,0,5,0" Background="{DynamicResource WarningBgBrush}" Foreground="{StaticResource WarningBrush}" BorderThickness="0" FontSize="11" Cursor="Hand"/>
                                 <Button Content="{DynamicResource Void}" Click="BtnVoid_Click" Tag="{Binding}"
-                                        Padding="8,4" Background="#FFEBEE" Foreground="#C62828" BorderThickness="0" FontSize="11" Cursor="Hand"/>
+                                        Padding="8,4" Background="{DynamicResource DangerBgBrush}" Foreground="{StaticResource DangerBrush}" BorderThickness="0" FontSize="11" Cursor="Hand"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

@@ -1,0 +1,84 @@
+<Window x:Class="NHi.Inventory.Views.Settings.PosPrintSettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="POS Print Settings" Height="720" Width="480" WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize" Background="{DynamicResource CardBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="{DynamicResource CardBrush}">
+        <Border Padding="24">
+            <StackPanel>
+                <TextBlock Text="{DynamicResource PosPrintSettings}" FontSize="18" FontWeight="Bold" Foreground="#1565C0" Margin="0,0,0,16"/>
+
+                <TextBlock Text="{DynamicResource PrinterType}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <ComboBox x:Name="cmbPrinterType" FontSize="13" Padding="8,6" Margin="0,0,0,12" SelectionChanged="PrinterType_Changed">
+                    <ComboBoxItem Content="{DynamicResource ThermalPrinter}"/>
+                    <ComboBoxItem Content="{DynamicResource StandardPrinter}"/>
+                </ComboBox>
+
+                <TextBlock Text="{DynamicResource DefaultPrinter}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <ComboBox x:Name="cmbPrinter" FontSize="13" Padding="8,6" Margin="0,0,0,12"/>
+
+                <!-- Thermal group -->
+                <StackPanel x:Name="grpThermal">
+                    <TextBlock Text="{DynamicResource ThermalWidth}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <ComboBox x:Name="cmbThermalWidth" Grid.Column="0" FontSize="13" Padding="8,6" SelectionChanged="ThermalWidth_Changed">
+                            <ComboBoxItem Content="58 mm"/>
+                            <ComboBoxItem Content="80 mm"/>
+                            <ComboBoxItem Content="{DynamicResource CustomSize}"/>
+                        </ComboBox>
+                        <StackPanel x:Name="pnlThermalCustom" Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" Visibility="Collapsed">
+                            <TextBox x:Name="txtThermalCustom" Width="60" FontSize="13" Padding="8,6" HorizontalContentAlignment="Center"/>
+                            <TextBlock Text="mm" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Standard group -->
+                <StackPanel x:Name="grpStandard" Visibility="Collapsed">
+                    <TextBlock Text="{DynamicResource PaperSize}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <ComboBox x:Name="cmbStandardPaper" FontSize="13" Padding="8,6" Margin="0,0,0,10" SelectionChanged="StandardPaper_Changed">
+                        <ComboBoxItem Content="A4"/>
+                        <ComboBoxItem Content="A5"/>
+                        <ComboBoxItem Content="Letter"/>
+                        <ComboBoxItem Content="{DynamicResource CustomSize}"/>
+                    </ComboBox>
+                    <StackPanel x:Name="pnlStdCustom" Orientation="Horizontal" Visibility="Collapsed" Margin="0,0,0,12">
+                        <TextBox x:Name="txtStdW" Width="64" FontSize="13" Padding="8,6" HorizontalContentAlignment="Center"/>
+                        <TextBlock Text="×" VerticalAlignment="Center" Margin="6,0"/>
+                        <TextBox x:Name="txtStdH" Width="64" FontSize="13" Padding="8,6" HorizontalContentAlignment="Center"/>
+                        <TextBlock Text="mm" VerticalAlignment="Center" Margin="6,0,0,0" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                        <TextBlock Text="{DynamicResource MarginsMm}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBox x:Name="txtMargin" FontSize="13" Padding="8,6"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="{DynamicResource Copies}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBox x:Name="txtCopies" FontSize="13" Padding="8,6"/>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="{DynamicResource CopyMode}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <ComboBox x:Name="cmbCopyMode" FontSize="13" Padding="8,6" Margin="0,0,0,14">
+                    <ComboBoxItem Content="{DynamicResource CustomerCopy}"/>
+                    <ComboBoxItem Content="{DynamicResource ShopCopy}"/>
+                    <ComboBoxItem Content="{DynamicResource BothCopies}"/>
+                </ComboBox>
+
+                <CheckBox x:Name="chkAutoPrint" Content="{DynamicResource AutoPrintAfterSale}" FontSize="13" Margin="0,0,0,8"/>
+                <CheckBox x:Name="chkAutoCut" Content="{DynamicResource AutoCut}" FontSize="13" Margin="0,0,0,8"/>
+                <CheckBox x:Name="chkLivePreview" Content="{DynamicResource ShowLivePreview}" FontSize="13" Margin="0,0,0,18"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="{DynamicResource TestPrint}" Click="BtnTest_Click" Style="{StaticResource SecondaryButton}" Padding="16,9" Margin="0,0,10,0"/>
+                    <Button Content="{DynamicResource Save}" Click="BtnSave_Click" Style="{StaticResource PrimaryButton}" Padding="22,9"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </ScrollViewer>
+</Window>

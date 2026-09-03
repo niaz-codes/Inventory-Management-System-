@@ -6,6 +6,7 @@ public class SupplierLedger
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     public int SupplierId { get; set; }
     public Supplier? Supplier { get; set; }
     public DateTime TransactionDate { get; set; } = DateTime.Now;
@@ -17,4 +18,8 @@ public class SupplierLedger
     public int? ReferenceId { get; set; }
     [MaxLength(50)]
     public string? ReferenceType { get; set; }
+    public int? CreatedBy { get; set; }
+    /// <summary>OpeningBalance | Purchase | CashPurchase | Payment | PurchaseReturn | ManualDebit | ManualCredit</summary>
+    [MaxLength(30)]
+    public string TransactionType { get; set; } = string.Empty;
 }

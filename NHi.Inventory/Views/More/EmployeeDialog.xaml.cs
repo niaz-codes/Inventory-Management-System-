@@ -21,8 +21,23 @@ public partial class EmployeeDialog : Window
             txtPosition.Text = existing.Position ?? "";
             txtPhone.Text = existing.Phone ?? "";
             txtAddress.Text = existing.Address ?? "";
-            txtSalary.Text = existing.MonthlySalary.ToString("0.##");
+            txtSalary.Text = existing.DailyWage.ToString("0.##");
+            txtMonthly.Text = existing.MonthlySalary.ToString("0.##");
+            rbMonthly.IsChecked = existing.SalaryType == "Monthly";
+            rbDaily.IsChecked = existing.SalaryType != "Monthly";
         }
+
+        UpdateSalaryPanels();
+    }
+
+    private void SalType_Changed(object sender, RoutedEventArgs e) => UpdateSalaryPanels();
+
+    private void UpdateSalaryPanels()
+    {
+        if (pnlDaily == null || pnlMonthly == null) return;
+        var monthly = rbMonthly.IsChecked == true;
+        pnlDaily.Visibility = monthly ? Visibility.Collapsed : Visibility.Visible;
+        pnlMonthly.Visibility = monthly ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void BtnSave_Click(object sender, RoutedEventArgs e)
@@ -38,7 +53,9 @@ public partial class EmployeeDialog : Window
         employee.Position = txtPosition.Text.Trim();
         employee.Phone = txtPhone.Text.Trim();
         employee.Address = txtAddress.Text.Trim();
-        employee.MonthlySalary = decimal.TryParse(txtSalary.Text, out var salary) ? salary : 0;
+        employee.SalaryType = rbMonthly.IsChecked == true ? "Monthly" : "Daily";
+        employee.DailyWage = decimal.TryParse(txtSalary.Text, out var wage) ? wage : 0;
+        employee.MonthlySalary = decimal.TryParse(txtMonthly.Text, out var monthly) ? monthly : 0;
 
         new EmployeeService().Save(employee);
         this.DialogResult = true;

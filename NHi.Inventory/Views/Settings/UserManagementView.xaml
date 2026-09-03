@@ -9,11 +9,11 @@
         <DockPanel Grid.Row="0" Margin="0,0,0,10">
             <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Users}" FontSize="22" FontWeight="Bold"/>
             <Button DockPanel.Dock="Right" Content="{DynamicResource AddUser}" HorizontalAlignment="Right"
-                    Click="BtnAdd_Click" Background="#1565C0" Foreground="White" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+                    Click="BtnAdd_Click" Padding="15,7" FontSize="12" Style="{StaticResource PrimaryButton}"/>
         </DockPanel>
         <DataGrid x:Name="dg" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
-                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1" FontSize="13" CanUserAddRows="False"
-                  HeadersVisibility="Column" RowBackground="White" AlternatingRowBackground="#FAFAFA">
+                  GridLinesVisibility="Horizontal" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="120"/>
                 <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="*"/>
@@ -24,6 +24,14 @@
                         <DataTemplate>
                             <Button Content="Reset Password" FontSize="10" Background="Transparent" BorderThickness="0"
                                     Click="BtnResetPassword_Click" Tag="{Binding Id}" Cursor="Hand" Foreground="#FF9800" Padding="4,0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="60">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="{DynamicResource Delete}" FontSize="10" Background="Transparent" BorderThickness="0"
+                                    Click="BtnDelete_Click" Tag="{Binding Id}" Cursor="Hand" Foreground="#F44336" Padding="4,0"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

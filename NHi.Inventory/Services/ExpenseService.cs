@@ -18,7 +18,7 @@ public class ExpenseService
     public int Save(Expense expense)
     {
         using var db = new AppDbContext();
-        if (expense.Id == 0) db.Expenses.Add(expense);
+        if (expense.Id == 0) { expense.ShopId = AuthService.CurrentShopId ?? 1; db.Expenses.Add(expense); }
         else db.Expenses.Update(expense);
         db.SaveChanges();
         return expense.Id;

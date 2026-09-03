@@ -48,7 +48,7 @@ public partial class PaymentDialog : Window
         else if (_type == "employee")
             new EmployeeService().MakePayment(_entityId, amount, txtNotes.Text.Trim());
         else
-            new SupplierService().MakePayment(_entityId, amount, txtNotes.Text.Trim());
+            new SupplierService().PaySupplier(_entityId, amount, DateTime.Now, "Cash", null, txtNotes.Text.Trim(), AuthService.CurrentUser?.Id);
 
         MessageBox.Show(LanguageManager.GetString("PaymentReceived"), "", MessageBoxButton.OK, MessageBoxImage.Information);
         this.DialogResult = true;

@@ -10,7 +10,7 @@ public partial class BackupRestoreView : System.Windows.Controls.UserControl
 
     private void BtnBackup(object sender, RoutedEventArgs e)
     {
-        if (!AuthService.IsAdmin())
+        if (!AuthService.IsMainAdmin())
         {
             MessageBox.Show(LanguageManager.GetString("AdminPermissionRequired"), "", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
@@ -30,7 +30,7 @@ public partial class BackupRestoreView : System.Windows.Controls.UserControl
 
     private void BtnRestore(object sender, RoutedEventArgs e)
     {
-        if (!AuthService.IsAdmin())
+        if (!AuthService.IsMainAdmin())
         {
             MessageBox.Show(LanguageManager.GetString("AdminPermissionRequired"), "", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;

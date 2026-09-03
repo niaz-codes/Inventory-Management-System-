@@ -1,0 +1,185 @@
+<Window x:Class="NHi.Inventory.Views.Khata.SupplierKhataView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Supplier Khata" Height="720" Width="980" WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource LightBgBrush}" MinHeight="600" MinWidth="800">
+    <Window.Resources>
+        <Style x:Key="ActionBtnBase" TargetType="Button">
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="7" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Opacity" Value="0.82"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ActionBtnRed" TargetType="Button" BasedOn="{StaticResource ActionBtnBase}">
+            <Setter Property="Background" Value="{DynamicResource DangerBgBrush}"/>
+            <Setter Property="Foreground" Value="#C62828"/>
+        </Style>
+        <Style x:Key="ActionBtnGreen" TargetType="Button" BasedOn="{StaticResource ActionBtnBase}">
+            <Setter Property="Background" Value="{DynamicResource SuccessBgBrush}"/>
+            <Setter Property="Foreground" Value="#2E7D32"/>
+        </Style>
+        <Style x:Key="ActionBtnBlue" TargetType="Button" BasedOn="{StaticResource ActionBtnBase}">
+            <Setter Property="Background" Value="{DynamicResource InfoBgBrush}"/>
+            <Setter Property="Foreground" Value="#1565C0"/>
+        </Style>
+        <Style x:Key="ActionBtnGray" TargetType="Button" BasedOn="{StaticResource ActionBtnBase}">
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        </Style>
+    </Window.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{DynamicResource CardBrush}" CornerRadius="10" Padding="16" Margin="0,0,0,12" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock x:Name="txtName" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock x:Name="txtDetails" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,4,0,0"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <Border x:Name="badgeStatus" CornerRadius="4" Padding="8,3" Margin="0,0,8,0">
+                            <TextBlock x:Name="txtStatusBadge" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource CurrentPayableLabel}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Right"/>
+                    <TextBlock x:Name="txtBalance" FontSize="28" FontWeight="Bold" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Quick Actions -->
+        <WrapPanel Grid.Row="1" Margin="0,0,0,12">
+            <Button x:Name="btnPaySupplier" Click="BtnPaySupplier_Click" Style="{StaticResource ActionBtnGreen}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Wallet" Width="15" Height="15" Foreground="{DynamicResource SuccessTextBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="{DynamicResource PaySupplier}" Foreground="{DynamicResource SuccessTextBrush}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnAddEntry" Click="BtnAddEntry_Click" Style="{StaticResource ActionBtnRed}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="PlusCircleOutline" Width="15" Height="15" Foreground="{DynamicResource DangerTextBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="{DynamicResource AddKhataEntry}" Foreground="{DynamicResource DangerTextBrush}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnPrintStatement" Click="BtnPrintStatement_Click" Style="{StaticResource ActionBtnGray}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Printer" Width="15" Height="15" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="{DynamicResource PrintKhata}" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnExportExcel" Click="BtnExportExcel_Click" Style="{StaticResource ActionBtnGray}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="ChartBar" Width="15" Height="15" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="{DynamicResource ExportToExcel}" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnEditSupplier" Click="BtnEditSupplier_Click" Style="{StaticResource ActionBtnGray}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="PencilOutline" Width="15" Height="15" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="{DynamicResource EditSupplier}" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnWhatsApp" Click="BtnWhatsApp_Click" Style="{StaticResource ActionBtnGreen}" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Whatsapp" Width="15" Height="15" Foreground="{DynamicResource SuccessTextBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="{DynamicResource PaymentReminder}" Foreground="{DynamicResource SuccessTextBrush}"/>
+                </StackPanel>
+            </Button>
+        </WrapPanel>
+
+        <!-- Date Filter -->
+        <Border Grid.Row="2" Background="{DynamicResource CardBrush}" CornerRadius="10" Padding="12" Margin="0,0,0,12" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{DynamicResource From}" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"/>
+                <DatePicker x:Name="dpFrom" FontSize="12" Width="130"/>
+                <TextBlock Text="{DynamicResource To}" VerticalAlignment="Center" FontSize="12" Margin="15,0,8,0"/>
+                <DatePicker x:Name="dpTo" FontSize="12" Width="130"/>
+                <Button Content="{DynamicResource Filter}" Click="BtnFilter_Click" Style="{StaticResource PrimaryButton}" Padding="12,6" Margin="15,0,5,0" FontSize="12"/>
+                <Button Content="{DynamicResource All}" Click="BtnClearFilter_Click" Style="{StaticResource SecondaryButton}" Padding="12,6" FontSize="12"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Ledger -->
+        <DataGrid x:Name="dgLedger" Grid.Row="3" MaxHeight="420" AutoGenerateColumns="False" IsReadOnly="True"
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BorderBrush}"
+                  BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" RowBackground="{DynamicResource CardBrush}"
+                  AlternatingRowBackground="{DynamicResource AltRowBrush}" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{DynamicResource Date}" Binding="{Binding TransactionDate, StringFormat='{}{0:dd-MMM-yyyy}'}" Width="95"/>
+                <DataGridTextColumn Header="{DynamicResource TransactionType}" Binding="{Binding TypeText}" Width="110"/>
+                <DataGridTextColumn Header="{DynamicResource Reference}" Binding="{Binding ReferenceText}" Width="110"/>
+                <DataGridTextColumn Header="{DynamicResource Description}" Binding="{Binding Description}" Width="*"/>
+                <DataGridTextColumn Header="{DynamicResource Debit}" Binding="{Binding Debit, StringFormat='Rs. {0:N0}'}" Width="90"/>
+                <DataGridTextColumn Header="{DynamicResource Credit}" Binding="{Binding Credit, StringFormat='Rs. {0:N0}'}" Width="90"/>
+                <DataGridTextColumn Header="{DynamicResource Balance}" Binding="{Binding Balance, StringFormat='Rs. {0:N0}'}" Width="100"/>
+                <DataGridTextColumn Header="{DynamicResource CreatedByLabel}" Binding="{Binding CreatedByName}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Summary -->
+        <Border Grid.Row="4" Background="#1565C0" CornerRadius="10" Padding="15,12" Margin="0,12,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{DynamicResource OpeningBalance}" FontSize="10" Foreground="#BBDEFB"/>
+                    <TextBlock x:Name="txtOpening" FontSize="13" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{DynamicResource TotalPurchases}" FontSize="10" Foreground="#BBDEFB"/>
+                    <TextBlock x:Name="txtTotalPurchases" FontSize="13" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="{DynamicResource TotalPaymentsLabel}" FontSize="10" Foreground="#BBDEFB"/>
+                    <TextBlock x:Name="txtTotalPayments" FontSize="13" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Grid.Column="3">
+                    <TextBlock Text="{DynamicResource TotalAdjustmentsLabel}" FontSize="10" Foreground="#BBDEFB"/>
+                    <TextBlock x:Name="txtTotalAdjustments" FontSize="13" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Grid.Column="4">
+                    <TextBlock Text="{DynamicResource CurrentPayableLabel}" FontSize="10" Foreground="#BBDEFB"/>
+                    <TextBlock x:Name="txtCurrentPayable" FontSize="13" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+    </ScrollViewer>
+</Window>

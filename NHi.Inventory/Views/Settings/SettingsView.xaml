@@ -1,50 +1,716 @@
 <UserControl x:Class="NHi.Inventory.Views.Settings.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
-        <StackPanel MaxWidth="600" HorizontalAlignment="Center">
-            <TextBlock Text="{DynamicResource Settings}" FontSize="22" FontWeight="Bold" Margin="0,10,0,20"/>
-            <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,15" BorderBrush="#E0E0E0" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="{DynamicResource CompanyProfile}" FontSize="16" FontWeight="SemiBold" Foreground="#1565C0" Margin="0,0,0,12"/>
-                    <TextBlock Text="{DynamicResource ShopName}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <TextBox x:Name="txtCompanyName" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource PhoneNumber}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <TextBox x:Name="txtPhone" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource Address}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <TextBox x:Name="txtAddress" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource City}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <TextBox x:Name="txtCity" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource Email}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <TextBox x:Name="txtEmail" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource Currency}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <TextBox x:Name="txtCurrency" FontSize="13" Padding="10,8" Text="Rs." Margin="0,0,0,12"/>
-                    <TextBlock x:Name="txtReadOnlyNotice" Text="{DynamicResource AdminPermissionRequired}" FontSize="11"
-                               Foreground="#F44336" Margin="0,0,0,8" Visibility="Collapsed"/>
-                    <Button x:Name="btnSaveCompany" Content="{DynamicResource SaveChanges}" Height="38" Click="BtnSaveCompany" Background="#1565C0" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                </StackPanel>
-            </Border>
-            <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,15" BorderBrush="#E0E0E0" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="{DynamicResource ChangePassword}" FontSize="16" FontWeight="SemiBold" Foreground="#FF9800" Margin="0,0,0,12"/>
-                    <TextBlock Text="{DynamicResource Password}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <PasswordBox x:Name="txtCurrentPass" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource NewPassword}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <PasswordBox x:Name="txtNewPass" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource ConfirmPassword}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <PasswordBox x:Name="txtConfirmPass" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
-                    <Button Content="{DynamicResource Save}" Height="38" Click="BtnChangePassword" Background="#FF9800" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                </StackPanel>
-            </Border>
-            <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,15" BorderBrush="#E0E0E0" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="Language" FontSize="16" FontWeight="SemiBold" Foreground="#4CAF50" Margin="0,0,0,12"/>
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton x:Name="rbEnglish" Content="English" IsChecked="True" GroupName="Lang" FontSize="13" Margin="0,0,20,0" Checked="Lang_Changed"/>
-                        <RadioButton x:Name="rbUrdu" Content="اردو" GroupName="Lang" FontSize="13" Checked="Lang_Changed"/>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <UserControl.Resources>
+
+        <!-- Launcher card: colourful icon badge + animated hover / press -->
+        <Style x:Key="SettingsLauncherCard" TargetType="Button">
+            <Setter Property="Width" Value="270"/>
+            <Setter Property="Height" Value="120"/>
+            <Setter Property="Margin" Value="0,0,18,18"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="cardBd" Background="{TemplateBinding Background}" CornerRadius="16"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="18"
+                                RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="cardScale" ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
+                            <Border.Effect>
+                                <DropShadowEffect x:Name="cardShadow" BlurRadius="16" ShadowDepth="2" Opacity="0.10" Color="#000"/>
+                            </Border.Effect>
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="cardBd" Property="BorderBrush" Value="#1565C0"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="1.035" Duration="0:0:0.14"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="1.035" Duration="0:0:0.14"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardShadow" Storyboard.TargetProperty="Opacity" To="0.24" Duration="0:0:0.14"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardShadow" Storyboard.TargetProperty="Opacity" To="0.10" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="0.965" Duration="0:0:0.08"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="0.965" Duration="0:0:0.08"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="1.035" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="1.035" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BackButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="9" Padding="12,8">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ArrowLeft" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Back" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource HoverBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PanelCard" TargetType="Border">
+            <Setter Property="Width" Value="460"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Margin" Value="0,16,0,0"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="3" Opacity="0.10" Color="#000"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        </Style>
+
+        <!-- Premium clickable language card. A ToggleButton (NOT a RadioButton - no dot, whole
+             card is the hit target); code-behind keeps exactly one checked. Selected state =
+             brand border + tinted fill + checkmark badge + a small lift, all animated. -->
+        <Style x:Key="LanguageCard" TargetType="ToggleButton">
+            <Setter Property="Width" Value="210"/>
+            <Setter Property="Height" Value="150"/>
+            <Setter Property="Margin" Value="0,0,16,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="cardBd" Background="{TemplateBinding Background}" CornerRadius="16"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" Padding="16"
+                                RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="cardScale" ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
+                            <Border.Effect>
+                                <DropShadowEffect x:Name="cardShadow" BlurRadius="16" ShadowDepth="2" Opacity="0.10" Color="#000"/>
+                            </Border.Effect>
+                            <Grid>
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <Border x:Name="checkBadge" Width="24" Height="24" CornerRadius="12"
+                                        Background="{DynamicResource PrimaryBrush}"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0"
+                                        RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform>
+                                        <ScaleTransform x:Name="checkScale" ScaleX="0.4" ScaleY="0.4"/>
+                                    </Border.RenderTransform>
+                                    <materialDesign:PackIcon Kind="Check" Width="15" Height="15" Foreground="White"
+                                                             HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="cardBd" Property="BorderBrush" Value="{DynamicResource FocusBrush}"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="1.03" Duration="0:0:0.14"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="1.03" Duration="0:0:0.14"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardShadow" Storyboard.TargetProperty="Opacity" To="0.22" Duration="0:0:0.14"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardShadow" Storyboard.TargetProperty="Opacity" To="0.10" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="cardBd" Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter TargetName="cardBd" Property="Background" Value="{DynamicResource SelectionBrush}"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="checkBadge" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.18"/>
+                                            <DoubleAnimation Storyboard.TargetName="checkScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.22">
+                                                <DoubleAnimation.EasingFunction><BackEase EasingMode="EaseOut" Amplitude="0.6"/></DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="checkScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.22">
+                                                <DoubleAnimation.EasingFunction><BackEase EasingMode="EaseOut" Amplitude="0.6"/></DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="1.04" Duration="0:0:0.18"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="1.04" Duration="0:0:0.18"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardShadow" Storyboard.TargetProperty="Opacity" To="0.28" Duration="0:0:0.18"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="checkBadge" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.12"/>
+                                            <DoubleAnimation Storyboard.TargetName="checkScale" Storyboard.TargetProperty="ScaleX" To="0.4" Duration="0:0:0.12"/>
+                                            <DoubleAnimation Storyboard.TargetName="checkScale" Storyboard.TargetProperty="ScaleY" To="0.4" Duration="0:0:0.12"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.16"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.16"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardShadow" Storyboard.TargetProperty="Opacity" To="0.10" Duration="0:0:0.16"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleX" To="0.97" Duration="0:0:0.08"/>
+                                            <DoubleAnimation Storyboard.TargetName="cardScale" Storyboard.TargetProperty="ScaleY" To="0.97" Duration="0:0:0.08"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- ============ LAUNCHER ============ -->
+        <ScrollViewer x:Name="launcherPane" VerticalScrollBarVisibility="Auto" Padding="24">
+            <StackPanel MaxWidth="1200">
+                <TextBlock Text="{DynamicResource Settings}" FontSize="24" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,6,0,4"/>
+                <TextBlock Text="Choose a setting to configure" FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,22"/>
+                <WrapPanel>
+                    <Button Style="{StaticResource SettingsLauncherCard}" Tag="Profile" Click="OpenPanel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#E3F2FD" Offset="0"/><GradientStop Color="#BBDEFB" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="AccountCircleOutline" Width="24" Height="24" Foreground="#1565C0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="View Profile" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Shop &amp; account details" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource SettingsLauncherCard}" Tag="Password" Click="OpenPanel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FFF3E0" Offset="0"/><GradientStop Color="#FFE0B2" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="LockOutline" Width="22" Height="22" Foreground="#EF6C00" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource ChangePassword}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Update your login password" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource SettingsLauncherCard}" Tag="Inventory" Click="OpenPanel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#E0F2F1" Offset="0"/><GradientStop Color="#B2DFDB" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="PackageVariantClosed" Width="22" Height="22" Foreground="#00796B" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource InventorySettings}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Expiry warnings &amp; stock rules" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource SettingsLauncherCard}" Tag="Receipt" Click="OpenPanel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#EDE7F6" Offset="0"/><GradientStop Color="#D1C4E9" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="Printer" Width="22" Height="22" Foreground="#5E35B1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Receipt Size" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Thermal paper width &amp; height" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource SettingsLauncherCard}" Tag="Layout" Click="OpenPanel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FCE4EC" Offset="0"/><GradientStop Color="#F8BBD0" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="FilePdfBox" Width="22" Height="22" Foreground="#C2185B" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Page Layout" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="A4 / invoice print layout" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource SettingsLauncherCard}" Tag="Language" Click="OpenPanel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#E8F5E9" Offset="0"/><GradientStop Color="#C8E6C9" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="Translate" Width="22" Height="22" Foreground="#2E7D32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Language" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="English / اردو" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource SettingsLauncherCard}" Tag="Theme" Click="OpenPanel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#ECEFF1" Offset="0"/><GradientStop Color="#CFD8DC" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="PaletteOutline" Width="22" Height="22" Foreground="#546E7A" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource Theme}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Light / Dark appearance" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource SettingsLauncherCard}" Click="OpenBarcodePrint_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#E8EAF6" Offset="0"/><GradientStop Color="#C5CAE9" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="BarcodeScan" Width="22" Height="22" Foreground="#3949AB" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource PrintBarcodes}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{DynamicResource BarcodeSettingHint}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource SettingsLauncherCard}" Click="OpenPosPrint_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="46" Height="46" CornerRadius="13" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#E0F2F1" Offset="0"/><GradientStop Color="#B2DFDB" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <materialDesign:PackIcon Kind="ReceiptTextOutline" Width="22" Height="22" Foreground="#00796B" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource PosPrintSettings}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{DynamicResource PosPrintSettingHint}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ============ DETAIL PANELS ============ -->
+        <Grid x:Name="detailHost" Visibility="Collapsed">
+
+            <!-- View Profile -->
+            <ScrollViewer x:Name="panelProfile" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Padding="24">
+                <StackPanel MaxWidth="1000">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <Button Style="{StaticResource BackButton}" Click="BackToLauncher_Click" Margin="0,0,12,0"/>
+                        <TextBlock Text="View Profile" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                     </StackPanel>
+                    <WrapPanel>
+                        <Border Style="{StaticResource PanelCard}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                    <Border Width="34" Height="34" CornerRadius="9" Background="#E3F2FD" Margin="0,0,10,0">
+                                        <materialDesign:PackIcon Kind="AccountCircleOutline" Width="18" Height="18" Foreground="#1565C0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Account" FontSize="16" FontWeight="SemiBold" Foreground="#1565C0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="Name" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock x:Name="txtProfileName" FontSize="14" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Username" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock x:Name="txtProfileUsername" FontSize="14" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Role" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock x:Name="txtProfileRole" FontSize="14" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Change Username (admin only) -->
+                        <Border x:Name="cardChangeUsername" Style="{StaticResource PanelCard}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                    <Border Width="34" Height="34" CornerRadius="9" Background="#E8EAF6" Margin="0,0,10,0">
+                                        <materialDesign:PackIcon Kind="AccountEditOutline" Width="18" Height="18" Foreground="#3949AB" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="{DynamicResource ChangeUsername}" FontSize="16" FontWeight="SemiBold" Foreground="#3949AB" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <TextBlock Text="{DynamicResource CurrentUsername}" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock x:Name="txtCurrentUsername" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"
+                                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                                <TextBlock Text="{DynamicResource NewUsername}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtNewUsername" FontSize="13" Padding="10,8" Margin="0,0,0,8" MaxLength="50"/>
+
+                                <TextBlock Text="{DynamicResource ConfirmWithPassword}" Style="{StaticResource FieldLabel}"/>
+                                <PasswordBox x:Name="txtUsernameCurrentPass" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
+
+                                <TextBlock x:Name="txtUsernameStatus" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,10" Visibility="Collapsed"/>
+                                <Button Content="{DynamicResource ChangeUsername}" Height="40" Click="BtnChangeUsername_Click"
+                                        Background="#3949AB" Style="{StaticResource PrimaryButton}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource PanelCard}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                    <Border Width="34" Height="34" CornerRadius="9" Background="#E3F2FD" Margin="0,0,10,0">
+                                        <materialDesign:PackIcon Kind="StoreOutline" Width="18" Height="18" Foreground="#1565C0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="{DynamicResource CompanyProfile}" FontSize="16" FontWeight="SemiBold" Foreground="#1565C0" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <TextBlock Text="{DynamicResource CompanyLogo}" Style="{StaticResource FieldLabel}"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Width="64" Height="64" Background="{DynamicResource LightBgBrush}" CornerRadius="8" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                                        <Image x:Name="imgLogoPreview" Stretch="Uniform" Margin="6"/>
+                                    </Border>
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="12,0,0,0">
+                                        <Button x:Name="btnUploadLogo" Content="{DynamicResource UploadLogo}" Click="BtnUploadLogo_Click"
+                                                Height="30" Padding="12,0" Background="{DynamicResource InfoBgBrush}" Foreground="{DynamicResource InfoTextBrush}" BorderThickness="1"
+                                                BorderBrush="{DynamicResource BorderBrush}" Cursor="Hand" HorizontalAlignment="Left" Margin="0,0,0,6"/>
+                                        <Button x:Name="btnRemoveLogo" Content="{DynamicResource RemoveLogo}" Click="BtnRemoveLogo_Click"
+                                                Height="30" Padding="12,0" Background="{DynamicResource DangerBgBrush}" Foreground="{DynamicResource DangerTextBrush}" BorderThickness="1"
+                                                BorderBrush="{DynamicResource BorderBrush}" Cursor="Hand" HorizontalAlignment="Left"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <TextBlock Text="{DynamicResource ShopName}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtCompanyName" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
+                                <TextBlock Text="{DynamicResource PhoneNumber}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtPhone" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
+                                <TextBlock Text="{DynamicResource Address}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtAddress" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
+                                <TextBlock Text="{DynamicResource City}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtCity" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
+                                <TextBlock Text="{DynamicResource Email}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtEmail" FontSize="13" Padding="10,8" Margin="0,0,0,8"/>
+                                <TextBlock Text="{DynamicResource Currency}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtCurrency" FontSize="13" Padding="10,8" Text="Rs." Margin="0,0,0,12"/>
+                                <TextBlock x:Name="txtReadOnlyNotice" Text="{DynamicResource ProfileManagedByMainAdmin}" FontSize="11"
+                                           Foreground="#F44336" Margin="0,0,0,8" Visibility="Collapsed" TextWrapping="Wrap"/>
+                                <Button x:Name="btnSaveCompany" Content="{DynamicResource SaveChanges}" Height="40" Click="BtnSaveCompany" Style="{StaticResource PrimaryButton}"/>
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
                 </StackPanel>
-            </Border>
-        </StackPanel>
-    </ScrollViewer>
+            </ScrollViewer>
+
+            <!-- Change Password -->
+            <ScrollViewer x:Name="panelPassword" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Padding="24">
+                <StackPanel MaxWidth="1000">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <Button Style="{StaticResource BackButton}" Click="BackToLauncher_Click" Margin="0,0,12,0"/>
+                        <TextBlock Text="{DynamicResource ChangePassword}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Border Style="{StaticResource PanelCard}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <Border Width="34" Height="34" CornerRadius="9" Background="#FFF3E0" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="LockOutline" Width="17" Height="17" Foreground="#EF6C00" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource ChangePassword}" FontSize="16" FontWeight="SemiBold" Foreground="#EF6C00" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{DynamicResource CurrentPassword}" Style="{StaticResource FieldLabel}"/>
+                            <Grid Margin="0,0,0,8">
+                                <PasswordBox x:Name="txtCurrentPass" FontSize="13" Padding="10,8"/>
+                                <TextBox x:Name="txtCurrentPassVisible" FontSize="13" Padding="10,8" Visibility="Collapsed"/>
+                            </Grid>
+
+                            <TextBlock Text="{DynamicResource NewPassword}" Style="{StaticResource FieldLabel}"/>
+                            <Grid Margin="0,0,0,4">
+                                <PasswordBox x:Name="txtNewPass" FontSize="13" Padding="10,8" PasswordChanged="NewPassword_Changed"/>
+                                <TextBox x:Name="txtNewPassVisible" FontSize="13" Padding="10,8" Visibility="Collapsed" TextChanged="NewPassword_Changed"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ProgressBar x:Name="pbStrength" Grid.Column="0" Height="6" Minimum="0" Maximum="4" Value="0"
+                                             VerticalAlignment="Center" Background="{DynamicResource SurfaceAltBrush}" BorderThickness="0"/>
+                                <TextBlock x:Name="txtStrengthLabel" Grid.Column="1" FontSize="11" FontWeight="SemiBold"
+                                           Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <TextBlock Text="{DynamicResource ConfirmPassword}" Style="{StaticResource FieldLabel}"/>
+                            <Grid Margin="0,0,0,10">
+                                <PasswordBox x:Name="txtConfirmPass" FontSize="13" Padding="10,8"/>
+                                <TextBox x:Name="txtConfirmPassVisible" FontSize="13" Padding="10,8" Visibility="Collapsed"/>
+                            </Grid>
+
+                            <CheckBox x:Name="chkShowPasswords" Content="{DynamicResource ShowPasswords}" FontSize="12" Margin="0,0,0,12"
+                                      Checked="ShowPasswords_Toggled" Unchecked="ShowPasswords_Toggled"/>
+
+                            <TextBlock x:Name="txtPasswordStatus" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,10" Visibility="Collapsed"/>
+                            <Button Content="{DynamicResource Save}" Height="40" Click="BtnChangePassword" Background="#EF6C00" Style="{StaticResource PrimaryButton}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Inventory Settings -->
+            <ScrollViewer x:Name="panelInventory" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Padding="24">
+                <StackPanel MaxWidth="1000">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <Button Style="{StaticResource BackButton}" Click="BackToLauncher_Click" Margin="0,0,12,0"/>
+                        <TextBlock Text="{DynamicResource InventorySettings}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Border x:Name="borderInventorySettings" Style="{StaticResource PanelCard}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <Border Width="34" Height="34" CornerRadius="9" Background="#E0F2F1" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="PackageVariantClosed" Width="17" Height="17" Foreground="#00796B" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource InventorySettings}" FontSize="16" FontWeight="SemiBold" Foreground="#00796B" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{DynamicResource ExpiryWarningDays}" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="txtExpiryWarningDays" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
+                            <CheckBox x:Name="chkBlockExpiredSale" Content="{DynamicResource BlockExpiredSale}" FontSize="12" Margin="0,0,0,8"/>
+                            <CheckBox x:Name="chkAllowNegativeStock" Content="{DynamicResource AllowNegativeStock}" FontSize="12" Margin="0,0,0,12"/>
+                            <Button x:Name="btnSaveInventorySettings" Content="{DynamicResource SaveChanges}" Height="40" Click="BtnSaveInventorySettings_Click"
+                                    Background="#00796B" Style="{StaticResource PrimaryButton}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Receipt Size -->
+            <ScrollViewer x:Name="panelReceipt" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Padding="24">
+                <StackPanel MaxWidth="1000">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <Button Style="{StaticResource BackButton}" Click="BackToLauncher_Click" Margin="0,0,12,0"/>
+                        <TextBlock Text="Receipt Size" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Border x:Name="borderPrintSettings" Style="{StaticResource PanelCard}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <Border Width="34" Height="34" CornerRadius="9" Background="#EDE7F6" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="Printer" Width="17" Height="17" Foreground="#5E35B1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource ReceiptPrintSize}" FontSize="16" FontWeight="SemiBold" Foreground="#5E35B1" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{DynamicResource PaperWidthMm}" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="txtReceiptWidth" FontSize="13" Padding="10,8" Margin="0,0,0,8" Tag="80"/>
+                            <TextBlock Text="{DynamicResource PaperHeightMm}" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="txtReceiptHeight" FontSize="13" Padding="10,8" Margin="0,0,0,4"/>
+                            <TextBlock Text="{DynamicResource PaperHeightAutoHint}" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                            <Button x:Name="btnSavePrintSettings" Content="{DynamicResource SaveChanges}" Height="40" Click="BtnSavePrintSettings_Click"
+                                    Background="#5E35B1" Style="{StaticResource PrimaryButton}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Page Layout -->
+            <ScrollViewer x:Name="panelLayout" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Padding="24">
+                <StackPanel MaxWidth="1000">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <Button Style="{StaticResource BackButton}" Click="BackToLauncher_Click" Margin="0,0,12,0"/>
+                        <TextBlock Text="Page Layout" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Border x:Name="borderPrintLayout" Style="{StaticResource PanelCard}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <Border Width="34" Height="34" CornerRadius="9" Background="#FCE4EC" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="FilePdfBox" Width="17" Height="17" Foreground="#C2185B" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource PrintLayout}" FontSize="16" FontWeight="SemiBold" Foreground="#C2185B" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{DynamicResource PrintLayoutCardHint}" FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,16"/>
+                            <Button x:Name="btnOpenPrintLayout" Content="{DynamicResource ConfigurePrintLayout}" Height="40"
+                                    Click="BtnOpenPrintLayout_Click" Background="#C2185B" Style="{StaticResource PrimaryButton}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Language -->
+            <ScrollViewer x:Name="panelLanguage" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Padding="24">
+                <StackPanel MaxWidth="1000">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <Button Style="{StaticResource BackButton}" Click="BackToLauncher_Click" Margin="0,0,12,0"/>
+                        <TextBlock Text="{DynamicResource Language}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Border Style="{StaticResource PanelCard}" Width="Auto" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <Border Width="34" Height="34" CornerRadius="9" Background="#E8F5E9" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="Translate" Width="17" Height="17" Foreground="#2E7D32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource Language}" FontSize="16" FontWeight="SemiBold" Foreground="#2E7D32" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{DynamicResource ChooseLanguage}" FontSize="12" Margin="0,0,0,16"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal">
+                                <ToggleButton x:Name="cardEnglish" Style="{StaticResource LanguageCard}" Tag="en" Click="LanguageCard_Click">
+                                    <StackPanel>
+                                        <!-- Mini Union Jack (flag colours are fixed, never themed). -->
+                                        <Border Width="54" Height="40" CornerRadius="7" ClipToBounds="True" Background="#012169">
+                                            <Grid>
+                                                <Path Data="M0,0 L54,40 M54,0 L0,40" Stroke="White" StrokeThickness="9"/>
+                                                <Path Data="M0,0 L54,40 M54,0 L0,40" Stroke="#C8102E" StrokeThickness="4"/>
+                                                <Rectangle Width="10" Fill="White" HorizontalAlignment="Center"/>
+                                                <Rectangle Height="10" Fill="White" VerticalAlignment="Center"/>
+                                                <Rectangle Width="5" Fill="#C8102E" HorizontalAlignment="Center"/>
+                                                <Rectangle Height="5" Fill="#C8102E" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                        <TextBlock Text="English" FontSize="17" FontWeight="Bold" Margin="0,12,0,2"
+                                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        <TextBlock Text="English Interface" FontSize="12"
+                                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    </StackPanel>
+                                </ToggleButton>
+                                <ToggleButton x:Name="cardUrdu" Style="{StaticResource LanguageCard}" Tag="ur" Click="LanguageCard_Click">
+                                    <StackPanel>
+                                        <!-- Mini Pakistan flag: green field, white hoist bar, crescent + star. -->
+                                        <Border Width="54" Height="40" CornerRadius="7" ClipToBounds="True" Background="#01411C">
+                                            <Grid>
+                                                <Rectangle Width="15" Fill="White" HorizontalAlignment="Left"/>
+                                                <Grid Margin="15,0,0,0">
+                                                    <Ellipse Width="20" Height="20" Fill="White"/>
+                                                    <Ellipse Width="20" Height="20" Fill="#01411C" Margin="6,-4,0,0"/>
+                                                    <Path Data="M0,-9 L2.4,-2.9 L9,-2.9 L3.7,1.1 L5.7,7.6 L0,3.6 L-5.7,7.6 L-3.7,1.1 L-9,-2.9 L-2.4,-2.9 Z"
+                                                          Fill="White" RenderTransformOrigin="0.5,0.5">
+                                                        <Path.RenderTransform><TransformGroup><ScaleTransform ScaleX="0.7" ScaleY="0.7"/><TranslateTransform X="9" Y="0"/></TransformGroup></Path.RenderTransform>
+                                                    </Path>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                        <TextBlock Text="اردو" FontSize="18" FontWeight="Bold" Margin="0,12,0,2"
+                                                   FlowDirection="RightToLeft" FontFamily="{DynamicResource UrduFontFamily}"
+                                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        <TextBlock Text="اردو انٹرفیس" FontSize="12" FlowDirection="RightToLeft"
+                                                   FontFamily="{DynamicResource UrduFontFamily}"
+                                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    </StackPanel>
+                                </ToggleButton>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Theme -->
+            <ScrollViewer x:Name="panelTheme" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" Padding="24">
+                <StackPanel MaxWidth="1000">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <Button Style="{StaticResource BackButton}" Click="BackToLauncher_Click" Margin="0,0,12,0"/>
+                        <TextBlock Text="{DynamicResource Theme}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Border Style="{StaticResource PanelCard}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <Border Width="34" Height="34" CornerRadius="9" Background="#ECEFF1" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="PaletteOutline" Width="17" Height="17" Foreground="#546E7A" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource Theme}" FontSize="16" FontWeight="SemiBold" Foreground="#546E7A" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbLight" Content="{DynamicResource LightMode}" IsChecked="True" GroupName="ThemeMode" FontSize="13" Margin="0,0,20,0" Checked="Theme_Changed"/>
+                                <RadioButton x:Name="rbDark" Content="{DynamicResource DarkMode}" GroupName="ThemeMode" FontSize="13" Checked="Theme_Changed"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
 </UserControl>

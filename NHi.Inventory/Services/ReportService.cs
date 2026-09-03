@@ -104,4 +104,27 @@ public class ReportService
         var expenses = db.Expenses.Where(e => !e.IsDeleted && e.ExpenseDate.Year == month.Year && e.ExpenseDate.Month == month.Month).ToList().Sum(e => e.Amount);
         return revenue - expenses;
     }
+
+    public decimal GetMonthlyPurchases(DateTime month)
+    {
+        using var db = new AppDbContext();
+        return db.Purchases.Where(p => !p.IsDeleted && p.PurchaseDate.Year == month.Year && p.PurchaseDate.Month == month.Month)
+            .ToList().Sum(p => p.GrandTotal);
+    }
+
+    public decimal GetMonthlyExpenses(DateTime month)
+    {
+        using var db = new AppDbContext();
+        return db.Expenses.Where(e => !e.IsDeleted && e.ExpenseDate.Year == month.Year && e.ExpenseDate.Month == month.Month)
+            .ToList().Sum(e => e.Amount);
+    }
+
+    public int GetMonthlyRecordsCount(DateTime month)
+    {
+        using var db = new AppDbContext();
+        var sales = db.Sales.Count(s => !s.IsDeleted && s.SaleDate.Year == month.Year && s.SaleDate.Month == month.Month);
+        var purchases = db.Purchases.Count(p => !p.IsDeleted && p.PurchaseDate.Year == month.Year && p.PurchaseDate.Month == month.Month);
+        var expenses = db.Expenses.Count(e => !e.IsDeleted && e.ExpenseDate.Year == month.Year && e.ExpenseDate.Month == month.Month);
+        return sales + purchases + expenses;
+    }
 }

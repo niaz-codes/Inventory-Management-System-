@@ -15,8 +15,8 @@ public static class ExcelExportService
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sales");
 
-            var company = db.CompanySettings.FirstOrDefault();
-            ws.Cell(1, 1).Value = company?.CompanyName ?? "NHi Inventory";
+            var company = db.Shops.FirstOrDefault(s => s.Id == AuthService.CurrentShopId);
+            ws.Cell(1, 1).Value = company?.Name ?? "NHI Inventory";
             ws.Range(1, 1, 1, 8).Merge().Style.Font.Bold = true;
             ws.Range(1, 1, 1, 8).Style.Font.FontSize = 14;
 
@@ -256,6 +256,232 @@ public static class ExcelExportService
         catch { return false; }
     }
 
+    private static bool ExportProductRows(string filePath, string sheetTitle, List<Product> products, bool includeExpiry)
+    {
+        try
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add(sheetTitle);
+
+            ws.Cell(1, 1).Value = sheetTitle;
+            var lastCol = includeExpiry ? 7 : 6;
+            ws.Range(1, 1, 1, lastCol).Merge().Style.Font.Bold = true;
+            ws.Range(1, 1, 1, lastCol).Style.Font.FontSize = 14;
+
+            var headers = includeExpiry
+                ? new[] { "Name", "Barcode", "Category", "Current Stock", "Min Stock", "Expiry Date", "Stock Value" }
+                : new[] { "Name", "Barcode", "Category", "Current Stock", "Min Stock", "Stock Value" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ws.Cell(3, i + 1).Value = headers[i];
+                ws.Cell(3, i + 1).Style.Font.Bold = true;
+                ws.Cell(3, i + 1).Style.Fill.BackgroundColor = XLColor.LightCyan;
+            }
+
+            int row = 4;
+            foreach (var p in products)
+            {
+                int col = 1;
+                ws.Cell(row, col++).Value = p.NameEnglish;
+                ws.Cell(row, col++).Value = p.Barcode ?? "";
+                ws.Cell(row, col++).Value = p.Category?.Name ?? "";
+                ws.Cell(row, col++).Value = (double)p.CurrentStock;
+                ws.Cell(row, col++).Value = (double)p.MinimumStock;
+                if (includeExpiry) ws.Cell(row, col++).Value = p.ExpiryDate?.ToString("dd-MMM-yyyy") ?? "";
+                ws.Cell(row, col).Value = (double)p.StockValue;
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            wb.SaveAs(filePath);
+            return true;
+        }
+        catch { return false; }
+    }
+
+    public static bool ExportLowStock(string filePath) =>
+        ExportProductRows(filePath, "Low Stock", new ProductService().GetLowStock(), false);
+
+    public static bool ExportExpiredProducts(string filePath) =>
+        ExportProductRows(filePath, "Expired Products", new ProductService().GetExpiredProducts(), true);
+
+    public static bool ExportExpiringProducts(string filePath, int withinDays) =>
+        ExportProductRows(filePath, "Expiring Soon", new ProductService().GetExpiringProducts(withinDays), true);
+
+    public static bool ExportStockValuationByCategory(string filePath)
+    {
+        try
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Stock Valuation by Category");
+
+            ws.Cell(1, 1).Value = "Stock Valuation by Category";
+            ws.Range(1, 1, 1, 3).Merge().Style.Font.Bold = true;
+            ws.Range(1, 1, 1, 3).Style.Font.FontSize = 14;
+
+            var headers = new[] { "Category", "Products", "Stock Value" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ws.Cell(3, i + 1).Value = headers[i];
+                ws.Cell(3, i + 1).Style.Font.Bold = true;
+                ws.Cell(3, i + 1).Style.Fill.BackgroundColor = XLColor.LightGreen;
+            }
+
+            int row = 4;
+            foreach (var c in new ProductService().GetStockValueByCategory())
+            {
+                ws.Cell(row, 1).Value = c.CategoryName;
+                ws.Cell(row, 2).Value = c.ProductCount;
+                ws.Cell(row, 3).Value = (double)c.StockValue;
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            wb.SaveAs(filePath);
+            return true;
+        }
+        catch { return false; }
+    }
+
+    public static bool ExportStockAdjustmentHistory(string filePath)
+    {
+        try
+        {
+            using var db = new AppDbContext();
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Stock Adjustments");
+
+            ws.Cell(1, 1).Value = "Stock Adjustment History";
+            ws.Range(1, 1, 1, 5).Merge().Style.Font.Bold = true;
+            ws.Range(1, 1, 1, 5).Style.Font.FontSize = 14;
+
+            var headers = new[] { "Date", "Product", "Change", "Previous", "New" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ws.Cell(3, i + 1).Value = headers[i];
+                ws.Cell(3, i + 1).Style.Font.Bold = true;
+                ws.Cell(3, i + 1).Style.Fill.BackgroundColor = XLColor.LightYellow;
+            }
+
+            var entries = db.StockTransactions.Include(s => s.Product)
+                .Where(s => s.TransactionType == "ADJUSTMENT")
+                .OrderByDescending(s => s.TransactionDate).ToList();
+
+            int row = 4;
+            foreach (var s in entries)
+            {
+                ws.Cell(row, 1).Value = s.TransactionDate.ToString("dd-MMM-yyyy hh:mm tt");
+                ws.Cell(row, 2).Value = s.Product?.NameEnglish ?? "";
+                ws.Cell(row, 3).Value = (double)s.Quantity;
+                ws.Cell(row, 4).Value = (double)s.PreviousStock;
+                ws.Cell(row, 5).Value = (double)s.NewStock;
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            wb.SaveAs(filePath);
+            return true;
+        }
+        catch { return false; }
+    }
+
+    public static bool ExportCustomerStatement(string filePath, int customerId, DateTime? from = null, DateTime? to = null)
+    {
+        try
+        {
+            using var db = new AppDbContext();
+            var customer = db.Customers.Find(customerId);
+            if (customer == null) return false;
+
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Statement");
+
+            ws.Cell(1, 1).Value = $"Customer Statement - {customer.Name}";
+            ws.Range(1, 1, 1, 5).Merge().Style.Font.Bold = true;
+            ws.Range(1, 1, 1, 5).Style.Font.FontSize = 14;
+
+            ws.Cell(2, 1).Value = $"Phone: {customer.Phone ?? ""}   Balance: Rs. {customer.CurrentBalance:N0}   Generated: {DateTime.Now:dd-MMM-yyyy hh:mm tt}";
+            ws.Range(2, 1, 2, 5).Merge();
+
+            var headers = new[] { "Date", "Description", "Debit", "Credit", "Balance" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ws.Cell(4, i + 1).Value = headers[i];
+                ws.Cell(4, i + 1).Style.Font.Bold = true;
+                ws.Cell(4, i + 1).Style.Fill.BackgroundColor = XLColor.LightCyan;
+            }
+
+            var query = db.CustomerLedgers.Where(l => l.CustomerId == customerId).AsQueryable();
+            if (from.HasValue) query = query.Where(l => l.TransactionDate >= from.Value);
+            if (to.HasValue) query = query.Where(l => l.TransactionDate <= to.Value.AddDays(1));
+
+            int row = 5;
+            foreach (var l in query.OrderBy(l => l.TransactionDate).ToList())
+            {
+                ws.Cell(row, 1).Value = l.TransactionDate.ToString("dd-MMM-yyyy");
+                ws.Cell(row, 2).Value = l.Description;
+                ws.Cell(row, 3).Value = (double)l.Debit;
+                ws.Cell(row, 4).Value = (double)l.Credit;
+                ws.Cell(row, 5).Value = (double)l.Balance;
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            wb.SaveAs(filePath);
+            return true;
+        }
+        catch { return false; }
+    }
+
+    public static bool ExportSupplierStatement(string filePath, int supplierId, DateTime? from = null, DateTime? to = null)
+    {
+        try
+        {
+            using var db = new AppDbContext();
+            var supplier = db.Suppliers.Find(supplierId);
+            if (supplier == null) return false;
+
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Statement");
+
+            ws.Cell(1, 1).Value = $"Supplier Statement - {supplier.Name}";
+            ws.Range(1, 1, 1, 5).Merge().Style.Font.Bold = true;
+            ws.Range(1, 1, 1, 5).Style.Font.FontSize = 14;
+
+            ws.Cell(2, 1).Value = $"Phone: {supplier.Phone ?? ""}   Payable: Rs. {supplier.CurrentBalance:N0}   Generated: {DateTime.Now:dd-MMM-yyyy hh:mm tt}";
+            ws.Range(2, 1, 2, 5).Merge();
+
+            var headers = new[] { "Date", "Type", "Description", "Debit", "Credit", "Balance" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ws.Cell(4, i + 1).Value = headers[i];
+                ws.Cell(4, i + 1).Style.Font.Bold = true;
+                ws.Cell(4, i + 1).Style.Fill.BackgroundColor = XLColor.LightCyan;
+            }
+
+            var query = db.SupplierLedgers.Where(l => l.SupplierId == supplierId).AsQueryable();
+            if (from.HasValue) query = query.Where(l => l.TransactionDate >= from.Value);
+            if (to.HasValue) query = query.Where(l => l.TransactionDate <= to.Value.AddDays(1));
+
+            int row = 5;
+            foreach (var l in query.OrderBy(l => l.TransactionDate).ToList())
+            {
+                ws.Cell(row, 1).Value = l.TransactionDate.ToString("dd-MMM-yyyy");
+                ws.Cell(row, 2).Value = l.TransactionType;
+                ws.Cell(row, 3).Value = l.Description;
+                ws.Cell(row, 4).Value = (double)l.Debit;
+                ws.Cell(row, 5).Value = (double)l.Credit;
+                ws.Cell(row, 6).Value = (double)l.Balance;
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            wb.SaveAs(filePath);
+            return true;
+        }
+        catch { return false; }
+    }
+
     public static bool ExportSupplierLedger(string filePath)
     {
         try
@@ -435,7 +661,7 @@ public static class ExcelExportService
             ws.Range(1, 1, 1, 5).Merge().Style.Font.Bold = true;
             ws.Range(1, 1, 1, 5).Style.Font.FontSize = 14;
 
-            var headers = new[] { "Name", "Position", "Phone", "Monthly Salary", "Balance Due" };
+            var headers = new[] { "Name", "Position", "Phone", "Daily Wage", "Balance Due" };
             for (int i = 0; i < headers.Length; i++)
             {
                 ws.Cell(3, i + 1).Value = headers[i];
@@ -449,12 +675,79 @@ public static class ExcelExportService
                 ws.Cell(row, 1).Value = emp.Name;
                 ws.Cell(row, 2).Value = emp.Position ?? "";
                 ws.Cell(row, 3).Value = emp.Phone ?? "";
-                ws.Cell(row, 4).Value = (double)emp.MonthlySalary;
+                ws.Cell(row, 4).Value = (double)emp.DailyWage;
                 ws.Cell(row, 5).Value = (double)emp.CurrentBalance;
                 row++;
             }
 
             ws.Columns().AdjustToContents();
+            wb.SaveAs(filePath);
+            return true;
+        }
+        catch { return false; }
+    }
+
+    public static bool ExportEmployeeStatement(string filePath, int employeeId)
+    {
+        try
+        {
+            using var db = new AppDbContext();
+            var employee = db.Employees.Find(employeeId);
+            if (employee == null) return false;
+
+            using var wb = new XLWorkbook();
+            var employeeService = new EmployeeService();
+
+            var wsAttendance = wb.Worksheets.Add("Worked Days");
+            wsAttendance.Cell(1, 1).Value = $"{employee.Name} - Worked Days";
+            wsAttendance.Range(1, 1, 1, 3).Merge().Style.Font.Bold = true;
+            wsAttendance.Range(1, 1, 1, 3).Style.Font.FontSize = 14;
+
+            var attendanceHeaders = new[] { "Date", "Amount", "Status" };
+            for (int i = 0; i < attendanceHeaders.Length; i++)
+            {
+                wsAttendance.Cell(3, i + 1).Value = attendanceHeaders[i];
+                wsAttendance.Cell(3, i + 1).Style.Font.Bold = true;
+                wsAttendance.Cell(3, i + 1).Style.Fill.BackgroundColor = XLColor.LightGreen;
+            }
+
+            var statusByAttendance = employeeService.GetDayPaymentStatus(employeeId);
+            var attendance = employeeService.GetAttendance(employeeId).OrderBy(a => a.WorkDate).ToList();
+            int attRow = 4;
+            foreach (var a in attendance)
+            {
+                wsAttendance.Cell(attRow, 1).Value = a.WorkDate.ToString("dd-MMM-yyyy");
+                wsAttendance.Cell(attRow, 2).Value = (double)a.Amount;
+                wsAttendance.Cell(attRow, 3).Value = statusByAttendance.GetValueOrDefault(a.Id, "Unpaid");
+                attRow++;
+            }
+            wsAttendance.Columns().AdjustToContents();
+
+            var wsLedger = wb.Worksheets.Add("Ledger");
+            wsLedger.Cell(1, 1).Value = $"{employee.Name} - Ledger";
+            wsLedger.Range(1, 1, 1, 5).Merge().Style.Font.Bold = true;
+            wsLedger.Range(1, 1, 1, 5).Style.Font.FontSize = 14;
+
+            var ledgerHeaders = new[] { "Date", "Description", "Debit", "Credit", "Balance" };
+            for (int i = 0; i < ledgerHeaders.Length; i++)
+            {
+                wsLedger.Cell(3, i + 1).Value = ledgerHeaders[i];
+                wsLedger.Cell(3, i + 1).Style.Font.Bold = true;
+                wsLedger.Cell(3, i + 1).Style.Fill.BackgroundColor = XLColor.LightCyan;
+            }
+
+            int ledRow = 4;
+            foreach (var l in employeeService.GetLedger(employeeId))
+            {
+                wsLedger.Cell(ledRow, 1).Value = l.TransactionDate.ToString("dd-MMM-yyyy");
+                wsLedger.Cell(ledRow, 2).Value = l.Description;
+                wsLedger.Cell(ledRow, 3).Value = (double)l.Debit;
+                wsLedger.Cell(ledRow, 4).Value = (double)l.Credit;
+                wsLedger.Cell(ledRow, 5).Value = (double)l.Balance;
+                ledRow++;
+            }
+            wsLedger.Columns().AdjustToContents();
+
             wb.SaveAs(filePath);
             return true;
         }

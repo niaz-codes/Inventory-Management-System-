@@ -1,4 +1,6 @@
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Globalization;
 using System.Threading;
 
@@ -11,6 +13,7 @@ public static class LanguageManager
     public static string CurrentLanguage => _currentLanguage;
     public static bool IsRTL => _currentLanguage == "ur";
     public static FlowDirection CurrentFlowDirection => IsRTL ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+    public static FontFamily? UrduFontFamily => Application.Current?.TryFindResource("UrduFontFamily") as FontFamily;
 
     public static event Action? LanguageChanged;
 
@@ -39,14 +42,24 @@ public static class LanguageManager
             }
 
             var flowDirection = language == "ur" ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+            var urduFont = UrduFontFamily;
             foreach (Window window in app.Windows)
             {
+                // The print preview window hosts a WinForms PrintPreviewControl showing the
+                // actual page image — mirroring it would flip that image backwards, so it
+                // always stays left-to-right regardless of the app's language.
+                if (window is Views.Printing.UniversalPrintPreviewWindow) continue;
                 window.FlowDirection = flowDirection;
+                if (language == "ur" && urduFont != null) window.FontFamily = urduFont;
+                else window.ClearValue(Control.FontFamilyProperty);
             }
         }
 
         Thread.CurrentThread.CurrentCulture = new CultureInfo(language == "ur" ? "ur-PK" : "en-US");
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(language == "ur" ? "ur-PK" : "en-US");
+
+        // Remember the choice so it's already in effect next launch (including on the login screen).
+        AppPreferences.Language = _currentLanguage;
 
         LanguageChanged?.Invoke();
     }

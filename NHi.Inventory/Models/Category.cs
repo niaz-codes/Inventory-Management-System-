@@ -6,6 +6,7 @@ public class Category
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     [Required, MaxLength(100)]
     public string Name { get; set; } = string.Empty;
     [MaxLength(200)]

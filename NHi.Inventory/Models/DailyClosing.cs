@@ -6,6 +6,7 @@ public class DailyClosing
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     public DateTime ClosingDate { get; set; } = DateTime.Today;
     public decimal OpeningCash { get; set; }
     public decimal TotalCashSales { get; set; }

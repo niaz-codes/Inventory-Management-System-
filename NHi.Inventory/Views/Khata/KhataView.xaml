@@ -1,124 +1,420 @@
 <UserControl x:Class="NHi.Inventory.Views.Khata.KhataView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid Margin="15">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:NHi.Inventory.Views.Khata">
+    <UserControl.Resources>
+        <local:KhataStatusBrushConverter x:Key="StatusBrushConverter"/>
+
+        <!-- Scoped to this view only: the DataGrid's auto-generated cell/header text elements
+             have no ambient Foreground to inherit, so without this they default to plain black
+             and disappear against a dark-mode card background. -->
+        <Style x:Key="GridCellText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{DynamicResource HoverBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        </Style>
+
+        <!-- Small rounded pill action button (View Khata / Export / Make Payment) - scoped to
+             this file since it's only needed here. -->
+        <Style x:Key="PillActionButton" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Opacity" Value="0.82"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="15" Style="{StaticResource FadeSlideIn}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Tabs -->
-        <TabControl Grid.Row="0" Background="Transparent" BorderThickness="0,0,0,1" BorderBrush="#E0E0E0">
-            <TabItem>
+        <TabControl Grid.Row="0" Background="Transparent" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BorderBrush}">
+            <TabItem Style="{StaticResource IconTabItem}">
                 <TabItem.Header>
-                    <TextBlock Text="{DynamicResource CustomerKhata}" FontSize="13" FontWeight="SemiBold" Padding="15,5"/>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Width="16" Height="16" Margin="0,0,7,0" VerticalAlignment="Center"
+                                                  Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <TextBlock Text="{DynamicResource CustomerKhata}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    </StackPanel>
                 </TabItem.Header>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Customer List -->
-                    <Border Grid.Row="0" Background="White" CornerRadius="10" Padding="12" Margin="0,0,0,10" BorderBrush="#E0E0E0" BorderThickness="1">
+                    <!-- Dashboard -->
+                    <WrapPanel Grid.Row="0" Margin="0,0,0,5">
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource InfoBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="AccountMultipleOutline" Width="18" Height="18" Foreground="{StaticResource InfoBrush}"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource TotalCustomers}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatTotalCustomers" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource WarningBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="CashMultiple" Width="18" Height="18" Foreground="#FF9800"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource CustomersWithBalance}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatWithBalance" FontSize="20" FontWeight="Bold" Foreground="#FF9800"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}" Background="#1565C0">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="#2E78CC" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="ChartBar" Width="18" Height="18" Foreground="White"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource TotalReceivable}" FontSize="11" Foreground="#BBDEFB"/>
+                                    <TextBlock x:Name="txtStatReceivable" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource SuccessBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="Wallet" Width="18" Height="18" Foreground="{StaticResource SuccessBrush}"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource TodayReceived}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatTodayReceived" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource SuccessTextBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource DangerBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="ReceiptTextOutline" Width="18" Height="18" Foreground="{DynamicResource DangerTextBrush}"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource TodayCreditSales}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatTodayCredit" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource DangerTextBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource DangerBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="AlertCircleOutline" Width="18" Height="18" Foreground="#F44336"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource OverdueCustomersCount}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatOverdue" FontSize="20" FontWeight="Bold" Foreground="#F44336"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource WarningBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="BellOutline" Width="18" Height="18" Foreground="{DynamicResource WarningTextBrush}"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource NearLimitCustomers}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatNearLimit" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource WarningTextBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
+
+                    <!-- Toolbar -->
+                    <Border Grid.Row="1" Background="{DynamicResource CardBrush}" CornerRadius="10" Padding="12" Margin="0,0,0,10" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <!-- Search flexes; the two filter combos hold a fixed width so long
+                                     option labels truncate inside them (arrow stays visible) instead
+                                     of widening the toolbar and pushing the buttons off-screen. -->
+                                <ColumnDefinition Width="*" MinWidth="120"/>
+                                <ColumnDefinition Width="158"/>
+                                <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBox x:Name="txtCustomerSearch" Grid.Column="0" FontSize="13" Padding="10,8"
-                                     TextChanged="TxtCustomerSearch_TextChanged"/>
-                            <Button Grid.Column="1" Content="{DynamicResource AddCustomer}" Padding="12,7" Margin="10,0,5,0"
-                                    Click="BtnAddCustomer_Click" FontSize="12" Background="#1565C0" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                            <Button Grid.Column="2" Content="{DynamicResource AddSupplier}" Padding="12,7" Margin="5,0,5,0"
-                                    Click="BtnAddSupplier_Click" FontSize="12" Background="#4CAF50" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                            <Button Grid.Column="3" Content="{DynamicResource ExportToExcel}" Padding="12,7" Margin="5,0,0,0"
-                                    Click="BtnExportCustomerLedger_Click" FontSize="12" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"/>
+                                     Tag="{DynamicResource SearchCustomers}" TextChanged="TxtCustomerSearch_TextChanged"/>
+                            <ComboBox x:Name="cmbFilter" Grid.Column="1" FontSize="12" Padding="8,6" Margin="8,0,0,0" SelectedIndex="0"
+                                      ToolTip="{Binding SelectedItem.Content, RelativeSource={RelativeSource Self}}" SelectionChanged="Filter_Changed">
+                                <ComboBoxItem Content="{DynamicResource FilterAllCustomers}" Tag="All"/>
+                                <ComboBoxItem Content="{DynamicResource FilterWithBalance}" Tag="WithBalance"/>
+                                <ComboBoxItem Content="{DynamicResource FilterPaidCustomers}" Tag="Paid"/>
+                                <ComboBoxItem Content="{DynamicResource FilterOverdueCustomers}" Tag="Overdue"/>
+                                <ComboBoxItem Content="{DynamicResource FilterAdvanceCustomers}" Tag="Advance"/>
+                            </ComboBox>
+                            <ComboBox x:Name="cmbSort" Grid.Column="2" FontSize="12" Padding="8,6" Margin="8,0,0,0" SelectedIndex="0"
+                                      ToolTip="{Binding SelectedItem.Content, RelativeSource={RelativeSource Self}}" SelectionChanged="Filter_Changed">
+                                <ComboBoxItem Content="{DynamicResource SortByName}" Tag="Name"/>
+                                <ComboBoxItem Content="{DynamicResource SortHighestBalance}" Tag="HighestBalance"/>
+                                <ComboBoxItem Content="{DynamicResource SortLowestBalance}" Tag="LowestBalance"/>
+                                <ComboBoxItem Content="{DynamicResource SortRecentTransaction}" Tag="Recent"/>
+                            </ComboBox>
+                            <Button Grid.Column="3" Margin="8,0,0,0" Click="BtnAddCustomer_Click" Style="{StaticResource PrimaryButton}" Padding="12,7" FontSize="12">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Plus" Width="14" Height="14" Foreground="White" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource AddCustomer}" FontSize="12" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Column="4" Padding="12,7" Margin="8,0,0,0" Style="{StaticResource PillActionButton}"
+                                    Click="BtnExportCustomerLedger_Click" FontSize="12" Background="{DynamicResource SuccessBgBrush}" Foreground="{DynamicResource SuccessTextBrush}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ChartBar" Width="14" Height="14" Foreground="{DynamicResource SuccessTextBrush}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource ExportToExcel}" FontSize="12" Foreground="{DynamicResource SuccessTextBrush}"/>
+                                </StackPanel>
+                            </Button>
                         </Grid>
                     </Border>
 
-                    <!-- Customer Ledger -->
-                    <DataGrid x:Name="dgCustomerLedger" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
-                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F0F0F0"
-                              BorderBrush="#E0E0E0" BorderThickness="1" RowBackground="White" 
-                              AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
-                              HeadersVisibility="Column" SelectionMode="Single">
+                    <!-- Customer List -->
+                    <DataGrid x:Name="dgCustomers" Grid.Row="2" MaxHeight="480" RowHeight="NaN" AutoGenerateColumns="False" IsReadOnly="True"
+                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BorderBrush}"
+                              BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" RowBackground="{DynamicResource CardBrush}"
+                              AlternatingRowBackground="{DynamicResource AltRowBrush}" FontSize="13" CanUserAddRows="False"
+                              HeadersVisibility="Column" SelectionMode="Single"
+                              MouseDoubleClick="DgCustomers_MouseDoubleClick" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat='{}{0:dd-MMM-yyyy}'}" Width="100"/>
-                            <DataGridTextColumn Header="Customer" Binding="{Binding CustomerName}" Width="120"/>
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
-                            <DataGridTextColumn Header="Debit" Binding="{Binding Debit, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                            <DataGridTextColumn Header="Credit" Binding="{Binding Credit, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                            <DataGridTextColumn Header="Balance" Binding="{Binding Balance, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                            <DataGridTemplateColumn Width="90">
+                            <DataGridTextColumn Header="{DynamicResource CustomerName}" Binding="{Binding Name}" Width="*" MinWidth="110" ElementStyle="{StaticResource GridCellText}"/>
+                            <DataGridTextColumn Header="{DynamicResource Phone}" Binding="{Binding Phone}" Width="110" ElementStyle="{StaticResource GridCellText}"/>
+                            <DataGridTextColumn Header="{DynamicResource Balance}" Binding="{Binding Balance, StringFormat='Rs. {0:N0}'}" Width="110" ElementStyle="{StaticResource GridCellText}"/>
+                            <DataGridTemplateColumn Header="{DynamicResource Status}" Width="92">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="{DynamicResource ReceivePayment}" FontSize="10" Padding="5,3"
-                                                Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Cursor="Hand"
-                                                Click="BtnReceivePayment_Click" Tag="{Binding CustomerId}"/>
+                                        <Border Background="{Binding StatusKey, Converter={StaticResource StatusBrushConverter}}"
+                                                CornerRadius="4" Padding="8,3" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding StatusText}" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!-- Fixed-width, right-aligned icon actions. Horizontal scrolling is disabled and
+                                 the only star column (Name) absorbs any shrink, so this column is always fully
+                                 allocated and the three icons never get pushed off-screen or clipped. -->
+                            <DataGridTemplateColumn Header="{DynamicResource Actions}" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,3,8,3" HorizontalAlignment="Right">
+                                            <Button Style="{StaticResource GhostIconButton}" Width="30" Height="30"
+                                                    Click="BtnViewKhata_Click" Tag="{Binding Id}" ToolTip="{DynamicResource ViewKhata}">
+                                                <materialDesign:PackIcon Kind="FileDocumentOutline" Width="16" Height="16" Foreground="{StaticResource PrimaryBrush}"/>
+                                            </Button>
+                                            <Button Style="{StaticResource GhostIconButton}" Width="30" Height="30"
+                                                    Click="BtnReceivePayment_Click" Tag="{Binding Id}" ToolTip="{DynamicResource ReceivePayment}">
+                                                <materialDesign:PackIcon Kind="Wallet" Width="16" Height="16" Foreground="{StaticResource SuccessBrush}"/>
+                                            </Button>
+                                            <Button Style="{StaticResource GhostIconButton}" Width="30" Height="30"
+                                                    Click="BtnSendReminder_Click" Tag="{Binding Id}" ToolTip="{DynamicResource SendReminder}">
+                                                <materialDesign:PackIcon Kind="BellOutline" Width="16" Height="16" Foreground="#5E35B1"/>
+                                            </Button>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-
-                    <!-- Balance Summary -->
-                    <Border Grid.Row="2" Background="#1565C0" CornerRadius="0,0,10,10" Padding="15,10" Margin="0,-1,0,0">
-                        <Grid>
-                            <TextBlock x:Name="txtCustomerBalance" Text="Total Receivables: Rs. 0" 
-                                       Foreground="White" FontSize="14" FontWeight="SemiBold"/>
-                        </Grid>
-                    </Border>
                 </Grid>
+                </ScrollViewer>
             </TabItem>
 
-            <TabItem>
+            <TabItem Style="{StaticResource IconTabItem}">
                 <TabItem.Header>
-                    <TextBlock Text="{DynamicResource SupplierLedger}" FontSize="13" FontWeight="SemiBold" Padding="15,5"/>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="TruckDeliveryOutline" Width="16" Height="16" Margin="0,0,7,0" VerticalAlignment="Center"
+                                                  Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <TextBlock Text="{DynamicResource SupplierKhata}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    </StackPanel>
                 </TabItem.Header>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Button Grid.Row="0" Content="{DynamicResource ExportToExcel}" HorizontalAlignment="Right" Margin="0,0,0,10"
-                            Click="BtnExportSupplierLedger_Click" Padding="12,7" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" FontSize="12" Cursor="Hand"/>
+                    <!-- Dashboard -->
+                    <WrapPanel Grid.Row="0" Margin="0,0,0,5">
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource InfoBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="TruckDeliveryOutline" Width="18" Height="18" Foreground="{StaticResource InfoBrush}"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource TotalSuppliers}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatTotalSuppliers" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource WarningBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="AccountCashOutline" Width="18" Height="18" Foreground="{StaticResource WarningBrush}"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource SuppliersWithBalance}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatSuppliersWithBalance" FontSize="20" FontWeight="Bold" Foreground="#FF9800"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}" Background="#1565C0">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="#2E78CC" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="CashMultiple" Width="18" Height="18" Foreground="White"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource SupplierPayables}" FontSize="11" Foreground="#BBDEFB"/>
+                                    <TextBlock x:Name="txtStatTotalPayables" FontSize="20" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource AnimatedStatCard}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="36" Height="36" CornerRadius="10" Background="{DynamicResource SuccessBgBrush}" Margin="0,0,10,0">
+                                    <materialDesign:PackIcon Kind="Wallet" Width="18" Height="18" Foreground="{StaticResource SuccessBrush}"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource TodayPaid}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock x:Name="txtStatTodayPaid" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource SuccessTextBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
 
-                    <DataGrid x:Name="dgSupplierLedger" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
-                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F0F0F0"
-                              BorderBrush="#E0E0E0" BorderThickness="1" RowBackground="White" 
-                              AlternatingRowBackground="#FAFAFA" FontSize="13" CanUserAddRows="False"
-                              HeadersVisibility="Column">
+                    <!-- Toolbar -->
+                    <Border Grid.Row="1" Background="{DynamicResource CardBrush}" CornerRadius="10" Padding="12" Margin="0,0,0,10" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!-- Search flexes; the two filter combos hold a fixed width so long
+                                     option labels truncate inside them (arrow stays visible) instead
+                                     of widening the toolbar and pushing the buttons off-screen. -->
+                                <ColumnDefinition Width="*" MinWidth="120"/>
+                                <ColumnDefinition Width="158"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="txtSupplierSearch" Grid.Column="0" FontSize="13" Padding="10,8"
+                                     Tag="{DynamicResource SearchSuppliers}" TextChanged="TxtSupplierSearch_TextChanged"/>
+                            <ComboBox x:Name="cmbSupplierFilter" Grid.Column="1" FontSize="12" Padding="8,6" Margin="8,0,0,0" SelectedIndex="0"
+                                      ToolTip="{Binding SelectedItem.Content, RelativeSource={RelativeSource Self}}" SelectionChanged="SupplierFilter_Changed">
+                                <ComboBoxItem Content="{DynamicResource FilterAllSuppliers}" Tag="All"/>
+                                <ComboBoxItem Content="{DynamicResource FilterWithBalance}" Tag="WithBalance"/>
+                                <ComboBoxItem Content="{DynamicResource FilterPaidCustomers}" Tag="Paid"/>
+                                <ComboBoxItem Content="{DynamicResource FilterAdvanceCustomers}" Tag="Advance"/>
+                            </ComboBox>
+                            <ComboBox x:Name="cmbSupplierSort" Grid.Column="2" FontSize="12" Padding="8,6" Margin="8,0,0,0" SelectedIndex="0"
+                                      ToolTip="{Binding SelectedItem.Content, RelativeSource={RelativeSource Self}}" SelectionChanged="SupplierFilter_Changed">
+                                <ComboBoxItem Content="{DynamicResource SortByName}" Tag="Name"/>
+                                <ComboBoxItem Content="{DynamicResource SortHighestBalance}" Tag="HighestBalance"/>
+                                <ComboBoxItem Content="{DynamicResource SortLowestBalance}" Tag="LowestBalance"/>
+                                <ComboBoxItem Content="{DynamicResource SortRecentTransaction}" Tag="Recent"/>
+                            </ComboBox>
+                            <Button Grid.Column="3" Margin="8,0,0,0" Click="BtnAddSupplier_Click" Style="{StaticResource PrimaryButton}" Padding="12,7" FontSize="12">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Plus" Width="14" Height="14" Foreground="White" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource AddSupplier}" FontSize="12" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Column="4" Margin="8,0,0,0" Click="BtnExportSupplierLedger_Click" Style="{StaticResource PillActionButton}"
+                                    Padding="12,7" Background="{DynamicResource SuccessBgBrush}" Foreground="{DynamicResource SuccessTextBrush}" FontSize="12">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ChartBar" Width="14" Height="14" Foreground="{DynamicResource SuccessTextBrush}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource ExportToExcel}" FontSize="12" Foreground="{DynamicResource SuccessTextBrush}"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- Supplier List -->
+                    <DataGrid x:Name="dgSuppliers" Grid.Row="2" MaxHeight="480" RowHeight="NaN" AutoGenerateColumns="False" IsReadOnly="True"
+                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BorderBrush}"
+                              BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" RowBackground="{DynamicResource CardBrush}"
+                              AlternatingRowBackground="{DynamicResource AltRowBrush}" FontSize="13" CanUserAddRows="False"
+                              HeadersVisibility="Column" SelectionMode="Single"
+                              MouseDoubleClick="DgSuppliers_MouseDoubleClick" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat='{}{0:dd-MMM-yyyy}'}" Width="100"/>
-                            <DataGridTextColumn Header="Supplier" Binding="{Binding SupplierName}" Width="120"/>
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
-                            <DataGridTextColumn Header="Debit" Binding="{Binding Debit, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                            <DataGridTextColumn Header="Credit" Binding="{Binding Credit, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                            <DataGridTextColumn Header="Balance" Binding="{Binding Balance, StringFormat='Rs. {0:N0}'}" Width="100"/>
-                            <DataGridTemplateColumn Width="90">
+                            <DataGridTextColumn Header="{DynamicResource SupplierName}" Binding="{Binding Name}" Width="*" MinWidth="110" ElementStyle="{StaticResource GridCellText}"/>
+                            <DataGridTextColumn Header="{DynamicResource Phone}" Binding="{Binding Phone}" Width="110" ElementStyle="{StaticResource GridCellText}"/>
+                            <DataGridTextColumn Header="{DynamicResource Balance}" Binding="{Binding Balance, StringFormat='Rs. {0:N0}'}" Width="110" ElementStyle="{StaticResource GridCellText}"/>
+                            <DataGridTemplateColumn Header="{DynamicResource Status}" Width="92">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="{DynamicResource MakePayment}" FontSize="10" Padding="5,3"
-                                                Background="#FFF3E0" Foreground="#E65100" BorderThickness="0" Cursor="Hand"
-                                                Click="BtnMakePayment_Click" Tag="{Binding SupplierId}"/>
+                                        <Border Background="{Binding StatusKey, Converter={StaticResource StatusBrushConverter}}"
+                                                CornerRadius="4" Padding="8,3" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding StatusText}" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{DynamicResource Actions}" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,3,8,3" HorizontalAlignment="Right">
+                                            <Button Style="{StaticResource GhostIconButton}" Width="30" Height="30"
+                                                    Click="BtnViewSupplierKhata_Click" Tag="{Binding Id}" ToolTip="{DynamicResource ViewKhata}">
+                                                <materialDesign:PackIcon Kind="FileDocumentOutline" Width="16" Height="16" Foreground="{StaticResource PrimaryBrush}"/>
+                                            </Button>
+                                            <Button Style="{StaticResource GhostIconButton}" Width="30" Height="30"
+                                                    Click="BtnMakePayment_Click" Tag="{Binding Id}" ToolTip="{DynamicResource PaySupplier}">
+                                                <materialDesign:PackIcon Kind="Wallet" Width="16" Height="16" Foreground="{StaticResource SuccessBrush}"/>
+                                            </Button>
+                                            <Button Style="{StaticResource GhostIconButton}" Width="30" Height="30"
+                                                    Click="BtnSupplierReminder_Click" Tag="{Binding Id}" ToolTip="{DynamicResource PaymentReminder}">
+                                                <materialDesign:PackIcon Kind="BellOutline" Width="16" Height="16" Foreground="#5E35B1"/>
+                                            </Button>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-
-                    <Border Grid.Row="2" Background="#FF9800" CornerRadius="0,0,10,10" Padding="15,10" Margin="0,-1,0,0">
-                        <TextBlock x:Name="txtSupplierBalance" Text="Total Payables: Rs. 0"
-                                   Foreground="White" FontSize="14" FontWeight="SemiBold"/>
-                    </Border>
                 </Grid>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
     </Grid>

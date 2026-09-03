@@ -11,6 +11,12 @@ public partial class MoreView : UserControl
     public MoreView()
     {
         InitializeComponent();
+        Loaded += MoreView_Loaded;
+    }
+
+    private void MoreView_Loaded(object sender, RoutedEventArgs e)
+    {
+        btnUsers.Visibility = AuthService.IsAdmin() ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void NavigateTo(UserControl view)
@@ -26,7 +32,6 @@ public partial class MoreView : UserControl
     private void BtnExpenses_Click(object sender, RoutedEventArgs e) => NavigateTo(new ExpenseView());
     private void BtnReports_Click(object sender, RoutedEventArgs e) => NavigateTo(new ReportsView());
     private void BtnDailyClosing_Click(object sender, RoutedEventArgs e) => NavigateTo(new DailyClosingView());
-    private void BtnBackup_Click(object sender, RoutedEventArgs e) => NavigateTo(new BackupRestoreView());
     private void BtnSettings_Click(object sender, RoutedEventArgs e) => NavigateTo(new SettingsView());
     private void BtnUsers_Click(object sender, RoutedEventArgs e)
     {

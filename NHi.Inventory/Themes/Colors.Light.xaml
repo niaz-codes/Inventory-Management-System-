@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Surfaces -->
+    <SolidColorBrush x:Key="LightBgBrush" Color="#F5F7FA" />
+    <SolidColorBrush x:Key="CardBrush" Color="White" />
+    <SolidColorBrush x:Key="SurfaceAltBrush" Color="#EEF1F6" />
+    <SolidColorBrush x:Key="InputBgBrush" Color="#F7F9FC" />
+    <SolidColorBrush x:Key="AltRowBrush" Color="#FAFAFA" />
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#212121" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#757575" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="#9E9E9E" />
+    <SolidColorBrush x:Key="DisabledTextBrush" Color="#BDBDBD" />
+
+    <!-- Borders / interaction -->
+    <SolidColorBrush x:Key="BorderBrush" Color="#E0E0E0" />
+    <SolidColorBrush x:Key="HoverBrush" Color="#E3F2FD" />
+    <SolidColorBrush x:Key="SelectionBrush" Color="#BBDEFB" />
+    <SolidColorBrush x:Key="FocusBrush" Color="#1565C0" />
+    <SolidColorBrush x:Key="DisabledBgBrush" Color="#F0F0F0" />
+
+    <!-- Scrollbar -->
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#C7CDD6" />
+    <SolidColorBrush x:Key="ScrollThumbHoverBrush" Color="#A9B1BE" />
+
+    <!-- Soft status tints (paired with the theme-constant Success/Warning/Danger/Info
+         solid brushes in AppStyles.xaml) -->
+    <SolidColorBrush x:Key="SuccessBgBrush" Color="#E8F5E9" />
+    <SolidColorBrush x:Key="WarningBgBrush" Color="#FFF3E0" />
+    <SolidColorBrush x:Key="DangerBgBrush" Color="#FFEBEE" />
+    <SolidColorBrush x:Key="InfoBgBrush" Color="#E3F2FD" />
+
+    <!-- Text/icon color to use ON TOP of the matching *BgBrush tint above (never a hardcoded
+         literal - the tint goes from a light pastel here to a muted dark tint in Colors.Dark.xaml,
+         so the text color has to flip too or it goes dark-on-dark and disappears). -->
+    <SolidColorBrush x:Key="SuccessTextBrush" Color="#2E7D32" />
+    <SolidColorBrush x:Key="WarningTextBrush" Color="#E65100" />
+    <SolidColorBrush x:Key="DangerTextBrush" Color="#C62828" />
+    <SolidColorBrush x:Key="InfoTextBrush" Color="#1565C0" />
+</ResourceDictionary>

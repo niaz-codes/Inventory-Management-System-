@@ -6,6 +6,7 @@ public class Purchase
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     [Required, MaxLength(50)]
     public string InvoiceNumber { get; set; } = string.Empty;
     public DateTime PurchaseDate { get; set; } = DateTime.Now;

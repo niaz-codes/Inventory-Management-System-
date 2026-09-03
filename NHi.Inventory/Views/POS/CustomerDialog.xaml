@@ -1,12 +1,13 @@
 <Window x:Class="NHi.Inventory.Views.POS.CustomerDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Add Customer" Height="450" Width="400" WindowStartupLocation="CenterOwner"
-        Background="White" ResizeMode="NoResize">
+        Title="Add Customer" Height="640" Width="420" WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize" Background="{DynamicResource CardBrush}">
     <Border Padding="25">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <TextBlock Text="{DynamicResource AddCustomer}" FontSize="18" FontWeight="Bold" 
-                       Foreground="#1565C0" Margin="0,0,0,20"/>
+            <TextBlock x:Name="txtTitle" Text="{DynamicResource AddCustomer}" FontSize="18" FontWeight="Bold"
+                       Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,20"/>
 
             <TextBlock Text="{DynamicResource CustomerName}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
             <TextBox x:Name="txtName" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
@@ -15,35 +16,44 @@
             <TextBox x:Name="txtFatherName" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
 
             <TextBlock Text="{DynamicResource Phone}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
-            <TextBox x:Name="txtPhone" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
+            <TextBox x:Name="txtPhone" FontSize="13" Padding="10,8" Margin="0,0,0,8" TextChanged="TxtPhone_TextChanged"/>
+
+            <CheckBox x:Name="chkWhatsAppSame" Content="{DynamicResource WhatsAppSameAsPhone}" FontSize="12"
+                      IsChecked="True" Margin="0,0,0,8"/>
+
+            <TextBlock x:Name="lblWhatsApp" Text="{DynamicResource WhatsAppNumber}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtWhatsApp" FontSize="13" Padding="10,8" Margin="0,0,0,12" IsEnabled="False"/>
 
             <TextBlock Text="{DynamicResource Address}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
-            <TextBox x:Name="txtAddress" FontSize="13" Padding="10,8" Margin="0,0,0,15"/>
+            <TextBox x:Name="txtAddress" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
+
+            <TextBlock Text="{DynamicResource Email}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtEmail" FontSize="13" Padding="10,8" Margin="0,0,0,12"/>
+
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock x:Name="lblOpeningBalance" Text="{DynamicResource OpeningBalance}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <TextBox x:Name="txtOpeningBalance" FontSize="13" Padding="10,8" Text="0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="{DynamicResource CreditLimit}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <TextBox x:Name="txtCreditLimit" FontSize="13" Padding="10,8" Text="0"/>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="{DynamicResource Notes}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtNotes" FontSize="13" Padding="10,8" Margin="0,0,0,12" TextWrapping="Wrap" AcceptsReturn="True" Height="50"/>
+
+            <CheckBox x:Name="chkActive" Content="{DynamicResource Active}" FontSize="13" IsChecked="True" Margin="0,0,0,18"/>
 
             <Button Content="{DynamicResource Save}" Height="40" FontSize="14" FontWeight="SemiBold"
-                    Click="BtnSave_Click">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="#4CAF50"/>
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="10">
-                                        <ContentPresenter HorizontalAlignment="Center"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="bd" Property="Background" Value="#388E3C"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Style>
-            </Button>
+                    Click="BtnSave_Click" Style="{StaticResource SuccessButton}"/>
         </StackPanel>
+        </ScrollViewer>
     </Border>
 </Window>

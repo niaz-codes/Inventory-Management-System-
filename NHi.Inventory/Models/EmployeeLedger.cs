@@ -6,6 +6,7 @@ public class EmployeeLedger
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     public int EmployeeId { get; set; }
     public Employee? Employee { get; set; }
     public DateTime TransactionDate { get; set; } = DateTime.Now;

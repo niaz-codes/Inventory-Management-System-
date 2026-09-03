@@ -6,6 +6,7 @@ public class CustomerPayment
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     public int CustomerId { get; set; }
     public Customer? Customer { get; set; }
     public decimal Amount { get; set; }
@@ -15,4 +16,6 @@ public class CustomerPayment
     [MaxLength(300)]
     public string? Notes { get; set; }
     public int? CreatedBy { get; set; }
+    [MaxLength(30)]
+    public string? ReceiptNumber { get; set; }
 }

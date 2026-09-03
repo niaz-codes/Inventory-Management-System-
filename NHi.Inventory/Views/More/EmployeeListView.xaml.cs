@@ -14,27 +14,32 @@ public partial class EmployeeListView : UserControl
 
     private void LoadData()
     {
-        dgEmployees.ItemsSource = _service.GetAll();
+        dgEmployees.ItemsSource = string.IsNullOrWhiteSpace(txtSearch?.Text) ? _service.GetAll() : _service.Search(txtSearch.Text);
         txtTotalDues.Text = $"{LanguageManager.GetString("TotalDues")}: Rs. {_service.GetTotalDues():N0}";
-        dgLedger.ItemsSource = null;
     }
 
-    private void DgEmployees_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e) => LoadData();
+
+    private void OpenDetail(int employeeId)
     {
-        if (dgEmployees.SelectedItem is Employee employee)
-            dgLedger.ItemsSource = _service.GetLedger(employee.Id);
+        var dialog = new EmployeeDetailView(employeeId) { Owner = Window.GetWindow(this) };
+        dialog.ShowDialog();
+        if (dialog.DataChanged) LoadData();
+    }
+
+    private void DgEmployees_DoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (dgEmployees.SelectedItem is Employee employee) OpenDetail(employee.Id);
+    }
+
+    private void BtnView_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is int employeeId) OpenDetail(employeeId);
     }
 
     private void BtnAdd_Click(object sender, RoutedEventArgs e)
     {
         var dialog = new EmployeeDialog();
-        if (dialog.ShowDialog() == true) LoadData();
-    }
-
-    private void BtnAddDue_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is not Button btn || btn.Tag is not int employeeId) return;
-        var dialog = new AddDueDialog(employeeId);
         if (dialog.ShowDialog() == true) LoadData();
     }
 

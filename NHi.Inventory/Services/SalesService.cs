@@ -8,9 +8,15 @@ public class SalesService
 {
     private readonly ProductService _productService = new();
 
+    /// <summary>Preview only — the authoritative number is assigned atomically inside CompleteSale's own transaction to avoid a read-then-format race on rapid/duplicate submissions.</summary>
     public string GenerateInvoiceNumber()
     {
         using var db = new AppDbContext();
+        return GenerateInvoiceNumberInternal(db);
+    }
+
+    private static string GenerateInvoiceNumberInternal(AppDbContext db)
+    {
         var year = DateTime.Now.Year;
         var prefix = $"NHI-{year}-";
         var lastSale = db.Sales.Where(s => s.InvoiceNumber.StartsWith(prefix))
@@ -20,12 +26,30 @@ public class SalesService
         return $"{prefix}{(lastNum + 1):D6}";
     }
 
-    public int CompleteSale(Sale sale, List<SaleItem> items)
+    /// <summary>
+    /// Validates stock, saves the sale/items/stock/Khata/cash movements as one transaction,
+    /// and assigns the invoice number atomically within it. Returns an error resource key
+    /// (not a pre-built message) on failure, matching ProductService.Save's convention, so
+    /// nothing is written unless every line item can actually be fulfilled.
+    /// </summary>
+    public (bool success, string? errorKey, int saleId) CompleteSale(Sale sale, List<SaleItem> items, DateTime? creditDueDate = null)
     {
         using var db = new AppDbContext();
         using var transaction = db.Database.BeginTransaction();
         try
         {
+            if (items.Count == 0) { transaction.Rollback(); return (false, "EmptyCart", 0); }
+
+            foreach (var item in items)
+            {
+                if (item.Quantity <= 0) { transaction.Rollback(); return (false, "InvalidStock", 0); }
+                var product = db.Products.Find(item.ProductId);
+                if (product == null) { transaction.Rollback(); return (false, "NoDataFound", 0); }
+                if (product.CurrentStock < item.Quantity) { transaction.Rollback(); return (false, "InsufficientStock", 0); }
+            }
+
+            sale.ShopId = AuthService.CurrentShopId ?? 1;
+            sale.InvoiceNumber = GenerateInvoiceNumberInternal(db);
             sale.CreatedAt = DateTime.Now;
             sale.CreatedBy = AuthService.CurrentUser?.Id;
             db.Sales.Add(sale);
@@ -33,26 +57,25 @@ public class SalesService
 
             foreach (var item in items)
             {
+                item.ShopId = sale.ShopId;
                 item.SaleId = sale.Id;
                 db.SaleItems.Add(item);
 
-                var product = db.Products.Find(item.ProductId);
-                if (product != null)
+                var product = db.Products.Find(item.ProductId)!;
+                var prevStock = product.CurrentStock;
+                product.CurrentStock -= item.Quantity;
+                db.StockTransactions.Add(new StockTransaction
                 {
-                    var prevStock = product.CurrentStock;
-                    product.CurrentStock -= item.Quantity;
-                    db.StockTransactions.Add(new StockTransaction
-                    {
-                        ProductId = item.ProductId,
-                        TransactionType = "SALE",
-                        Quantity = -item.Quantity,
-                        PreviousStock = prevStock,
-                        NewStock = product.CurrentStock,
-                        Description = $"Sale Invoice: {sale.InvoiceNumber}",
-                        ReferenceId = sale.Id,
-                        ReferenceType = "Sale"
-                    });
-                }
+                    ShopId = sale.ShopId,
+                    ProductId = item.ProductId,
+                    TransactionType = "SALE",
+                    Quantity = -item.Quantity,
+                    PreviousStock = prevStock,
+                    NewStock = product.CurrentStock,
+                    Description = $"Sale Invoice: {sale.InvoiceNumber}",
+                    ReferenceId = sale.Id,
+                    ReferenceType = "Sale"
+                });
             }
 
             if (sale.IsCreditSale && sale.CustomerId.HasValue && sale.RemainingAmount > 0)
@@ -63,19 +86,24 @@ public class SalesService
                     customer.CurrentBalance += sale.RemainingAmount;
                     db.CustomerLedgers.Add(new CustomerLedger
                     {
+                        ShopId = sale.ShopId,
                         CustomerId = sale.CustomerId.Value,
                         Description = $"Credit Sale - {sale.InvoiceNumber}",
                         Debit = sale.RemainingAmount,
                         Credit = 0,
                         Balance = customer.CurrentBalance,
                         ReferenceId = sale.Id,
-                        ReferenceType = "Sale"
+                        ReferenceType = "Sale",
+                        DueDate = creditDueDate,
+                        CreatedBy = sale.CreatedBy,
+                        TransactionType = "CreditSale"
                     });
                 }
             }
 
             db.CashTransactions.Add(new CashTransaction
             {
+                ShopId = sale.ShopId,
                 TransactionType = "SALE",
                 Amount = sale.PaidAmount,
                 IsInflow = true,
@@ -86,7 +114,14 @@ public class SalesService
 
             db.SaveChanges();
             transaction.Commit();
-            return sale.Id;
+
+            // Sending the invoice over WhatsApp is the caller's responsibility — POSScreen opens
+            // ReceiptActionsDialog after a successful sale, which calls WhatsAppService only if
+            // the employee explicitly clicks "Send WhatsApp". Keeping it out of this
+            // transactional method keeps CompleteSale free of UI/messaging side effects
+            // (TestDataSeeder's demo sales use this method too, with no customer interaction).
+
+            return (true, null, sale.Id);
         }
         catch
         {
@@ -95,13 +130,14 @@ public class SalesService
         }
     }
 
-    public List<Sale> GetSales(DateTime? from = null, DateTime? to = null)
+    public List<Sale> GetSales(DateTime? from = null, DateTime? to = null, int? customerId = null)
     {
         using var db = new AppDbContext();
         var query = db.Sales.Include(s => s.Customer).Include(s => s.Items).ThenInclude(i => i.Product)
             .Where(s => !s.IsDeleted).AsQueryable();
         if (from.HasValue) query = query.Where(s => s.SaleDate >= from.Value);
         if (to.HasValue) query = query.Where(s => s.SaleDate <= to.Value.AddDays(1));
+        if (customerId.HasValue) query = query.Where(s => s.CustomerId == customerId.Value);
         return query.OrderByDescending(s => s.SaleDate).ToList();
     }
 
@@ -114,7 +150,8 @@ public class SalesService
     public Sale? GetSaleById(int id)
     {
         using var db = new AppDbContext();
-        return db.Sales.Include(s => s.Customer).Include(s => s.Items).ThenInclude(i => i.Product)
+        return db.Sales.Include(s => s.Customer)
+            .Include(s => s.Items).ThenInclude(i => i.Product).ThenInclude(p => p!.Unit)
             .FirstOrDefault(s => s.Id == id);
     }
 
@@ -138,6 +175,7 @@ public class SalesService
                     product.CurrentStock += item.Quantity;
                     db.StockTransactions.Add(new StockTransaction
                     {
+                        ShopId = sale.ShopId,
                         ProductId = item.ProductId,
                         TransactionType = "VOID",
                         Quantity = item.Quantity,
@@ -158,13 +196,16 @@ public class SalesService
                     customer.CurrentBalance -= sale.RemainingAmount;
                     db.CustomerLedgers.Add(new CustomerLedger
                     {
+                        ShopId = sale.ShopId,
                         CustomerId = sale.CustomerId.Value,
                         Description = $"Void Sale Credit Reversal - {sale.InvoiceNumber}",
                         Debit = 0,
                         Credit = sale.RemainingAmount,
                         Balance = customer.CurrentBalance,
                         ReferenceId = saleId,
-                        ReferenceType = "Sale"
+                        ReferenceType = "Sale",
+                        CreatedBy = AuthService.CurrentUser?.Id,
+                        TransactionType = "Reversal"
                     });
                 }
             }
@@ -207,6 +248,7 @@ public class SalesService
                 product.CurrentStock += quantity;
                 db.StockTransactions.Add(new StockTransaction
                 {
+                    ShopId = sale.ShopId,
                     ProductId = productId,
                     TransactionType = "SALE_RETURN",
                     Quantity = quantity,
@@ -226,13 +268,16 @@ public class SalesService
                     customer.CurrentBalance -= refundAmount;
                     db.CustomerLedgers.Add(new CustomerLedger
                     {
+                        ShopId = sale.ShopId,
                         CustomerId = sale.CustomerId.Value,
                         Description = $"Sale Return - {sale.InvoiceNumber}",
                         Debit = 0,
                         Credit = refundAmount,
                         Balance = customer.CurrentBalance,
                         ReferenceId = saleId,
-                        ReferenceType = "SaleReturn"
+                        ReferenceType = "SaleReturn",
+                        CreatedBy = AuthService.CurrentUser?.Id,
+                        TransactionType = "SaleReturn"
                     });
                 }
             }
@@ -240,6 +285,7 @@ public class SalesService
             {
                 db.CashTransactions.Add(new CashTransaction
                 {
+                    ShopId = sale.ShopId,
                     TransactionType = "SALE_RETURN",
                     Amount = refundAmount,
                     IsInflow = false,
@@ -251,6 +297,7 @@ public class SalesService
 
             db.SaleReturns.Add(new SaleReturn
             {
+                ShopId = sale.ShopId,
                 SaleId = saleId,
                 ProductId = productId,
                 Quantity = quantity,

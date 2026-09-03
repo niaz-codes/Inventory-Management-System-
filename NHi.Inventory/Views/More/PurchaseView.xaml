@@ -10,13 +10,13 @@
         <DockPanel Grid.Row="0" Margin="0,0,0,10">
             <TextBlock DockPanel.Dock="Left" Text="{DynamicResource Purchases}" FontSize="22" FontWeight="Bold"/>
             <Button DockPanel.Dock="Right" Content="{DynamicResource AddPurchase}" HorizontalAlignment="Right"
-                    Click="BtnAdd_Click" Background="#1565C0" Foreground="White" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+                    Click="BtnAdd_Click" Padding="15,7" FontSize="12" Style="{StaticResource PrimaryButton}"/>
             <Button DockPanel.Dock="Right" Content="{DynamicResource ExportToExcel}" HorizontalAlignment="Right" Margin="0,0,10,0"
-                    Click="BtnExport_Click" Background="#E8F5E9" Foreground="#2E7D32" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
+                    Click="BtnExport_Click" Background="{DynamicResource SuccessBgBrush}" Foreground="{StaticResource SuccessBrush}" BorderThickness="0" Padding="15,7" Cursor="Hand" FontSize="12"/>
         </DockPanel>
         <DataGrid x:Name="dg" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"
-                  GridLinesVisibility="Horizontal" BorderBrush="#E0E0E0" BorderThickness="1" FontSize="13" CanUserAddRows="False"
-                  HeadersVisibility="Column" RowBackground="White" AlternatingRowBackground="#FAFAFA">
+                  GridLinesVisibility="Horizontal" FontSize="13" CanUserAddRows="False"
+                  HeadersVisibility="Column">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Invoice" Binding="{Binding InvoiceNumber}" Width="130"/>
                 <DataGridTextColumn Header="Date" Binding="{Binding PurchaseDate, StringFormat='{}{0:dd-MMM-yyyy}'}" Width="100"/>
@@ -28,7 +28,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="{DynamicResource Return}" Click="BtnReturn_Click" Tag="{Binding}"
-                                    Padding="8,4" Background="#FFF3E0" Foreground="#E65100" BorderThickness="0" FontSize="11" Cursor="Hand"/>
+                                    Padding="8,4" Background="{DynamicResource WarningBgBrush}" Foreground="{StaticResource WarningBrush}" BorderThickness="0" FontSize="11" Cursor="Hand"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

@@ -1,0 +1,35 @@
+<Window x:Class="NHi.Inventory.Views.More.PostSalaryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Post Monthly Salary" Height="420" Width="380" WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize" Background="{DynamicResource CardBrush}">
+    <Border Padding="25">
+        <StackPanel>
+            <TextBlock Text="{DynamicResource PostMonthlySalary}" FontSize="18" FontWeight="Bold" Foreground="#1565C0" Margin="0,0,0,15"/>
+
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                    <TextBlock Text="{DynamicResource SalaryMonth}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <ComboBox x:Name="cmbMonth" FontSize="13" Padding="8,6"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{DynamicResource SalaryYear}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <ComboBox x:Name="cmbYear" FontSize="13" Padding="8,6"/>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="{DynamicResource Amount}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtAmount" FontSize="16" Padding="12,10" Margin="0,0,0,12"/>
+
+            <TextBlock Text="{DynamicResource Notes}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="txtNotes" FontSize="13" Padding="10,8" Margin="0,0,0,15"/>
+
+            <Button Content="{DynamicResource Save}" Height="40" FontSize="14" FontWeight="SemiBold"
+                    Click="BtnSave_Click" Style="{StaticResource PrimaryButton}"/>
+        </StackPanel>
+    </Border>
+</Window>

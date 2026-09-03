@@ -1,15 +1,58 @@
 <Window x:Class="NHi.Inventory.Views.Inventory.CategoryBrandDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Add" Height="180" Width="350" WindowStartupLocation="CenterOwner"
-        Background="White" ResizeMode="NoResize">
-    <Border Padding="25">
-        <StackPanel>
-            <TextBlock x:Name="txtTitle" FontSize="16" FontWeight="Bold" Foreground="#1565C0" Margin="0,0,0,15"/>
-            <TextBlock x:Name="lblName" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
-            <TextBox x:Name="txtName" FontSize="13" Padding="10,8" Margin="0,0,0,15"/>
-            <Button Content="{DynamicResource Save}" Height="35" Click="BtnSave_Click"
-                    Background="#1565C0" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-        </StackPanel>
-    </Border>
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Add" Height="460" Width="360" WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource LightBgBrush}" ResizeMode="NoResize">
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="txtTitle" Grid.Row="0" FontSize="16" FontWeight="Bold" Foreground="#1565C0" Margin="0,0,0,15"/>
+
+        <TextBlock x:Name="lblName" Grid.Row="1" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+        <Grid Grid.Row="2" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="txtName" Grid.Column="0" FontSize="13" Padding="10,8" KeyDown="TxtName_KeyDown"/>
+            <Button Grid.Column="1" Content="{DynamicResource Add}" Click="BtnAdd_Click" Margin="8,0,0,0" Padding="14,8"
+                    FontWeight="SemiBold" Style="{StaticResource PrimaryButton}"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="icItems">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{DynamicResource CardBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                CornerRadius="10" Padding="12,9" Margin="0,0,0,6">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <Button Grid.Column="1" Style="{StaticResource GhostIconButton}" Width="26" Height="26"
+                                        Cursor="Hand" Click="BtnDeleteItem_Click" Tag="{Binding Id}">
+                                    <materialDesign:PackIcon Kind="TrashCanOutline" Width="14" Height="14" Foreground="{StaticResource DangerBrush}"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <TextBlock x:Name="txtEmpty" Grid.Row="3" Text="{DynamicResource NoRecordsFound}" FontSize="12"
+                   Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+
+        <Button Grid.Row="4" Content="{DynamicResource Close}" Height="36" Margin="0,15,0,0" Click="BtnClose_Click"
+                Style="{StaticResource SecondaryButton}"/>
+    </Grid>
 </Window>

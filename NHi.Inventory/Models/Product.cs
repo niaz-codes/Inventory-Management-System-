@@ -6,6 +6,7 @@ public class Product
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     [Required, MaxLength(200)]
     public string NameEnglish { get; set; } = string.Empty;
     [MaxLength(200)]
@@ -36,4 +37,6 @@ public class Product
     public byte[]? ImageData { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+    public decimal StockValue => CurrentStock * PurchasePrice;
 }

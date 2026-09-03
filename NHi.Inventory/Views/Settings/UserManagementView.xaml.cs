@@ -29,4 +29,28 @@ public partial class UserManagementView : UserControl
             dialog.ShowDialog();
         }
     }
+
+    private void BtnDelete_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn || btn.Tag is not int userId) return;
+
+        if (userId == AuthService.CurrentUser?.Id)
+        {
+            MessageBox.Show(LanguageManager.GetString("CannotDeleteOwnAccount"), "", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        var result = MessageBox.Show(LanguageManager.GetString("ConfirmDelete"), "", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if (result != MessageBoxResult.Yes) return;
+
+        using var db = new AppDbContext();
+        var user = db.Users.FirstOrDefault(u => u.Id == userId);
+        if (user == null) return;
+
+        var username = user.Username;
+        db.Users.Remove(user);
+        db.SaveChanges();
+        AuditLogService.Log("USER_DELETE", "User", userId, username);
+        LoadUsers();
+    }
 }

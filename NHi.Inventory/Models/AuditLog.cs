@@ -6,6 +6,7 @@ public class AuditLog
 {
     [Key]
     public int Id { get; set; }
+    public int? ShopId { get; set; }
     public DateTime Timestamp { get; set; } = DateTime.Now;
     public int? UserId { get; set; }
     [MaxLength(100)]

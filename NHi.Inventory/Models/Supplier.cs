@@ -6,12 +6,17 @@ public class Supplier
 {
     [Key]
     public int Id { get; set; }
+    public int ShopId { get; set; }
     [Required, MaxLength(100)]
     public string Name { get; set; } = string.Empty;
+    [MaxLength(150)]
+    public string? CompanyName { get; set; }
     [MaxLength(100)]
     public string? ContactPerson { get; set; }
     [MaxLength(20)]
     public string? Phone { get; set; }
+    [MaxLength(20)]
+    public string? WhatsAppNumber { get; set; }
     [MaxLength(300)]
     public string? Address { get; set; }
     [MaxLength(300)]

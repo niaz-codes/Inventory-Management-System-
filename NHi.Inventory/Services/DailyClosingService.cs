@@ -27,6 +27,7 @@ public class DailyClosingService
 
         return new DailyClosing
         {
+            ShopId = AuthService.CurrentShopId ?? 1,
             ClosingDate = today,
             OpeningCash = opening,
             TotalCashSales = cashSales,
