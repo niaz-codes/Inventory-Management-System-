@@ -12,7 +12,7 @@
         pwsh -File installer\build-installer.ps1 -Version 1.1.0  # override version (for an update release)
 
     RELEASING AN UPDATE
-        Bump <Version> in NHi.Inventory\NHi.Inventory.csproj (or pass -Version), then run this.
+        Bump <Version> in src\NHi.Inventory\NHi.Inventory.csproj (or pass -Version), then run this.
         Users just run the new Setup.exe over the old install: same AppId = in-place upgrade,
         and the database + settings in %LOCALAPPDATA%\NHiInventory\ are never touched.
 #>
@@ -24,7 +24,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $repo      = Split-Path $PSScriptRoot -Parent
-$csproj    = Join-Path $repo "NHi.Inventory\NHi.Inventory.csproj"
+$csproj    = Join-Path $repo "src\NHi.Inventory\NHi.Inventory.csproj"
 $publishIn = Join-Path $PSScriptRoot "publish"
 $issFile   = Join-Path $PSScriptRoot "NHiInventory.iss"
 $outDir    = Join-Path $PSScriptRoot "Output"

@@ -3,7 +3,7 @@
 ; ----------------------------------------------------------------------------
 ;  Build:
 ;     1. Publish the app (self-contained, win-x64) into  installer\publish\
-;        dotnet publish NHi.Inventory\NHi.Inventory.csproj -c Release -r win-x64 ^
+;        dotnet publish src\NHi.Inventory\NHi.Inventory.csproj -c Release -r win-x64 ^
 ;          --self-contained true -p:PublishSingleFile=false -p:DebugType=none ^
 ;          -p:DebugSymbols=false -o installer\publish
 ;     2. Compile this script:
@@ -46,7 +46,7 @@ UninstallDisplayIcon={app}\{#AppExeName}
 
 ; Modern wizard look, with the user able to pick the install folder.
 WizardStyle=modern
-SetupIconFile=..\NHi.Inventory\Resources\AppIcon.ico
+SetupIconFile=..\src\NHi.Inventory\Resources\AppIcon.ico
 OutputDir=Output
 OutputBaseFilename=NHI-Inventory-Setup
 Compression=lzma2/max
