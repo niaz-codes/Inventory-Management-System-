@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using NHi.Inventory.Models;
 using NHi.Inventory.Services;
 using BCrypt.Net;
@@ -6,6 +7,14 @@ namespace NHi.Inventory.Data;
 
 public static class SeedData
 {
+    /// <summary>
+    /// When the initial administrator account is created on first run and no password was
+    /// supplied through the NHI_ADMIN_PASSWORD environment variable, a strong random password
+    /// is generated. It is exposed here so the UI can show it exactly once. The password is
+    /// never hard-coded and is never written to source control.
+    /// </summary>
+    public static string? FirstRunAdminPassword { get; private set; }
+
     public static void Initialize()
     {
         // This runs once at first-ever startup, before any login — SchemaUpgrader has
@@ -26,7 +35,7 @@ public static class SeedData
                 new User
                 {
                     Username = "admin",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("REDACTED"),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(ResolveInitialAdminPassword()),
                     FullName = "Administrator",
                     Role = "MAIN_ADMIN",
                     ShopId = null,
@@ -115,18 +124,46 @@ public static class SeedData
     }
 
     /// <summary>
-    /// One-time migration for databases created before the default admin
-    /// password was hardened: if the admin account still has the old
-    /// "admin" password, upgrade it to the new default without touching
-    /// any other data.
+    /// Resolves the password for the initial administrator account. The password is never
+    /// hard-coded: it comes from the NHI_ADMIN_PASSWORD environment variable when set,
+    /// otherwise a strong random password is generated and surfaced once through
+    /// <see cref="FirstRunAdminPassword"/> so the UI can show it to the operator.
     /// </summary>
-    public static void UpgradeDefaultAdminPassword(AppDbContext db)
+    private static string ResolveInitialAdminPassword()
     {
-        var admin = db.Users.FirstOrDefault(u => u.Username == "admin");
-        if (admin != null && BCrypt.Net.BCrypt.Verify("admin", admin.PasswordHash))
+        var fromEnvironment = Environment.GetEnvironmentVariable("NHI_ADMIN_PASSWORD");
+        if (!string.IsNullOrWhiteSpace(fromEnvironment))
+            return fromEnvironment!;
+
+        var generated = GenerateStrongPassword(12);
+        FirstRunAdminPassword = generated;
+        return generated;
+    }
+
+    private static string GenerateStrongPassword(int length)
+    {
+        const string upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+        const string lower = "abcdefghijkmnopqrstuvwxyz";
+        const string digits = "23456789";
+        const string symbols = "!@#$%^&*";
+        const string all = upper + lower + digits + symbols;
+
+        var chars = new char[length];
+        // Guarantee at least one character from each class.
+        chars[0] = upper[RandomNumberGenerator.GetInt32(upper.Length)];
+        chars[1] = lower[RandomNumberGenerator.GetInt32(lower.Length)];
+        chars[2] = digits[RandomNumberGenerator.GetInt32(digits.Length)];
+        chars[3] = symbols[RandomNumberGenerator.GetInt32(symbols.Length)];
+        for (var i = 4; i < length; i++)
+            chars[i] = all[RandomNumberGenerator.GetInt32(all.Length)];
+
+        // Fisher-Yates shuffle so the guaranteed characters are not always in front.
+        for (var i = chars.Length - 1; i > 0; i--)
         {
-            admin.PasswordHash = BCrypt.Net.BCrypt.HashPassword("REDACTED");
-            db.SaveChanges();
+            var j = RandomNumberGenerator.GetInt32(i + 1);
+            (chars[i], chars[j]) = (chars[j], chars[i]);
         }
+
+        return new string(chars);
     }
 }

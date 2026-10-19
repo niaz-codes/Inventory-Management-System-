@@ -54,9 +54,9 @@ echo.
 echo Or find the executable in:
 echo   src\NHi.Inventory\bin\Release\net8.0-windows\
 echo.
-echo Default Login (change the admin password after first sign-in):
-echo   Admin: admin / REDACTED
-echo   User:  user / user
+echo Default Login:
+echo   Shop user: user / user
+echo   Administrator password is set on first run (not stored in the repo).
 echo.
 popd
 pause

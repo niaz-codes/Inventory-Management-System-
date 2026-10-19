@@ -160,16 +160,15 @@ committed (the setup executable is over GitHub's file-size limit and is rebuilt 
 
 ## Login information
 
-Default accounts created on first run:
+- **Shop user** — username `user`, password `user`.
+- **Administrator** — the `admin` account is created automatically on first run, and its
+  password is **never stored in this repository**. Set the `NHI_ADMIN_PASSWORD` environment
+  variable before the first launch to choose it, or the app generates a strong random password
+  and shows it **once** on the first-run screen.
 
-| Role | Username | Password |
-| --- | --- | --- |
-| Administrator | `admin` | `REDACTED` |
-| Shop user | `user` | `user` |
-
-> ⚠️ **Change the administrator password immediately after your first sign-in**, and do not
-> share credentials with unauthorised users. The administrator can also create additional
-> users and shops from **Settings → User Management** and **Shop Management**.
+> ⚠️ **Write the administrator password down when it is first shown, and change it after
+> signing in.** Do not share credentials with unauthorised users. The administrator can create
+> additional users and shops from **Settings → User Management** and **Shop Management**.
 
 ## Data storage & backup
 

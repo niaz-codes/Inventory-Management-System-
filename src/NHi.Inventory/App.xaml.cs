@@ -40,7 +40,18 @@ public partial class App : Application
         db.Database.EnsureCreated();
         SchemaUpgrader.Run(db);
         SeedData.Initialize();
-        SeedData.UpgradeDefaultAdminPassword(db);
+        if (SeedData.FirstRunAdminPassword is { } firstRunAdminPassword)
+        {
+            MessageBox.Show(
+                "Your administrator account was created.\n\n"
+                + "Username:  admin\n"
+                + "Password:  " + firstRunAdminPassword + "\n\n"
+                + "Write this password down now, then change it after signing in.\n"
+                + "It will not be shown again.",
+                "NHI Inventory - Administrator Setup",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
 #if DEBUG
         TestDataSeeder.SeedIfNeeded(db);
 #endif

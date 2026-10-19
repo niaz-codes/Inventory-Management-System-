@@ -33,13 +33,16 @@ Once installed, open the application from the desktop shortcut or the Windows St
 
 | Field | Login details |
 | --- | --- |
-| Administrator username | `admin` |
-| Administrator password | `REDACTED` |
 | Shop-user username | `user` |
 | Shop-user password | `user` |
 
-> **Important:** change the administrator password after logging in. For security, avoid
-> sharing your login credentials with unauthorised users.
+The **administrator** account (`admin`) is created automatically on first run. Its password is
+not shipped with the application: set the `NHI_ADMIN_PASSWORD` environment variable before the
+first launch to choose one, or the app generates a strong random password and displays it once
+on the first-run screen.
+
+> **Important:** note the administrator password when it is first shown, and change it after
+> logging in. For security, avoid sharing your login credentials with unauthorised users.
 
 ## Data storage & backup
 
